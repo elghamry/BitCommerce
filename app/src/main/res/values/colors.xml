@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimary">#81BA3F</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="purple">#644C98</color>
     <color name="white">#ffffffff</color>
+    <color name="text_header">#3C3C3C</color>
+    <color name="line_color">#848484</color>
+    <color name="colorText">#FFFFFF</color>
+
+
+    <color name="alerter_default_success_background">#4CAF50</color>
+    <color name="alert_default_error_background">#F44336</color>
+    <color name="alert_default_text_color">@android:color/white</color>
+    <color name="alert_default_icon_color">@android:color/white</color>
+    <color name="acc_info_line_color">#AD121212</color>
+
 </resources>

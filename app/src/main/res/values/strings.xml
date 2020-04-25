@@ -98,4 +98,42 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="action_cart">Cart</string>
+    <string name="action_search">Search</string>
+    <string name="item_name">Item Name</string>
+    <string name="type">Type: </string>
+    <string name="nutrition"> Nutrition</string>
+    <string name="_15_sr">15 SR</string>
+    <string name="tab_text_1">Description</string>
+    <string name="tab_text_2">Reviews</string>
+    <string name="add_to_cart">Add To Cart</string>
+    <string name="items_150">150 items</string>
+    <string name="products">Products</string>
+
+    <string name="lib_name">Alerter</string>
+    <string name="msg.alert_cleared">Alert Cleared</string>
+    <string name="msg.no_alert_showing">No Alert Showing</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_search">Search</string>
+    <string name="title_cart">Cart</string>
+    <string name="title_profile">Profile</string>
+    <string name="firas_alateeq">Firas Alateeq</string>
+    <string name="firas_email">Firas@biotic.sa</string>
+    <string name="my_account">My Account</string>
+
+    <string name="help_amp_faq"><![CDATA[Help & FAQ]]></string>
+    <string name="contact_us">\nContact Us</string>
+    <string name="help">\nHelp</string>
+    <string name="my_orders">\nMy Orders</string>
+    <string name="manage_naccount">Manage\nAccount</string>
+    <string name="change">Change</string>
+    <string name="account_information">Account Information</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="change_password">Change Password</string>
+    <string name="change_language">Change Language</string>
+    <string name="screen_is_under_development">Screen is under Development</string>
+    <string name="now">Now</string>
+    <string name="was">Was</string>
 </resources>

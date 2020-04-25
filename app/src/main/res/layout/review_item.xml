@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <com.rishabhharit.roundedimageview.RoundedImageView
+            android:id="@+id/review_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/bg"
+            android:translationZ="3dp"
+            android:visibility="visible"
+            app:cornerRadius="1000dp"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+            android:id="@+id/review_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/grenale_conbla"
+            android:maxLength="10"
+            android:text="name"
+            android:textColor="@color/text_header"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/review_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <sa.biotic.app.components.RatingBar
+            android:id="@+id/smart_rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="22dp"
+            android:isIndicator="false"
+            android:visibility="visible"
+            app:backgroundDrawable="@drawable/leaf_rate_background"
+            app:gap="0dp"
+            app:indicator="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxRating="5"
+            app:orientation="horizontal"
+            app:rating="3.5"
+            app:ratingDrawable="@drawable/leaf_rate" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

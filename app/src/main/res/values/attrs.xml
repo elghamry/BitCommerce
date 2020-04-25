@@ -1,0 +1,36 @@
+<resources>
+    <attr name="backgroundDrawable" format="reference" />
+    <declare-styleable name="ElegantNumberButton">
+
+
+        <attr name="backGroundColor" format="color" />
+        <attr name="initialNumber" format="integer" />
+        <attr name="finalNumber" format="integer" />
+        <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="backgroundDrawable" />
+    </declare-styleable>
+    <declare-styleable name="SmartRatingBar">
+        <attr name="maxRating" format="integer" />
+        <attr name="gap" format="dimension" />
+        <attr name="rating" format="float" />
+        <attr name="orientation" format="integer">
+            <enum name="vertical" value="1" />
+            <enum name="horizontal" value="0" />
+        </attr>
+        <attr name="ratingDrawable" format="reference" />
+        <attr name="backgroundDrawable" />
+        <attr name="indicator" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="Alerter">
+        <attr name="alertStyle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="Alert">
+        <attr name="alertIcon" format="reference" />
+        <attr name="alertBackgroundColor" format="color" />
+        <attr name="alertTitle" format="string" />
+        <attr name="alertText" format="string" />
+    </declare-styleable>
+</resources>

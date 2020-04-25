@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:attrs="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -10,179 +10,138 @@
             tools:context=".MainActivity">
 
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.fragment.app.FragmentContainerView
 
+
+                android:id="@+id/nav_host_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:fillViewport="true"
-                android:id="@+id/scroll_container"
-                attrs:layout_constraintBottom_toTopOf="@id/nav_view"
-                attrs:layout_constraintEnd_toEndOf="parent"
-                attrs:layout_constraintStart_toStartOf="parent"
-                attrs:layout_constraintTop_toTopOf="parent"
-                >
+                android:layout_marginTop="40dp"
+                app:layout_constraintBottom_toTopOf="@+id/nav_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/toolbar_background"
+
+                android:theme="@style/AppTheme.AppBarOverlay"
+
+
+                android:visibility="visible"
+
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:popupTheme="@style/AppTheme.AppBarOverlay">
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/container"
+                    android:id="@+id/search_widget"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="match_parent"
+                    android:visibility="visible">
+
+                <EditText
 
 
-                <androidx.viewpager.widget.ViewPager
-                        android:id="@+id/viewPager"
-                        android:layout_width="match_parent"
-                        android:layout_height="250dp"
-                        attrs:layout_constraintEnd_toEndOf="parent"
-                        attrs:layout_constraintHorizontal_bias="0.0"
-                        attrs:layout_constraintStart_toStartOf="parent"
-                        attrs:layout_constraintTop_toTopOf="parent" />
+                        android:id="@+id/search_et"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="8dp"
 
-                <com.rd.PageIndicatorView
-                        android:id="@+id/pageIndicatorView"
+                        android:layout_marginEnd="6dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/search_background"
+
+
+                        android:drawableEnd="@drawable/search_colored"
+                        android:drawablePadding="6dp"
+                        android:ems="10"
+
+
+                        android:gravity="center"
+                        android:hint="Type what you’re looking for..."
+                        android:inputType="textPersonName"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:text=""
+                        android:textColor="@color/line_color"
+
+                        android:textColorHint="@color/line_color"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/cancel_tv"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_goneMarginEnd="27dp" />
+
+                <TextView
+                        android:id="@+id/cancel_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="45dp"
-                        android:padding="20dp"
-                        attrs:layout_constraintBottom_toBottomOf="@+id/viewPager"
-                        attrs:layout_constraintEnd_toEndOf="parent"
-                        attrs:layout_constraintStart_toStartOf="parent"
-                        attrs:piv_animationType="worm"
-                        attrs:piv_interactiveAnimation="true"
-                        attrs:piv_padding="15dp"
-                        attrs:piv_radius="6dp"
-                        attrs:piv_selectedColor="@android:color/holo_green_dark"
-                        attrs:piv_strokeWidth="9dp"
-                        attrs:piv_unselectedColor="@android:color/white"
-                        attrs:piv_viewPager="@id/viewPager" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/shape"
-                        android:clipChildren="true"
-                        android:orientation="vertical"
-
-                        attrs:layout_constraintBottom_toBottomOf="parent"
-                        attrs:layout_constraintEnd_toEndOf="parent"
-                        attrs:layout_constraintStart_toStartOf="parent"
-                        attrs:layout_constraintTop_toBottomOf="@+id/pageIndicatorView">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/categoryRecycler"
-                            android:layout_width="wrap_content"
-                            android:layout_height="100dp"
-                            android:layout_marginTop="20dp"
-                            attrs:layout_constraintEnd_toEndOf="parent"
-                            attrs:layout_constraintStart_toStartOf="parent"
-                            attrs:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/constraintLayout2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            attrs:layout_constraintEnd_toEndOf="parent"
-                            attrs:layout_constraintStart_toStartOf="parent"
-                            attrs:layout_constraintTop_toBottomOf="@+id/categoryRecycler">
-
-                        <TextView
-                                android:id="@+id/textView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:fontFamily="@font/grenale_conbla"
-                                android:text="@string/newest_product"
-                                android:textColor="@android:color/black"
-                                android:textSize="16sp"
-                                attrs:layout_constraintStart_toStartOf="parent"
-                                attrs:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="21dp"
-                                android:layout_marginEnd="16dp"
-                                android:fontFamily="@font/ubuntu_regular"
-                                android:text="@string/see_all"
-                                android:textColor="@android:color/holo_green_dark"
-                                android:textSize="16sp"
-                                attrs:layout_constraintEnd_toEndOf="parent"
-                                attrs:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/productsRecycler"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            attrs:layout_constraintEnd_toEndOf="parent"
-                            attrs:layout_constraintStart_toStartOf="parent"
-                            attrs:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/constraintLayout3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            attrs:layout_constraintEnd_toEndOf="parent"
-                            attrs:layout_constraintStart_toStartOf="parent"
-                            attrs:layout_constraintTop_toBottomOf="@+id/productsRecycler">
-
-                        <TextView
-                                android:id="@+id/textView1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:fontFamily="@font/grenale_conbla"
-                                android:text="@string/newest_bundles"
-                                android:textColor="@android:color/black"
-                                android:textSize="16sp"
-                                attrs:layout_constraintStart_toStartOf="parent"
-                                attrs:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="21dp"
-                                android:layout_marginEnd="16dp"
-                                android:fontFamily="@font/ubuntu_regular"
-                                android:text="@string/see_all"
-                                android:textColor="@android:color/holo_green_dark"
-                                android:textSize="16sp"
-                                attrs:layout_constraintEnd_toEndOf="parent"
-                                attrs:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/bundlesRecycler"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            attrs:layout_constraintEnd_toEndOf="parent"
-                            attrs:layout_constraintStart_toStartOf="parent"
-                            attrs:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_marginEnd="12dp"
+                        android:gravity="center"
+                        android:text="Cancel"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/search_et"
+                        app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
 
 
-        </androidx.core.widget.NestedScrollView>
+        <!--        app:defaultNavHost="true"-->
+        <!--        android:name="androidx.navigation.fragment.NavHostFragment"-->
+        <!--        app:navGraph="@navigation/nav_graph"-->
+
+        <!--        <fragment-->
+        <!--                android:name="androidx.navigation.fragment.NavHostFragment"-->
+        <!--                android:id="@+id/nav_host_container2"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="0dp"-->
+        <!--                app:layout_constraintBottom_toTopOf="@+id/nav_view"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+
+        <!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
+        <!--                android:id="@+id/nav_view"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:background="?android:attr/windowBackground"-->
+        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:menu="@menu/bottom_nav_menu" />-->
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/nav_view"
+
+                android:background="?android:attr/windowBackground"
+                app:itemBackground="@drawable/nav_background"
+                app:itemIconTint="@color/nav_item_background"
+                app:itemTextColor="@color/nav_item_background"
+                app:labelVisibilityMode="labeled"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/windowBackground"
-                attrs:layout_constraintBottom_toBottomOf="parent"
-                attrs:layout_constraintEnd_toEndOf="parent"
-                attrs:layout_constraintStart_toStartOf="parent"
-                attrs:menu="@menu/bottom_nav_menu" />
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:menu="@menu/bottom_nav_menu" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
