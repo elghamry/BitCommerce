@@ -49,6 +49,9 @@ dependencies {
     implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.18'
+
+
 
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
 

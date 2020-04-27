@@ -41,6 +41,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:paddingBottom="300dp"
+                android:paddingTop="16dp"
                 android:text="@string/large_text"
                 android:textColor="@color/line_color"
                 android:textSize="13sp"

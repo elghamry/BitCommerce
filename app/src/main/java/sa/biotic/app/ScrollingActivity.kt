@@ -268,7 +268,9 @@ class ScrollingActivity : AppCompatActivity() {
         Glide.with(this)
 //                .load(model.img)
 
-            .load(product_image).centerCrop().into(product_iv)
+            .load(product_image)
+            .centerCrop()
+            .into(product_iv)
 
         product_tv.text = product_title
         product_price.text = price

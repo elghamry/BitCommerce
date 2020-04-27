@@ -14,7 +14,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         RxSplashScreen.Builder(this)
 
-            .setSplashScreen(R.layout.activity_splash_modified, 5, TimeUnit.SECONDS)
+            .setSplashScreen(R.layout.activity_splash_modified, 2300, TimeUnit.MILLISECONDS)
 //            .setFirstScreen(R.layout.activity_login)
             .navigate(object : RxSplashScreenInteraction {
                 override fun navigateToLoginScreen() {

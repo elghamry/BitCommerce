@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -15,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import kotlinx.android.synthetic.main.activity_main.*
+import pl.droidsonroids.gif.GifImageView
 import sa.biotic.app.R
 import sa.biotic.app.utils.margin
 
@@ -35,7 +35,7 @@ class SearchFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var image_loader: ImageView
+    lateinit var image_loader: GifImageView
 //    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class SearchFragment : Fragment() {
 
         var toolbar: Toolbar = ((activity as AppCompatActivity).toolbar)
         toolbar.visibility = Toolbar.VISIBLE
-        image_loader = root.findViewById<ImageView>(R.id.bottle)
+        image_loader = root.findViewById<GifImageView>(R.id.bottle)
         var container: FragmentContainerView =
             (activity as AppCompatActivity).findViewById<FragmentContainerView>(R.id.nav_host_container)
         container.margin(top = 40F)
@@ -80,7 +80,7 @@ class SearchFragment : Fragment() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-                image_loader.setImageDrawable(resources.getDrawable(R.drawable.loader_test))
+                image_loader.setImageResource(R.drawable.loader_test)
 
 
             }

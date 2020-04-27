@@ -83,7 +83,15 @@ class HomeViewModel : ViewModel() {
                 "good meal for bla bla oats !!i love it"
             )
         )
-        prods.add(Product(prods.size+1.toLong(),"https://images-na.ssl-images-amazon.com/images/G/15/img16/grocery/content-grid/36251_grocery_breakfastfoods-_apr27_440x300.png","Corn Flakes Product","13 SR","good meal for bla bla oats !!i love it"))
+        prods.add(
+            Product(
+                prods.size + 1.toLong(),
+                "https://i.imgur.com/HcZ2Ld8.png",
+                "Corn Flakes Product",
+                "13 SR",
+                "good meal for bla bla oats !!i love it"
+            )
+        )
 //        prods.add(Product(prods.size+1.toLong(),"","Oat Meal2 Product","153 SR","good meal for bla bla oats !!i love it dear"))
         prods.add(Product(prods.size+1.toLong(),"https://grist.files.wordpress.com/2015/11/organic.jpg?w=1024&h=576&crop=1","organic with Rice","20 SR","good meal for bla bla oats !!i love it"))
         prods.add(Product(prods.size+1.toLong(),"https://s1.r29static.com/bin/entry/57f/277,2,1488,837/1200xbm,80/2251087/image.jpg","chips pips Vitamin","30 SR","good meal for bla bla oats !!i love it"))

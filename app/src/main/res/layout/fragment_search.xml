@@ -14,7 +14,7 @@
             android:text="@string/hello_blank_fragment"
             android:visibility="gone" />
 
-    <ImageView
+    <pl.droidsonroids.gif.GifImageView
             android:id="@+id/bottle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
