@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_scrolling.*
 import sa.biotic.app.components.alerter.Alerter
 import sa.biotic.app.components.alerter.OnHideAlertListener
 import sa.biotic.app.components.alerter.OnShowAlertListener
+
 import sa.biotic.app.model.Review
 
 
@@ -418,7 +419,10 @@ class ScrollingActivity : AppCompatActivity() {
 
 
 //            intent.putExtra(EXTRA_MESSAGE, message)
-                startActivityForResult(intent, 1)
+                launchActivity<MainActivity> {
+                    putExtra("root", "search")
+                }
+//                startActivityForResult(intent, 1)
                 finish()
                 true
             }

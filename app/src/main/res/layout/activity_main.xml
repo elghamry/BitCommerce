@@ -65,6 +65,8 @@
                         android:drawableEnd="@drawable/search_colored"
                         android:drawablePadding="6dp"
                         android:ems="10"
+                        android:fontFamily="@font/ubuntu_regular"
+                        android:textSize="14sp"
 
 
                         android:gravity="center"
@@ -143,11 +145,6 @@
                 app:menu="@menu/bottom_nav_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
 
 
 </layout>

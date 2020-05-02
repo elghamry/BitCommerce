@@ -1,0 +1,282 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_bg"
+            android:fitsSystemWindows="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@android:color/transparent"
+                tools:context=".fragments.RegisterFragment">
+
+            <!-- TODO: Update blank fragment layout -->
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/hello_blank_fragment"
+                    android:visibility="gone" />
+
+
+            <TextView
+                    android:id="@+id/tvLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+
+                    android:layout_marginTop="50dp"
+                    android:drawablePadding="10dp"
+                    android:elevation="5dp"
+                    android:fontFamily="@font/grenale_conbla"
+                    android:text="@string/join_us"
+                    android:textColor="@color/text_header"
+                    android:textSize="40sp"
+                    android:textStyle="bold"
+                    android:transitionName="tvLogin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginTop="35dp"
+
+                    android:layout_marginEnd="48dp"
+                    android:layout_marginBottom="24dp"
+                    android:paddingBottom="20dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="10dp"
+
+                    app:cardElevation="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLogin">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="30dp">
+
+                    <LinearLayout
+                            android:id="@+id/linearLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="4dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/etFirstLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginBottom="6dp">
+
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etFirst"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:drawableStart="@drawable/user"
+                                    android:drawablePadding="6dp"
+                                    android:fontFamily="@font/ubuntu_regular"
+                                    android:hint="@string/first_name"
+                                    android:inputType="text"
+                                    android:padding="16dp"
+                                    android:paddingStart="6dp"
+                                    android:textColor="@color/line_color"
+                                    android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/etLastLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginBottom="6dp">
+
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etLast"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:drawableStart="@drawable/user"
+                                    android:drawablePadding="6dp"
+                                    android:fontFamily="@font/ubuntu_regular"
+                                    android:hint="@string/last_name"
+                                    android:inputType="text"
+                                    android:padding="16dp"
+                                    android:paddingStart="6dp"
+                                    android:textColor="@color/line_color"
+                                    android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/etEmailLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginBottom="6dp">
+
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etEmail"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:drawableStart="@drawable/email"
+                                    android:drawablePadding="6dp"
+                                    android:fontFamily="@font/ubuntu_regular"
+                                    android:hint="@string/email_address"
+                                    android:inputType="text"
+                                    android:padding="16dp"
+                                    android:paddingStart="6dp"
+                                    android:textColor="@color/line_color"
+                                    android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/etPhonelLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginBottom="6dp">
+
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etPhone"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:drawableStart="@drawable/email"
+                                    android:drawablePadding="6dp"
+                                    android:fontFamily="@font/ubuntu_regular"
+                                    android:hint="@string/phone"
+                                    android:inputType="text"
+                                    android:padding="16dp"
+                                    android:paddingStart="6dp"
+                                    android:textColor="@color/line_color"
+                                    android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/etPasswordLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="6dp"
+                                app:passwordToggleDrawable="@drawable/pass_show_off"
+                                app:passwordToggleEnabled="true"
+
+                                app:passwordToggleTint="@color/purple">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etPassword"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="24dp"
+                                    android:layout_marginRight="10dp"
+                                    android:drawableStart="@drawable/pass"
+                                    android:drawablePadding="6dp"
+                                    android:fontFamily="@font/ubuntu_regular"
+                                    android:hint="@string/password"
+                                    android:inputType="textPassword"
+                                    android:padding="16dp"
+                                    android:paddingStart="6dp"
+                                    android:textColor="@color/line_color"
+
+
+                                    android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/etConPasswordLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="6dp"
+                                app:passwordToggleDrawable="@drawable/pass_show_off"
+                                app:passwordToggleEnabled="true"
+
+                                app:passwordToggleTint="@color/purple">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etConPassword"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="24dp"
+                                    android:layout_marginRight="10dp"
+                                    android:drawableStart="@drawable/pass"
+                                    android:drawablePadding="6dp"
+                                    android:fontFamily="@font/ubuntu_regular"
+                                    android:hint="@string/confirm_password"
+                                    android:inputType="textPassword"
+                                    android:padding="16dp"
+                                    android:paddingStart="6dp"
+                                    android:textColor="@color/line_color"
+
+
+                                    android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                    </LinearLayout>
+
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/register_btn"
+                            android:layout_width="0dp"
+                            android:layout_height="75dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="28dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/colorPrimary"
+                            android:fontFamily="@font/ubuntu_medium"
+                            android:gravity="center"
+                            android:text="@string/register"
+
+                            android:textAllCaps="false"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            app:backgroundTint="@color/colorPrimary"
+
+                            app:cornerRadius="12dp"
+                            app:iconGravity="textStart"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

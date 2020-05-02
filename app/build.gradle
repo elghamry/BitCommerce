@@ -52,7 +52,6 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.18'
 
 
-
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
 
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
@@ -86,7 +85,16 @@ dependencies {
 
     implementation 'com.github.jaidevnaik5886:RxSplashScreen:1.0'
 
+    //keyboard Visibility
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
+
+    //validation
+    implementation "com.wajahatkarim3.easyvalidation:easyvalidation-core:1.0.1"
+
+
 
     // binding
-    kapt 'androidx.databinding:databinding-compiler:3.5.0'
+    kapt 'androidx.databinding:databinding-compiler:3.5.1'
+    //SpinKit
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 }

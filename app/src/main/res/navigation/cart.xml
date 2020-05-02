@@ -3,11 +3,30 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/cart"
-        app:startDestination="@id/cartFragment">
+        app:startDestination="@id/loginFragment">
 
     <fragment
             android:id="@+id/cartFragment"
             android:name="sa.biotic.app.fragments.CartFragment"
             android:label="fragment_cart"
             tools:layout="@layout/fragment_cart" />
+    <fragment
+            android:id="@+id/loginFragment"
+            android:name="sa.biotic.app.fragments.LoginFragment"
+            android:label="@string/login"
+            tools:layout="@layout/fragment_login">
+        <action
+                android:id="@+id/action_loginFragment_to_registerFragment"
+                app:destination="@id/registerFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+    <fragment
+            android:id="@+id/registerFragment"
+            android:name="sa.biotic.app.fragments.RegisterFragment"
+            android:label="@string/register"
+            tools:layout="@layout/fragment_register" />
 </navigation>
