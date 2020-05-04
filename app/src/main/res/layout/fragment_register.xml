@@ -5,8 +5,9 @@
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/white_bg"
             android:fitsSystemWindows="true">
+        <!--        android:background="@drawable/white_bg"-->
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -82,21 +83,23 @@
                                 android:id="@+id/etFirstLayout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-
-                                android:layout_marginBottom="6dp">
+                                android:layout_marginBottom="6dp"
+                                app:counterMaxLength="35">
 
 
                             <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etFirst"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                     android:layout_marginLeft="10dp"
                                     android:layout_marginRight="10dp"
                                     android:drawableStart="@drawable/user"
                                     android:drawablePadding="6dp"
                                     android:fontFamily="@font/ubuntu_regular"
                                     android:hint="@string/first_name"
-                                    android:inputType="text"
+                                    android:inputType="text|textPersonName|textCapWords"
+                                    android:maxLength="35"
                                     android:padding="16dp"
                                     android:paddingStart="6dp"
                                     android:textColor="@color/line_color"
@@ -107,21 +110,23 @@
                                 android:id="@+id/etLastLayout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-
+                                app:counterMaxLength="35"
                                 android:layout_marginBottom="6dp">
 
 
                             <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etLast"
                                     android:layout_width="match_parent"
+                                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
                                     android:layout_marginRight="10dp"
                                     android:drawableStart="@drawable/user"
                                     android:drawablePadding="6dp"
                                     android:fontFamily="@font/ubuntu_regular"
+                                    android:inputType="text|textPersonName|textCapWords"
                                     android:hint="@string/last_name"
-                                    android:inputType="text"
+                                    android:maxLength="35"
                                     android:padding="16dp"
                                     android:paddingStart="6dp"
                                     android:textColor="@color/line_color"
@@ -163,6 +168,7 @@
 
                             <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etPhone"
+
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
@@ -171,7 +177,8 @@
                                     android:drawablePadding="6dp"
                                     android:fontFamily="@font/ubuntu_regular"
                                     android:hint="@string/phone"
-                                    android:inputType="text"
+                                    android:inputType="phone"
+
                                     android:padding="16dp"
                                     android:paddingStart="6dp"
                                     android:textColor="@color/line_color"

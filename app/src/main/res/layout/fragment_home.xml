@@ -98,16 +98,17 @@
                                 android:fontFamily="@font/grenale_conbla"
                                 android:text="@string/newest_product"
                                 android:textColor="@android:color/black"
-                                android:textSize="16sp"
+                                android:textSize="20sp"
                                 attrs:layout_constraintStart_toStartOf="parent"
                                 attrs:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                                 android:id="@+id/see_prods"
                                 android:layout_width="wrap_content"
-                                android:layout_height="21dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
                                 android:layout_marginEnd="19dp"
-                                android:fontFamily="@font/ubuntu_regular"
+                                android:fontFamily="@font/ubuntu_medium"
                                 android:text="@string/see_all"
                                 android:textColor="@android:color/holo_green_dark"
                                 android:textSize="16sp"
@@ -145,16 +146,17 @@
                                 android:fontFamily="@font/grenale_conbla"
                                 android:text="@string/newest_bundles"
                                 android:textColor="@android:color/black"
-                                android:textSize="16sp"
+                                android:textSize="20sp"
                                 attrs:layout_constraintStart_toStartOf="parent"
                                 attrs:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                                 android:id="@+id/see_bunds"
                                 android:layout_width="wrap_content"
-                                android:layout_height="21dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
                                 android:layout_marginEnd="19dp"
-                                android:fontFamily="@font/ubuntu_regular"
+                                android:fontFamily="@font/ubuntu_medium"
                                 android:text="@string/see_all"
                                 android:textColor="@android:color/holo_green_dark"
                                 android:textSize="16sp"

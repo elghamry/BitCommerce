@@ -31,6 +31,7 @@ import com.idanatz.oneadapter.external.events.ClickEventHook
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.external.modules.ItemSelectionModule
+
 import com.idanatz.oneadapter.external.modules.ItemSelectionModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
 import kotlinx.android.synthetic.main.activity_main.*
@@ -131,6 +132,7 @@ class HomeFragment : Fragment() {
             requireContext(),
             RecyclerView.HORIZONTAL, false
         )
+
 
         /** Setting up LiveData observation relationship **/
         viewModel.offersLive.observe(this, Observer { newOffers ->
@@ -287,9 +289,10 @@ class HomeFragment : Fragment() {
 
 //
             Glide.with(requireContext())
-                .load(model.icon)
+                .load(model.CategoryIconPurble)
 //                .centerCrop()
-                .load(model.icon).into(story1)
+//                .load(model.icon).
+                .into(story1)
 
 
 //            story2.setText(model.title)
@@ -314,6 +317,7 @@ class HomeFragment : Fragment() {
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 = viewBinder.findViewById<TextView>(R.id.price)
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
+            val story5 = viewBinder.findViewById<TextView>(R.id.calories)
 
 //            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
 
@@ -321,11 +325,12 @@ class HomeFragment : Fragment() {
             Glide.with(requireContext())
 //                .load(model.img)
 
-                .load(model.img).centerCrop().into(story1)
+                .load(model.ProductImage).centerCrop().into(story1)
 
-            story2.text = model.title
-            story3.text = model.price
-            story4.text = model.description
+            story2.text = model.ProductName_En
+            story3.text = model.ProductPrice + " SR"
+            story4.text = model.ProductDescription_En
+            story5.text = model.ProductCallories.toString()
 
 
 //            story2.setText(model.title)
@@ -349,18 +354,21 @@ class HomeFragment : Fragment() {
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 = viewBinder.findViewById<TextView>(R.id.price)
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
-
+            val story5 = viewBinder.findViewById<TextView>(R.id.calories)
+            val story6 = viewBinder.findViewById<ImageView>(R.id.cal_icon)
 //            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
 
 //
             Glide.with(requireContext())
 //                .load(model.img)
 
-                .load(model.img).centerCrop().into(story1)
+                .load(model.BundleImage).centerCrop().into(story1)
 
-            story2.text = model.title
-            story3.text = model.price
-            story4.text = model.description
+            story2.text = model.BundleName_En
+            story3.text = model.BundlePrice + " SR"
+            story4.text = model.BundleDescription_En
+            story5.visibility = TextView.INVISIBLE
+            story6.visibility = ImageView.INVISIBLE
 
 
 //            story2.setText(model.title)
@@ -394,10 +402,11 @@ class HomeFragment : Fragment() {
 //
 //            prevRecyclerBinderView = viewBinder
                 val intent = Intent(activity, ScrollingActivity::class.java)
-                intent.putExtra("product_name", model.title)
-                intent.putExtra("product_image", model.img)
-                intent.putExtra("product_price", model.price)
+//                intent.putExtra("product_name", model.title)
+//                intent.putExtra("product_image", model.img)
+//                intent.putExtra("product_price", model.price)
                 intent.putExtra("type", "product")
+                intent.putExtra("ProductItem", model)
 
 
 //            intent.putExtra(EXTRA_MESSAGE, message)
@@ -415,9 +424,10 @@ class HomeFragment : Fragment() {
 //            Toast.makeText(requireContext(), "${model.title} clicked", Toast.LENGTH_SHORT).show()
 
                 val intent = Intent(activity, ScrollingActivity::class.java)
-                intent.putExtra("product_name", model.title)
-                intent.putExtra("product_image", model.img)
-                intent.putExtra("product_price", model.price)
+//                intent.putExtra("product_name", model.title)
+//                intent.putExtra("product_image", model.img)
+//                intent.putExtra("product_price", model.price)
+                intent.putExtra("BundleItem", model)
                 intent.putExtra("type", "bundle")
 
 

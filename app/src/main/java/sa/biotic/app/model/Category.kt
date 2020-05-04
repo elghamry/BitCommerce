@@ -2,15 +2,25 @@ package sa.biotic.app.model
 
 import com.idanatz.oneadapter.external.interfaces.Diffable
 
-data class Category(var  icon : String,var title : String) : Diffable {
+
+data class Category(
+    val CategoryID: Int,
+    val CategoryIconPurble: String,
+    val CategoryIconWhite: String,
+    val CategoryName_Ar: String,
+    val CategoryName_En: String
+) : Diffable {
     override fun areContentTheSame(other: Any): Boolean
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        = other is  Category &&
-                icon ==  other.icon && title == other.title;
+            = other is Category &&
+            CategoryID == other.CategoryID && CategoryIconPurble == other.CategoryIconPurble
+            && CategoryIconWhite == other.CategoryIconWhite
+            && CategoryName_Ar == other.CategoryName_Ar
+            && CategoryName_En == other.CategoryName_En
 
 
     override fun getUniqueIdentifier(): Long {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        return 5.toLong()
+        return CategoryID.toLong()
     }
 }

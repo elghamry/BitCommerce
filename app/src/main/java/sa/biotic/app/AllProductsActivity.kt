@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -65,7 +64,7 @@ class AllProductsActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.toolbar.title = "hello"
+//        binding.toolbar.title = "hello"
 
 
 //        val navView: BottomNavigationView = binding.navView
@@ -85,7 +84,7 @@ class AllProductsActivity : AppCompatActivity() {
 //
 ////            binding.categoryRecycler.layoutManager = LinearLayoutManager(this,RecyclerView.HORIZONTAL,true)
         binding.productsRecycler.layoutManager =
-            GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
+            GridLayoutManagerWrapper(this, 2, GridLayoutManager.VERTICAL, false)
 ////            binding.bundlesRecycler.layoutManager = LinearLayoutManager(this,RecyclerView.HORIZONTAL,true)
 //
 //
@@ -95,7 +94,9 @@ class AllProductsActivity : AppCompatActivity() {
 //
 //        })
         productsAdapterCreation()
-        binding.toolbar.title = "Products"
+//        binding.toolbar.title = "Products"
+
+
 
 
 //        textMessage = findViewById(R.id.message)
@@ -135,11 +136,42 @@ class AllProductsActivity : AppCompatActivity() {
     private fun productsAdapterCreation() {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
-        prodsAdapter = OneAdapter(binding.productsRecycler)
-            .attachItemModule(
-                productItem()
-                    .addEventHook(clickProductEventHook())
-            )
+        if (intent.getStringExtra("type") == "Product") {
+            prodsAdapter = OneAdapter(binding.productsRecycler)
+                .attachItemModule(
+                    productItem()
+                        .addEventHook(clickProductEventHook())
+                )
+
+            binding.toolbar.title = getString(R.string.products)
+
+            viewModel.prodsLive.observe(this, Observer { newProds ->
+                prodsAdapter.setItems(newProds)
+
+                binding.noOfPr.text = newProds.size.toString() + " Items"
+
+
+            })
+        } else {
+            bundlesAdapter = OneAdapter(binding.productsRecycler)
+                .attachItemModule(
+                    bundleItem()
+                        .addEventHook(clickBundleEventHook())
+                )
+            binding.toolbar.title = getString(R.string.bundles)
+
+            viewModel.bundlesLive.observe(this, Observer { newProds ->
+                bundlesAdapter.setItems(newProds)
+
+                binding.noOfPr.text = newProds.size.toString() + " Items"
+
+
+            })
+        }
+
+
+
+
 //            .attachItemModule(headerItem())
 //            .attachItemModule(messageItem()
 
@@ -158,12 +190,73 @@ class AllProductsActivity : AppCompatActivity() {
 //        viewModel.bundlesLive?.observe(this, Observer { newBunds -> bundlesAdapter.setItems(newBunds)
 //        })
 
-        viewModel.prodsLive.observe(this, Observer { newProds ->
-            prodsAdapter.setItems(newProds)
-
-
-        })
+//        viewModel.prodsLive.observe(this, Observer { newProds ->
+//            prodsAdapter.setItems(newProds)
+//
+//
+//        })
     }
+
+    private fun clickProductEventHook(): ClickEventHook<Product> =
+        object : ClickEventHook<Product>() {
+            override fun onClick(model: Product, viewBinder: ViewBinder) {
+//            Toast.makeText(requireContext(), "${model.title} clicked", Toast.LENGTH_SHORT).show()
+
+//            if(prevRecyclerBinderView!=null){
+//
+//                prevRecyclerBinderView!!.findViewById<LinearLayout>(R.id.category_background)
+//                    .setBackgroundResource(R.drawable.category_frame)
+//                prevRecyclerBinderView!!.findViewById<ImageView>(R.id.category_image)
+//                    .setColorFilter(
+//                        ContextCompat.getColor(this@MainActivity, R.color.purple),
+//                        android.graphics.PorterDuff.Mode.SRC_IN)
+//
+//            }
+//
+//            viewBinder.findViewById<LinearLayout>(R.id.category_background)
+//                .setBackgroundResource(R.drawable.category_frame_clicked)
+//            viewBinder.findViewById<ImageView>(R.id.category_image)
+//                .setColorFilter(
+//                    ContextCompat.getColor(this@MainActivity, R.color.white),
+//                    android.graphics.PorterDuff.Mode.SRC_IN)
+//
+//            prevRecyclerBinderView = viewBinder
+                val intent = Intent(this@AllProductsActivity, ScrollingActivity::class.java)
+//                intent.putExtra("product_name", model.title)
+//                intent.putExtra("product_image", model.img)
+//                intent.putExtra("product_price", model.price)
+                intent.putExtra("type", "product")
+                intent.putExtra("ProductItem", model)
+
+
+//            intent.putExtra(EXTRA_MESSAGE, message)
+                startActivityForResult(intent, 1)
+
+            }
+
+
+        }
+
+
+    private fun clickBundleEventHook(): ClickEventHook<BundleProds> =
+        object : ClickEventHook<BundleProds>() {
+            override fun onClick(model: BundleProds, viewBinder: ViewBinder) {
+//            Toast.makeText(requireContext(), "${model.title} clicked", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this@AllProductsActivity, ScrollingActivity::class.java)
+//                intent.putExtra("product_name", model.title)
+//                intent.putExtra("product_image", model.img)
+//                intent.putExtra("product_price", model.price)
+                intent.putExtra("BundleItem", model)
+                intent.putExtra("type", "bundle")
+
+
+//            intent.putExtra(EXTRA_MESSAGE, message)
+                startActivityForResult(intent, 1)
+            }
+
+
+        }
 
 
     private fun categoryItem(): ItemModule<Category> = object : ItemModule<Category>() {
@@ -185,9 +278,9 @@ class AllProductsActivity : AppCompatActivity() {
 
 //
             Glide.with(this@AllProductsActivity)
-                .load(model.icon)
+                .load(model.CategoryIconPurble)
 //                .centerCrop()
-                .load(model.icon).into(story1)
+                .load(model.CategoryIconPurble).into(story1)
 
 
 //            story2.setText(model.title)
@@ -215,6 +308,7 @@ class AllProductsActivity : AppCompatActivity() {
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 = viewBinder.findViewById<TextView>(R.id.price)
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
+            val story5 = viewBinder.findViewById<TextView>(R.id.calories)
 
 //            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
 
@@ -222,14 +316,12 @@ class AllProductsActivity : AppCompatActivity() {
             Glide.with(this@AllProductsActivity)
 //                .load(model.img)
 
-                .load(model.img).centerCrop().into(story1)
+                .load(model.ProductImage).centerCrop().into(story1)
 
-            story2.text = model.title
-            story3.text = model.price
-            story4.text = model.description
-
-
-//            story2.setText(model.title)
+            story2.text = model.ProductName_En
+            story3.text = model.ProductPrice + " SR"
+            story4.text = model.ProductDescription_En
+            story5.text = model.ProductCallories.toString()
 
 
         }
@@ -237,7 +329,7 @@ class AllProductsActivity : AppCompatActivity() {
 
     private fun bundleItem(): ItemModule<BundleProds> = object : ItemModule<BundleProds>() {
         override fun provideModuleConfig(): ItemModuleConfig = object : ItemModuleConfig() {
-            override fun withLayoutResource(): Int = R.layout.product_item
+            override fun withLayoutResource(): Int = R.layout.product_item_for_all
 
             override fun withFirstBindAnimation(): Animator {
                 // can be implemented by inflating Animator Xml
@@ -253,18 +345,21 @@ class AllProductsActivity : AppCompatActivity() {
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 = viewBinder.findViewById<TextView>(R.id.price)
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
-
+            val story5 = viewBinder.findViewById<TextView>(R.id.calories)
+            val story6 = viewBinder.findViewById<ImageView>(R.id.cal_icon)
 //            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
 
 //
             Glide.with(this@AllProductsActivity)
 //                .load(model.img)
 
-                .load(model.img).centerCrop().into(story1)
+                .load(model.BundleImage).centerCrop().into(story1)
 
-            story2.text = model.title
-            story3.text = model.price
-            story4.text = model.description
+            story2.text = model.BundleName_En
+            story3.text = model.BundlePrice + " SR"
+            story4.text = model.BundleDescription_En
+            story5.visibility = TextView.INVISIBLE
+            story6.visibility = ImageView.INVISIBLE
 
 
 //            story2.setText(model.title)
@@ -273,62 +368,62 @@ class AllProductsActivity : AppCompatActivity() {
         }
     }
 
-    private fun clickProductEventHook(): ClickEventHook<Product> =
-        object : ClickEventHook<Product>() {
-            override fun onClick(model: Product, viewBinder: ViewBinder) {
-//            Toast.makeText(this@AllProductsActivity, "${model.title} clicked", Toast.LENGTH_SHORT).show()
-
-                val intent = Intent(this@AllProductsActivity, ScrollingActivity::class.java)
-                intent.putExtra("product_name", model.title)
-                intent.putExtra("product_image", model.img)
-                intent.putExtra("product_price", model.price)
-                intent.putExtra("type", "bundle")
-
-
-//            intent.putExtra(EXTRA_MESSAGE, message)
-                startActivityForResult(intent, 1)
-//        }
-
-//            if(prevRecyclerBinderView!=null){
+//    private fun clickProductEventHook(): ClickEventHook<Product> =
+//        object : ClickEventHook<Product>() {
+//            override fun onClick(model: Product, viewBinder: ViewBinder) {
+////            Toast.makeText(this@AllProductsActivity, "${model.title} clicked", Toast.LENGTH_SHORT).show()
 //
-//                prevRecyclerBinderView!!.findViewById<LinearLayout>(R.id.category_background)
-//                    .setBackgroundResource(R.drawable.category_frame)
-//                prevRecyclerBinderView!!.findViewById<ImageView>(R.id.category_image)
-//                    .setColorFilter(
-//                        ContextCompat.getColor(this@MainActivity, R.color.purple),
-//                        android.graphics.PorterDuff.Mode.SRC_IN)
+//                val intent = Intent(this@AllProductsActivity, ScrollingActivity::class.java)
+////                intent.putExtra("product_name", model.title)
+////                intent.putExtra("product_image", model.img)
+////                intent.putExtra("product_price", model.price)
+//                intent.putExtra("type", "bundle")
+//
+//
+////            intent.putExtra(EXTRA_MESSAGE, message)
+//                startActivityForResult(intent, 1)
+////        }
+//
+////            if(prevRecyclerBinderView!=null){
+////
+////                prevRecyclerBinderView!!.findViewById<LinearLayout>(R.id.category_background)
+////                    .setBackgroundResource(R.drawable.category_frame)
+////                prevRecyclerBinderView!!.findViewById<ImageView>(R.id.category_image)
+////                    .setColorFilter(
+////                        ContextCompat.getColor(this@MainActivity, R.color.purple),
+////                        android.graphics.PorterDuff.Mode.SRC_IN)
+////
+////            }
+////
+////            viewBinder.findViewById<LinearLayout>(R.id.category_background)
+////                .setBackgroundResource(R.drawable.category_frame_clicked)
+////            viewBinder.findViewById<ImageView>(R.id.category_image)
+////                .setColorFilter(
+////                    ContextCompat.getColor(this@MainActivity, R.color.white),
+////                    android.graphics.PorterDuff.Mode.SRC_IN)
+////
+////            prevRecyclerBinderView = viewBinder
 //
 //            }
 //
-//            viewBinder.findViewById<LinearLayout>(R.id.category_background)
-//                .setBackgroundResource(R.drawable.category_frame_clicked)
-//            viewBinder.findViewById<ImageView>(R.id.category_image)
-//                .setColorFilter(
-//                    ContextCompat.getColor(this@MainActivity, R.color.white),
-//                    android.graphics.PorterDuff.Mode.SRC_IN)
 //
-//            prevRecyclerBinderView = viewBinder
-
-            }
-
-
-        }
-
-
-    private fun clickBundleEventHook(): ClickEventHook<BundleProds> =
-        object : ClickEventHook<BundleProds>() {
-            override fun onClick(model: BundleProds, viewBinder: ViewBinder) {
-                Toast.makeText(
-                    this@AllProductsActivity,
-                    "${model.title} clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-
-            }
-
-
-        }
+//        }
+//
+//
+//    private fun clickBundleEventHook(): ClickEventHook<BundleProds> =
+//        object : ClickEventHook<BundleProds>() {
+//            override fun onClick(model: BundleProds, viewBinder: ViewBinder) {
+////                Toast.makeText(
+//////                    this@AllProductsActivity,
+//////                    "${model.title} clicked",
+////                    Toast.LENGTH_SHORT
+////                ).show()
+//
+//
+//            }
+//
+//
+//        }
 
     private fun clickEventHook(): ClickEventHook<Category> = object : ClickEventHook<Category>() {
         override fun onClick(model: Category, viewBinder: ViewBinder) {

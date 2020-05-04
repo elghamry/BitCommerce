@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
+import sa.biotic.app.R
 import sa.biotic.app.ScrollingActivity
 import sa.biotic.app.databinding.OfferItemBinding
 import sa.biotic.app.model.Offer
@@ -29,10 +30,21 @@ class OfferPagerAdapter(val context: Context, val offers: MutableList<Offer>) : 
 
 
             val intent = Intent(binding.root.context, ScrollingActivity::class.java)
-            intent.putExtra("product_name", offers.get(position).title)
-            intent.putExtra("product_image", offers.get(position).img)
-            intent.putExtra("product_price", offers.get(position).price)
-            intent.putExtra("product_prev_price", offers.get(position).prev_price)
+//            intent.putExtra("product_name", offers.get(position).OfferDescription_En)
+//            intent.putExtra("product_image", offers.get(position).OfferImage)
+//            intent.putExtra("product_price", offers.get(position).OfferPrice)
+//            intent.putExtra("product_prev_price", offers.get(position).ProductPrice)
+//            intent.putExtra("product_description", offers.get(position).ProductDescreption_En)
+
+//                intent.putExtra("product_name", model.title)
+//                intent.putExtra("product_image", model.img)
+//                intent.putExtra("product_price", model.price)
+            intent.putExtra("OfferItem", offers.get(position))
+//            intent.putExtra("type", "bundle")
+
+
+//            intent.putExtra(EXTRA_MESSAGE, message)
+//            startActivityForResult(intent, 1)
 
             intent.putExtra("type", "offer")
             context.startActivity(intent)
@@ -47,12 +59,14 @@ class OfferPagerAdapter(val context: Context, val offers: MutableList<Offer>) : 
 
         Glide
             .with(context)
-            .load(offers.get(position).img)
+            .load(offers.get(position).OfferImage)
             .optionalCenterCrop()
-//            .placeholder(R.drawable.loading_spinner)
+//            .placeholder(r)
+            .placeholder(R.drawable.offer_placeholder)
             .into(binding.offerImage)
 
-        binding.offerTitle.text = offers.get(position).title
+
+        binding.offerTitle.text = offers.get(position).OfferDescription_En
 
 
 

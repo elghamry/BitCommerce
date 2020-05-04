@@ -103,7 +103,7 @@
     <string name="item_name">Item Name</string>
     <string name="type">Type: </string>
     <string name="nutrition"> Nutrition</string>
-    <string name="_15_sr">15 SR</string>
+    <string name="_15_sr">15.00 SR</string>
     <string name="tab_text_1">Description</string>
     <string name="tab_text_2">Reviews</string>
     <string name="add_to_cart">Add To Cart</string>
@@ -150,4 +150,12 @@
     <string name="phone">Phone</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="register">Register</string>
+    <string name="cal">500</string>
+    <string name="_500_cal">500 CAl</string>
+
+    <string name="tab_text_3">Products</string>
+
+    <string name="bundles">Bundles</string>
+    <string name="_sar">SAR</string>
+    <string name="calName">CAl</string>
 </resources>

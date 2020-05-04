@@ -21,6 +21,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import sa.biotic.app.R
+import sa.biotic.app.components.FillRequiredRule
+import sa.biotic.app.components.MissMatchRule
 import sa.biotic.app.components.PhoneLengthRule
 import sa.biotic.app.databinding.FragmentRegisterBinding
 import sa.biotic.app.utils.margin
@@ -88,10 +90,11 @@ class RegisterFragment : Fragment() {
             var pass = true
 
             binding.etPassword.validator()
-                .nonEmpty()
+                .addRule(FillRequiredRule())
                 .atleastOneNumber()
                 .atleastOneSpecialCharacters()
                 .atleastOneUpperCase()
+                .minLength(8)
                 .addErrorCallback {
                     binding.etPasswordLayout.error = it
 
@@ -107,11 +110,13 @@ class RegisterFragment : Fragment() {
                 }
                 .check()
             binding.etConPassword.validator()
-                .nonEmpty()
+                .addRule(FillRequiredRule())
                 .atleastOneNumber()
+                .minLength(8)
                 .atleastOneSpecialCharacters()
                 .atleastOneUpperCase()
-                .textEqualTo(binding.etPassword.text.toString())
+
+                .addRule(MissMatchRule(binding.etPassword.text.toString()))
                 .addErrorCallback {
                     binding.etConPasswordLayout.error = it
 
@@ -129,9 +134,10 @@ class RegisterFragment : Fragment() {
                 .check()
 
             binding.etFirst.validator()
-                .nonEmpty()
+                .addRule(FillRequiredRule())
                 .maxLength(35)
                 .minLength(3)
+
                 .addErrorCallback {
                     binding.etFirstLayout.error = it
 
@@ -155,9 +161,7 @@ class RegisterFragment : Fragment() {
 //            }
 
             binding.etPhone.validator()
-                .nonEmpty()
-
-
+                .addRule(FillRequiredRule())
                 .onlyNumbers()
                 .addRule(PhoneLengthRule())
                 .startsWith("5")
@@ -178,7 +182,7 @@ class RegisterFragment : Fragment() {
                 .check()
 
             binding.etLast.validator()
-                .nonEmpty()
+                .addRule(FillRequiredRule())
                 .maxLength(35)
                 .minLength(3)
                 .addErrorCallback {
@@ -197,7 +201,7 @@ class RegisterFragment : Fragment() {
                 .check()
 
             binding.etEmail.validator()
-                .nonEmpty()
+                .addRule(FillRequiredRule())
                 .validEmail()
                 .addErrorCallback {
                     binding.etEmailLayout.error = it

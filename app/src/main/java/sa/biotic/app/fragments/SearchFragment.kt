@@ -1,8 +1,10 @@
 package sa.biotic.app.fragments
 
+import android.content.ContentValues
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +15,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import pl.droidsonroids.gif.GifDrawable
 import pl.droidsonroids.gif.GifImageView
 import sa.biotic.app.R
 import sa.biotic.app.utils.margin
@@ -36,6 +42,7 @@ class SearchFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var image_loader: GifImageView
+    lateinit var bottomNavigationView: BottomNavigationView
 //    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +63,13 @@ class SearchFragment : Fragment() {
 
         var toolbar: Toolbar = ((activity as AppCompatActivity).toolbar)
         toolbar.visibility = Toolbar.VISIBLE
-        image_loader = root.findViewById<GifImageView>(R.id.bottle)
+        var gifFromResource: GifDrawable = GifDrawable(resources, R.drawable.search_loader)
+
+        image_loader = root.findViewById(R.id.bottle)
+
+        gifFromResource.stop()
+        image_loader.setImageDrawable(gifFromResource)
+
         var container: FragmentContainerView =
             (activity as AppCompatActivity).findViewById<FragmentContainerView>(R.id.nav_host_container)
         container.margin(top = 40F)
@@ -67,6 +80,10 @@ class SearchFragment : Fragment() {
         var cancel_tv: TextView =
             (activity as AppCompatActivity).findViewById<TextView>(R.id.cancel_tv)
         cancel_tv.visibility = TextView.GONE
+
+        cancel_tv.setOnClickListener {
+            (activity as AppCompatActivity).finish()
+        }
 
         var search_et: EditText =
             (activity as AppCompatActivity).findViewById<EditText>(R.id.search_et)
@@ -80,7 +97,10 @@ class SearchFragment : Fragment() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-                image_loader.setImageResource(R.drawable.loader_test)
+//                image_loader.setImageResource(R.drawable.loader_test)
+                gifFromResource.start()
+                image_loader.setImageDrawable(gifFromResource)
+
 
 
             }
@@ -96,6 +116,27 @@ class SearchFragment : Fragment() {
 
 
         }
+
+        bottomNavigationView =
+            (activity as AppCompatActivity).findViewById<BottomNavigationView>(sa.biotic.app.R.id.nav_view)
+
+        //keyboard
+        KeyboardVisibilityEvent.setEventListener(
+            activity,
+            object : KeyboardVisibilityEventListener {
+                override fun onVisibilityChanged(isOpen: Boolean) {
+                    Log.d(ContentValues.TAG, "onVisibilityChanged: Keyboard visibility changed")
+                    if (isOpen) {
+                        Log.d(ContentValues.TAG, "onVisibilityChanged: Keyboard is open")
+                        bottomNavigationView.visibility = View.GONE
+                        Log.d(ContentValues.TAG, "onVisibilityChanged: NavBar got Invisible")
+                    } else {
+                        Log.d(ContentValues.TAG, "onVisibilityChanged: Keyboard is closed")
+                        bottomNavigationView.visibility = View.VISIBLE
+                        Log.d(ContentValues.TAG, "onVisibilityChanged: NavBar got Visible")
+                    }
+                }
+            })
 
 
 

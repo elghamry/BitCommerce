@@ -4,10 +4,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import sa.biotic.app.R
 import sa.biotic.app.fragments.PlaceholderFragment
+import sa.biotic.app.fragments.ProdsBundsRelaFragment
 import sa.biotic.app.fragments.ReviewsFragment
 
 
-private val TAB_TITLES = arrayOf(
+private var TAB_TITLES = arrayOf(
+    R.string.tab_text_3,
     R.string.tab_text_1,
     R.string.tab_text_2
 )
@@ -23,10 +25,22 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
 
-        return if (position == 0) {
-            PlaceholderFragment.newInstance(position)
-        } else
-            ReviewsFragment.newInstance(position + 1)
+        return when (position) {
+            0 -> {
+                ProdsBundsRelaFragment.newInstance(position)
+            }
+
+
+            1 -> {
+                PlaceholderFragment.newInstance(position + 1)
+            }
+            else -> {
+                ReviewsFragment.newInstance(position + 2)
+            }
+        }
+
+
+
 //        return             PlaceholderFragment.newInstance(position )
 
     }
@@ -37,6 +51,6 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
 
     override fun getCount(): Int {
         // Show 2 total pages.
-        return 2
+        return 3
     }
 }

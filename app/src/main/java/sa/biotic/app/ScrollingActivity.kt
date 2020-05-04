@@ -1,8 +1,8 @@
 package sa.biotic.app
 
 import SectionsPagerAdapter
+import SectionsPagerAdapterNotBundle
 import android.content.Intent
-import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
+import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
@@ -23,10 +24,14 @@ import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
 import kotlinx.android.synthetic.main.activity_scrolling.*
+import kotlinx.android.synthetic.main.content_scrolling.*
 import sa.biotic.app.components.alerter.Alerter
 import sa.biotic.app.components.alerter.OnHideAlertListener
 import sa.biotic.app.components.alerter.OnShowAlertListener
-
+import sa.biotic.app.databinding.ActivityScrollingBinding
+import sa.biotic.app.model.BundleProds
+import sa.biotic.app.model.Offer
+import sa.biotic.app.model.Product
 import sa.biotic.app.model.Review
 
 
@@ -39,19 +44,25 @@ class ScrollingActivity : AppCompatActivity() {
     lateinit var alert_view: LinearLayout
     lateinit var main_alert_background: LinearLayout
     lateinit var nested: NestedScrollView
+    private lateinit var binding: ActivityScrollingBinding
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scrolling)
+//        setContentView(R.layout.activity_scrolling)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_scrolling)
         setSupportActionBar(toolbar)
 
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
+        val sectionsPagerAdapterNotBundle =
+            SectionsPagerAdapterNotBundle(this, supportFragmentManager)
+        val viewPager: ViewPager = view_pager
 
-        viewPager.adapter = sectionsPagerAdapter
+
         val tabs: TabLayout = findViewById<TabLayout>(R.id.tabs)
         nested = findViewById(R.id.nested_product)
-        tabs.setupWithViewPager(viewPager)
+
 
         var addToCartButton: MaterialButton = findViewById(R.id.add_to_cart)
         main_alert_background = findViewById(R.id.Alert_main_back)
@@ -245,36 +256,99 @@ class ScrollingActivity : AppCompatActivity() {
         val product_price = findViewById<TextView>(R.id.product_price)
 
 
-        val intent = intent
-        val product_title = intent.getStringExtra("product_name")
-        val product_image = intent.getStringExtra("product_image")
-        val price = intent.getStringExtra("product_price")
 
-        if (intent.getStringExtra("type") == "offer") {
-            val prev_price = intent.getStringExtra("product_prev_price")
-            val product_prev_price = findViewById<TextView>(R.id.product_prev_price)
-            val was = findViewById<TextView>(R.id.was)
-            val now = findViewById<TextView>(R.id.now)
+        if (intent.getStringExtra("type") == "bundle") {
+            val bundle: BundleProds? = intent.getParcelableExtra("BundleItem")
+            Glide.with(this)
+//                .load(model.img)
 
-            product_prev_price.paintFlags =
-                product_prev_price.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            product_prev_price.visibility = TextView.VISIBLE
-            product_prev_price.text = prev_price
-            was.visibility = TextView.VISIBLE
-            now.visibility = TextView.VISIBLE
+                .load(bundle?.BundleImage)
+                .centerCrop()
+                .into(binding.productImage)
+
+
+            product_name.text = bundle?.BundleName_En
+            product_price.text = bundle?.BundlePrice + " " + getString(R.string._sar)
+            calories.visibility = TextView.INVISIBLE
+            cal_icon.visibility = ImageView.INVISIBLE
+            viewPager.adapter = sectionsPagerAdapter
+
+
+        } else {
+            if (intent.getStringExtra("type") == "product") {
+                viewPager.adapter = sectionsPagerAdapterNotBundle
+                val product: Product? = intent.getParcelableExtra("ProductItem")
+                Glide.with(this)
+//                .load(model.img)
+
+                    .load(product?.ProductImage)
+                    .centerCrop()
+                    .into(binding.productImage)
+
+
+                product_name.text = product?.ProductName_En
+                product_price.text = product?.ProductPrice + " " + getString(R.string._sar)
+                calories.text =
+                    product?.ProductCallories.toString() + " " + getString(R.string.calName)
+
+
+            } else {
+                viewPager.adapter = sectionsPagerAdapterNotBundle
+                val offer: Offer? = intent.getParcelableExtra("OfferItem")
+                Glide.with(this)
+//                .load(model.img)
+
+                    .load(offer?.OfferImage)
+                    .centerCrop()
+                    .into(binding.productImage)
+
+
+                product_name.text = offer?.ProductName_En
+                product_price.text = offer?.OfferPrice + " " + getString(R.string._sar)
+                product_prev_price.text = offer?.ProductPrice + " " + getString(R.string._sar)
+//                calories.setText(offer?.ProductCallories.toString()+" "+getString(R.string.calName))
+                now.visibility = TextView.VISIBLE
+                was.visibility = TextView.VISIBLE
+                product_prev_price.visibility = TextView.VISIBLE
+
+            }
 
         }
 
-//        commented
-        Glide.with(this)
-//                .load(model.img)
+        tabs.setupWithViewPager(viewPager)
 
-            .load(product_image)
-            .centerCrop()
-            .into(product_iv)
 
-        product_tv.text = product_title
-        product_price.text = price
+//
+//        val intent = intent
+//        val product_title = intent.getStringExtra("product_name")
+//        val product_image = intent.getStringExtra("product_image")
+//        val price = intent.getStringExtra("product_price")
+//
+//        if (intent.getStringExtra("type") == "offer") {
+//            val prev_price = intent.getStringExtra("product_prev_price")
+//            val product_prev_price = findViewById<TextView>(R.id.product_prev_price)
+//            val was = findViewById<TextView>(R.id.was)
+//            val now = findViewById<TextView>(R.id.now)
+//
+//            product_prev_price.paintFlags =
+//                product_prev_price.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+//            product_prev_price.visibility = TextView.VISIBLE
+//            product_prev_price.text = prev_price
+//            was.visibility = TextView.VISIBLE
+//            now.visibility = TextView.VISIBLE
+//
+//        }
+//
+////        commented
+//        Glide.with(this)
+////                .load(model.img)
+//
+//            .load(product_image)
+//            .centerCrop()
+//            .into(product_iv)
+//
+//        product_tv.text = product_title
+//        product_price.text = price
 
     }
 
@@ -423,7 +497,7 @@ class ScrollingActivity : AppCompatActivity() {
                     putExtra("root", "search")
                 }
 //                startActivityForResult(intent, 1)
-                finish()
+//                finish()
                 true
             }
             R.id.action_cart -> {

@@ -1,22 +1,33 @@
 package sa.biotic.app.model
 
-
-
+import android.os.Parcelable
 import com.idanatz.oneadapter.external.interfaces.Diffable
+import kotlinx.android.parcel.Parcelize
 
-data class Product(val id :Long,val img : String,val title : String,val price:String,val description:String) : Diffable {
-    override fun areContentTheSame(other: Any): Boolean
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            = other is  Product &&
-            img ==  other.img
-            && title == other.title &&
-            price==other.price
-            && description==other.description
-//   = false
+@Parcelize
+data class Product(
+    val ProductCallories: Int,
+    val ProductCategoryID: String,
+    val ProductDescription_Ar: String,
+    val ProductDescription_En: String,
+    val ProductID: Int,
+    val ProductImage: String,
+    val ProductName_Ar: String,
+    val ProductName_En: String,
+    val ProductPrice: String
+) : Diffable, Parcelable {
+    override fun areContentTheSame(other: Any): Boolean = other is Product &&
+            ProductCallories == other.ProductCallories && ProductCategoryID == other.ProductCategoryID
+            && ProductDescription_Ar == other.ProductDescription_Ar
+            && ProductDescription_En == other.ProductDescription_En
+            && ProductID == other.ProductID
+            && ProductImage == other.ProductImage
+            && ProductName_Ar == other.ProductName_Ar
+            && ProductName_En == other.ProductName_En
+            && ProductPrice == other.ProductPrice
 
 
     override fun getUniqueIdentifier(): Long {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        return id
+        return ProductID.toLong()
     }
 }

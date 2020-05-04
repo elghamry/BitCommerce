@@ -10,6 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import sa.biotic.app.R
+import sa.biotic.app.model.BundleProds
+import sa.biotic.app.model.Offer
+import sa.biotic.app.model.Product
 import sa.biotic.app.viewmodels.AboutProductViewModel
 
 /**
@@ -33,9 +36,38 @@ class PlaceholderFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_main, container, false)
         val textView: TextView = root.findViewById(R.id.section_label)
+        val description: TextView = root.findViewById(R.id.product_description)
         aboutProductViewModel.text.observe(this, Observer<String> {
             textView.text = it
         })
+
+
+        if (activity?.intent?.getStringExtra("type") == "bundle") {
+            val bundle: BundleProds? = activity?.intent?.getParcelableExtra("BundleItem")
+
+
+
+            description.text = bundle?.BundleDescription_En
+
+
+        } else {
+            if (activity?.intent?.getStringExtra("type") == "product") {
+                val product: Product? = activity?.intent?.getParcelableExtra("ProductItem")
+
+                description.text = product?.ProductDescription_En
+
+            } else {
+                val offer: Offer? = activity?.intent?.getParcelableExtra("OfferItem")
+
+                description.text = offer?.ProductDescreption_En
+
+
+            }
+
+
+        }
+
+
         return root
     }
 

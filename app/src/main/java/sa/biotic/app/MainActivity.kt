@@ -100,6 +100,8 @@ class MainActivity : AppCompatActivity() {
             setSupportActionBar(binding.toolbar)
 
         } // Else, need to wait for onRestoreInstanceState
+
+        window.setBackgroundDrawableResource(R.drawable.white_bg)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {

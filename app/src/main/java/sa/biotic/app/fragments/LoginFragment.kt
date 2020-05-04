@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import sa.biotic.app.R
+import sa.biotic.app.components.FillRequiredRule
 import sa.biotic.app.databinding.FragmentLoginBinding
 import sa.biotic.app.utils.margin
 
@@ -103,10 +104,11 @@ class LoginFragment : Fragment() {
             var pass = true
 
             binding.etPassword.validator()
-                .nonEmpty()
+                .addRule(FillRequiredRule())
                 .atleastOneNumber()
                 .atleastOneSpecialCharacters()
                 .atleastOneUpperCase()
+                .minLength(8)
                 .addErrorCallback {
                     binding.etPasswordLayout.error = it
 
@@ -120,7 +122,7 @@ class LoginFragment : Fragment() {
                 .check()
 
             binding.etEmail.validator()
-                .nonEmpty()
+                .addRule(FillRequiredRule())
                 .validEmail()
                 .addErrorCallback {
                     binding.etEmailLayout.error = it

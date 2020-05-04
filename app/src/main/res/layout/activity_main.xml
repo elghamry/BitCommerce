@@ -143,6 +143,42 @@
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:menu="@menu/bottom_nav_menu" />
+        <!--        <sa.biotic.app.components.ProgressBottle-->
+        <!--                android:id="@+id/KLoadingSpin"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                app:backgroundColor="#2DFFFFFF"-->
+
+        <!--                app:rotationSpeedInMs="3000"-->
+        <!--                app:text=""-->
+
+
+        <!--                app:textColor="#ffffff"-->
+        <!--                app:textSize="80" />-->
+        <sa.biotic.app.components.ProgressBottle
+                android:id="@+id/myProgBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#C8FFFFFF"
+                android:elevation="10dp"
+                android:visibility="gone"
+                app:androidtextColor="@color/purple"
+                app:barType="@raw/drops_loader"
+
+
+                app:enlarge="5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:text="Please wait..."
+                app:textSize="8dp" />
+
+
+        <!--        app:secondarySpinnerColor="#FF9800"-->
+        <!--        app:primarySpinnerColor="#ffffff"-->
+        <!--        app:barType="@raw/drops_loader"-->
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
