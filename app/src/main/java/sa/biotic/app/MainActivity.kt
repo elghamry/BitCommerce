@@ -3,6 +3,7 @@ package sa.biotic.app
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEachIndexed
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -10,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import sa.biotic.app.databinding.ActivityMainBinding
+import sa.biotic.app.retrofit_service.Repository
 
 
 class MainActivity : AppCompatActivity() {
@@ -117,8 +119,11 @@ class MainActivity : AppCompatActivity() {
     /**
      * Called on first creation and when restoring state.
      */
+
+
     private fun setupBottomNavigationBar() {
         var bottomNavigationView: BottomNavigationView = binding.navView
+
 
         val navGraphIds =
             listOf(R.navigation.home, R.navigation.search, R.navigation.cart, R.navigation.profile)
@@ -144,6 +149,51 @@ class MainActivity : AppCompatActivity() {
             bottomNavigationView.selectedItemId = R.id.search
 
         }
+
+        if (intent.getStringExtra("root") == "cart") {
+
+
+            bottomNavigationView.selectedItemId = R.id.cart
+
+        }
+//
+//        val itemData = bottomNavigationView.menu?.findItem(R.id.cart)
+//        val actionView = itemData?.actionView as CartCounterActionView
+//        actionView.setItemData(bottomNavigationView.menu, itemData)
+//        Repository.getCartLocal().observe(this, Observer { count ->
+//
+//            actionView.count=count.size
+//            //            binding.wordText.text = newWord
+//
+//
+//
+//
+//        })
+        val badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.cart)
+        badgeDrawable.isVisible = false
+        bottomNavigationView.menu.forEachIndexed { index, item ->
+            if (index == 2) {
+                val badgeDrawable = bottomNavigationView.getOrCreateBadge(item.itemId)
+                badgeDrawable.backgroundColor = resources.getColor(R.color.colorPrimary)
+            }
+        }
+
+        Repository.getCartLocal().observe(this, Observer { count ->
+
+            badgeDrawable.isVisible = true
+            badgeDrawable.number = count.size
+            if (count.size == 0) badgeDrawable.isVisible = false
+            //            binding.wordText.text = newWord
+
+
+        })
+
+
+
+
+
+
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

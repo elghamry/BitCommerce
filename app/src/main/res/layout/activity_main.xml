@@ -141,6 +141,9 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
 
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:theme="@style/Theme.MaterialComponents.Light"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:menu="@menu/bottom_nav_menu" />
         <!--        <sa.biotic.app.components.ProgressBottle-->
@@ -166,12 +169,12 @@
                 app:barType="@raw/drops_loader"
 
 
-                app:enlarge="5"
+                app:enlarge="3"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:text="Please wait..."
+                app:text=" "
                 app:textSize="8dp" />
 
 

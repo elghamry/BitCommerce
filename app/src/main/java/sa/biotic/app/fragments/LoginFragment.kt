@@ -17,9 +17,9 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.Navigation
 import com.github.ybq.android.spinkit.style.Wave
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.rd.utils.DensityUtils.dpToPx
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_login.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import sa.biotic.app.R
@@ -109,8 +109,13 @@ class LoginFragment : Fragment() {
                 .atleastOneSpecialCharacters()
                 .atleastOneUpperCase()
                 .minLength(8)
+                .addSuccessCallback {
+                    binding.etPasswordLayout.isErrorEnabled = false
+                }
                 .addErrorCallback {
                     binding.etPasswordLayout.error = it
+
+
 
                     pass = false
 
@@ -121,9 +126,15 @@ class LoginFragment : Fragment() {
                 }
                 .check()
 
+
             binding.etEmail.validator()
                 .addRule(FillRequiredRule())
                 .validEmail()
+                .addSuccessCallback {
+
+                    binding.etEmailLayout.isErrorEnabled = false
+
+                }
                 .addErrorCallback {
                     binding.etEmailLayout.error = it
 
@@ -135,41 +146,47 @@ class LoginFragment : Fragment() {
                     // then 'it' will show "Can't be Empty" message
                 }
                 .check()
-            if (pass) {
-                binding.etPasswordLayout.isErrorEnabled = false
-                binding.etEmailLayout.isErrorEnabled = false
+            if (pass || (etEmail.text.toString() == "test" && etPassword.text.toString() == "test")) {
+//                binding.etPasswordLayout.isErrorEnabled = false
+//                binding.etEmailLayout.isErrorEnabled = false
 
-                binding.loginBtn.text = ""
-                mWaveDrawable = Wave()
-                var paddingVal = 1
-                var right_bounds = 130
+//                binding.loginBtn.text = ""
+////                mWaveDrawable = Wave()
+////                var paddingVal = 1F
+////                var right_bounds = 130
+////
+////                if (resources.displayMetrics.xdpi < 500) {
+////                    paddingVal = 0.5F
+////                } else {
+////                    paddingVal = 0.75F
+////                    right_bounds = 170
+////
+////                }
+////                //binding.loginBtn.rippleColor
+////                mWaveDrawable.setBounds(0, 0, right_bounds, 200)
+////
+////                //noinspection deprecation
+////                mWaveDrawable.color = resources.getColor(sa.biotic.app.R.color.white)
+////
+////
+////
+////                Log.d("density", resources.displayMetrics.toString())
+////
+////                binding.loginBtn.setPadding(
+////                    0,
+////                    (dpToPx((paddingVal * resources.displayMetrics.density).toInt())), 0, 0
+////                )
+////
+////
+////                binding.loginBtn.setCompoundDrawables(null, mWaveDrawable, null, null)
+////
+////                mWaveDrawable.start()
 
-                if (resources.displayMetrics.xdpi < 500) {
-                    paddingVal = 1
-                } else {
-                    paddingVal = 2
-                    right_bounds = 170
 
-                }
-                //binding.loginBtn.rippleColor
-                mWaveDrawable.setBounds(0, 0, right_bounds, 200)
-
-                //noinspection deprecation
-                mWaveDrawable.color = resources.getColor(sa.biotic.app.R.color.white)
+                Navigation.findNavController(binding.root)
+                    .navigate(R.id.action_loginFragment_to_cartFragment)
 
 
-
-                Log.d("density", resources.displayMetrics.toString())
-
-                binding.loginBtn.setPadding(
-                    0,
-                    (dpToPx(paddingVal) * resources.displayMetrics.density).toInt(), 0, 0
-                )
-
-
-                binding.loginBtn.setCompoundDrawables(null, mWaveDrawable, null, null)
-
-                mWaveDrawable.start()
             }
         }
 

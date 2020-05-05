@@ -5,6 +5,7 @@ import android.animation.AnimatorInflater
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -31,10 +31,10 @@ import com.idanatz.oneadapter.external.events.ClickEventHook
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.external.modules.ItemSelectionModule
-
 import com.idanatz.oneadapter.external.modules.ItemSelectionModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import sa.biotic.app.AllProductsActivity
 import sa.biotic.app.R
 import sa.biotic.app.ScrollingActivity
@@ -44,6 +44,7 @@ import sa.biotic.app.databinding.FragmentHomeBinding
 import sa.biotic.app.model.BundleProds
 import sa.biotic.app.model.Category
 import sa.biotic.app.model.Product
+import sa.biotic.app.retrofit_service.Repository
 import sa.biotic.app.utils.margin
 import sa.biotic.app.viewmodels.HomeViewModel
 
@@ -93,7 +94,7 @@ class HomeFragment : Fragment() {
 
 
         binding.viewPager.setPageTransformer(true, ZoomOutTranformer())
-        binding.pageIndicatorView.setViewPager(binding.viewPager)
+
 
         val view_pager: ViewPager = binding.viewPager
         binding.seeProds.setOnClickListener {
@@ -139,6 +140,7 @@ class HomeFragment : Fragment() {
             //            binding.wordText.text = newWord
 
             view_pager.adapter = OfferPagerAdapter(requireContext(), newOffers)
+            binding.pageIndicatorView.setViewPager(binding.viewPager)
 
 
         })
@@ -185,11 +187,11 @@ class HomeFragment : Fragment() {
 
         binding.viewPager.setOnClickListener {
 
-            Toast.makeText(
-                requireContext(),
-                binding.viewPager.currentItem.toString() + " clicked",
-                Toast.LENGTH_SHORT
-            ).show()
+            //            Toast.makeText(
+//                requireContext(),
+//                binding.viewPager.currentItem.toString() + " clicked",
+//                Toast.LENGTH_SHORT
+//            ).show()
 
 //           Log.d("offer no ",binding.viewPager.currentItem.toString())
 
@@ -203,8 +205,12 @@ class HomeFragment : Fragment() {
             (activity as AppCompatActivity).findViewById<FragmentContainerView>(R.id.nav_host_container)
         container.margin(top = 0F)
 
+
+
+
         return binding.root
     }
+
 
     private fun productsAdapterCreation() {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -269,6 +275,14 @@ class HomeFragment : Fragment() {
 
 
         viewModel.catsLive.observe(this, Observer { newCats ->
+
+            Repository.getCategoryProducts(newCats[0].CategoryID)
+            categoryRecycler.post {
+                categoryRecycler.findViewHolderForAdapterPosition(0)?.itemView?.performClick()
+
+
+            }
+
             oneAdapter.setItems(newCats)
         })
     }
@@ -318,6 +332,7 @@ class HomeFragment : Fragment() {
             val story3 = viewBinder.findViewById<TextView>(R.id.price)
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
             val story5 = viewBinder.findViewById<TextView>(R.id.calories)
+            val story6 = viewBinder.findViewById<TextView>(R.id.oldprice)
 
 //            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
 
@@ -328,9 +343,21 @@ class HomeFragment : Fragment() {
                 .load(model.ProductImage).centerCrop().into(story1)
 
             story2.text = model.ProductName_En
-            story3.text = model.ProductPrice + " SR"
+            story3.text = model.ProductPrice + " " + getString(R.string._sar)
             story4.text = model.ProductDescription_En
             story5.text = model.ProductCallories.toString()
+
+
+            story6.paintFlags =
+                story6.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+
+
+
+            if (model.ProductOfferPrice.toFloat() > 0) {
+                story3.text = model.ProductOfferPrice + " " + getString(R.string._sar)
+                story6.text = model.ProductPrice + " " + getString(R.string._sar)
+                story6.visibility = TextView.VISIBLE
+            }
 
 
 //            story2.setText(model.title)
@@ -356,6 +383,8 @@ class HomeFragment : Fragment() {
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
             val story5 = viewBinder.findViewById<TextView>(R.id.calories)
             val story6 = viewBinder.findViewById<ImageView>(R.id.cal_icon)
+//            val story7 = viewBinder.findViewById<CardView>(R.id.cal_card)
+            val story8 = viewBinder.findViewById<TextView>(R.id.oldprice)
 //            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
 
 //
@@ -365,10 +394,12 @@ class HomeFragment : Fragment() {
                 .load(model.BundleImage).centerCrop().into(story1)
 
             story2.text = model.BundleName_En
-            story3.text = model.BundlePrice + " SR"
+            story3.text = model.BundlePrice + " " + getString(R.string._sar)
             story4.text = model.BundleDescription_En
             story5.visibility = TextView.INVISIBLE
             story6.visibility = ImageView.INVISIBLE
+//            story7.visibility= CardView.INVISIBLE
+            story8.visibility = TextView.INVISIBLE
 
 
 //            story2.setText(model.title)
@@ -495,6 +526,9 @@ class HomeFragment : Fragment() {
                 )
 
             prevRecyclerBinderView = viewBinder
+
+
+            Repository.getCategoryProducts(model.CategoryID)
 
         }
 

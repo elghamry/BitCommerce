@@ -3,12 +3,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/cart"
-        app:startDestination="@id/loginFragment">
+        app:startDestination="@id/cartFragment">
 
     <fragment
             android:id="@+id/cartFragment"
             android:name="sa.biotic.app.fragments.CartFragment"
-            android:label="fragment_cart"
+            android:label="@string/cart"
             tools:layout="@layout/fragment_cart" />
     <fragment
             android:id="@+id/loginFragment"
@@ -18,6 +18,13 @@
         <action
                 android:id="@+id/action_loginFragment_to_registerFragment"
                 app:destination="@id/registerFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_loginFragment_to_cartFragment"
+                app:destination="@id/cartFragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"

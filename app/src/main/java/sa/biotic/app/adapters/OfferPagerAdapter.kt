@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
-import sa.biotic.app.R
 import sa.biotic.app.ScrollingActivity
 import sa.biotic.app.databinding.OfferItemBinding
 import sa.biotic.app.model.Offer
@@ -62,7 +61,7 @@ class OfferPagerAdapter(val context: Context, val offers: MutableList<Offer>) : 
             .load(offers.get(position).OfferImage)
             .optionalCenterCrop()
 //            .placeholder(r)
-            .placeholder(R.drawable.offer_placeholder)
+//            .placeholder(R.drawable.offer_placeholder)
             .into(binding.offerImage)
 
 

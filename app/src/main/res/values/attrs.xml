@@ -37,6 +37,16 @@
         <attr name="alertText" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="CheckView">
+        <attr name="cv_text" format="string" />
+    </declare-styleable>
+
+
+    <declare-styleable name="StepperView">
+        <attr name="quantity" format="integer" />
+        <attr name="titles" />
+    </declare-styleable>
+
     <!--    <declare-styleable name="LoadingSpin">-->
     <!--        <attr name="rotationSpeedInMs" format="integer" />-->
     <!--        <attr name="backgroundColor" format="color"/>-->

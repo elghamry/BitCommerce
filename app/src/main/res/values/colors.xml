@@ -4,10 +4,12 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#644C98</color>
     <color name="purple">#644C98</color>
+    <color name="red">#F44336</color>
     <color name="white">#ffffffff</color>
     <color name="text_header">#3C3C3C</color>
     <color name="line_color">#848484</color>
     <color name="colorText">#FFFFFF</color>
+    <color name="oldPrice">#C2C2C2</color>
 
 
     <color name="alerter_default_success_background">#4CAF50</color>
@@ -15,5 +17,11 @@
     <color name="alert_default_text_color">@android:color/white</color>
     <color name="alert_default_icon_color">@android:color/white</color>
     <color name="acc_info_line_color">#AD121212</color>
+
+
+    <color name="selected_step_color">@color/white</color>
+    <color name="default_step_color">#c1c1c1</color>
+    <color name="steper_view_gray">@android:color/transparent</color>
+    <color name="default_text_color">@android:color/transparent</color>
 
 </resources>

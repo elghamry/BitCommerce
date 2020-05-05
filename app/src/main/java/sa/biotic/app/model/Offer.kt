@@ -15,13 +15,17 @@ data class Offer(
     val OfferImage: String,
     val OfferPrice: String,
     val OfferStartDate: String,
+    val OfferName_Ar: String,
+    val OfferName_En: String,
+    val ProductCallories: String,
     val ProductDescreption_Ar: String,
     val ProductDescreption_En: String,
     val ProductID: Int,
     val ProductImage: String,
     val ProductName_Ar: String,
     val ProductName_En: String,
-    val ProductPrice: String
+    val ProductPrice: String,
+    val ProductReviews: String
 ) : Diffable, Parcelable {
     override fun areContentTheSame(other: Any): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

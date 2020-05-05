@@ -1,0 +1,246 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+
+    <!--        android:background="@drawable/white_bg"-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            tools:context=".fragments.ShowAddressFragment">
+
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/hello_blank_fragment"
+                android:visibility="gone" />
+
+
+        <androidx.cardview.widget.CardView
+                android:id="@+id/cv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+
+
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="0dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="10dp"
+
+                app:cardElevation="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp">
+
+                <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="4dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    <!--                        <TextView-->
+                    <!--                                android:layout_width="wrap_content"-->
+                    <!--                                android:layout_height="wrap_content"-->
+                    <!--                                android:layout_margin="10dp"-->
+                    <!--                                android:text="Username"-->
+                    <!--                                android:textColor="@color/text_header"-->
+                    <!--                                android:textSize="14sp"-->
+                    <!--                                android:textStyle="bold" />-->
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/etCityLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginBottom="6dp">
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etCity"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+
+                                android:drawablePadding="6dp"
+                                android:enabled="false"
+                                android:fontFamily="@font/ubuntu_regular"
+                                android:hint="City"
+                                android:inputType="text"
+                                android:padding="12dp"
+                                android:paddingStart="6dp"
+                                android:textColor="@color/line_color"
+                                android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/etAddressLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+
+                            >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginRight="10dp"
+
+                                android:drawablePadding="6dp"
+                                android:enabled="false"
+                                android:fontFamily="@font/ubuntu_regular"
+                                android:hint="Address"
+
+                                android:padding="12dp"
+                                android:paddingStart="6dp"
+                                android:textColor="@color/line_color"
+
+
+                                android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/remember_comp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="25dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                    <ImageView
+                            android:id="@+id/default_radio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="20dp"
+
+
+                            android:src="@drawable/radio_filled"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/textView5"
+
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                            android:id="@+id/textView5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+
+                            android:layout_marginBottom="24dp"
+
+                            android:fontFamily="@font/grenale_conbla"
+
+                            android:text="@string/setMyDefault"
+                            android:textColor="@color/text_header"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="@id/default_radio"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/back_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="156dp"
+
+
+                android:layout_height="60dp"
+                android:layout_marginStart="24dp"
+
+                android:layout_marginBottom="40dp"
+
+                android:background="@color/colorPrimary"
+                android:fontFamily="@font/ubuntu_medium"
+
+                android:gravity="center"
+
+                android:text="@string/back"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+
+
+                android:theme="@style/Theme.MaterialComponents"
+
+                app:backgroundTint="@android:color/transparent"
+                app:cornerRadius="12dp"
+                app:iconGravity="textStart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp" />
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/next_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="156dp"
+
+
+                android:layout_height="60dp"
+                android:layout_marginEnd="24dp"
+
+                android:layout_marginBottom="40dp"
+
+                android:background="@color/colorPrimary"
+                android:fontFamily="@font/ubuntu_medium"
+
+                android:gravity="center"
+
+                android:text="@string/next"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:textColor="@color/purple"
+                android:textSize="16sp"
+
+
+                android:theme="@style/Theme.MaterialComponents"
+
+                app:backgroundTint="@color/white"
+                app:cornerRadius="12dp"
+                app:iconGravity="textStart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

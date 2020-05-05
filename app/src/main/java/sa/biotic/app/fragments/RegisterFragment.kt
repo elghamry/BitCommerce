@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.github.ybq.android.spinkit.style.Wave
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.rd.utils.DensityUtils
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import kotlinx.android.synthetic.main.activity_main.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
@@ -222,39 +221,39 @@ class RegisterFragment : Fragment() {
 //                binding.etEmailLayout.isErrorEnabled=false
 
 
-                binding.registerBtn.text = ""
-                mWaveDrawable = Wave()
-                var paddingVal = 1
-                var right_bounds = 130
-
-                if (resources.displayMetrics.xdpi < 500) {
-                    paddingVal = 1
-                } else {
-                    paddingVal = 2
-                    right_bounds = 170
-
-                }
-                //binding.loginBtn.rippleColor
-                mWaveDrawable.setBounds(0, 0, right_bounds, 200)
-
-                //noinspection deprecation
-                mWaveDrawable.color = resources.getColor(R.color.white)
-
-
-
-                Log.d("density", resources.displayMetrics.toString())
-
-                binding.registerBtn.setPadding(
-                    0,
-                    (DensityUtils.dpToPx(paddingVal) * resources.displayMetrics.density).toInt(),
-                    0,
-                    0
-                )
-
-
-                binding.registerBtn.setCompoundDrawables(null, mWaveDrawable, null, null)
-
-                mWaveDrawable.start()
+//                binding.registerBtn.text = ""
+//                mWaveDrawable = Wave()
+//                var paddingVal = 1
+//                var right_bounds = 130
+//
+//                if (resources.displayMetrics.xdpi < 500) {
+//                    paddingVal = 1
+//                } else {
+//                    paddingVal = 2
+//                    right_bounds = 170
+//
+//                }
+//                //binding.loginBtn.rippleColor
+//                mWaveDrawable.setBounds(0, 0, right_bounds, 200)
+//
+//                //noinspection deprecation
+//                mWaveDrawable.color = resources.getColor(R.color.white)
+//
+//
+//
+//                Log.d("density", resources.displayMetrics.toString())
+//
+//                binding.registerBtn.setPadding(
+//                    0,
+//                    (DensityUtils.dpToPx(paddingVal) * resources.displayMetrics.density).toInt(),
+//                    0,
+//                    0
+//                )
+//
+//
+//                binding.registerBtn.setCompoundDrawables(null, mWaveDrawable, null, null)
+//
+//                mWaveDrawable.start()
             }
         }
 

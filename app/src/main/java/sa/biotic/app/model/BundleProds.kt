@@ -12,7 +12,8 @@ data class BundleProds(
     val BundleImage: String,
     val BundleName_Ar: String,
     val BundleName_En: String,
-    val BundlePrice: String
+    val BundlePrice: String,
+    val BundleReviews: String
 ) : Diffable, Parcelable {
     override fun areContentTheSame(other: Any): Boolean = other is BundleProds &&
             BundleID == other.BundleID
@@ -22,6 +23,7 @@ data class BundleProds(
             && BundleImage == other.BundleImage
             && BundleName_En == other.BundleName_En
             && BundlePrice == other.BundlePrice
+            && BundleReviews == other.BundleReviews
 
 
 

@@ -120,6 +120,7 @@
                     android:padding="6dp"
                     android:text="Continue Shopping"
                     android:textAppearance="@style/AlertTextAppearance"
+                    android:textColor="@color/white"
 
 
                     android:textSize="16sp"
@@ -129,6 +130,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:strokeColor="@color/white"
+                    android:theme="@style/Theme.MaterialComponents"
                     app:strokeWidth="1dp" />
 
 
@@ -143,11 +145,12 @@
                     android:onClick="clickCheckout"
                     android:padding="6dp"
                     android:text="Checkout"
-
+                    android:textColor="@color/white"
 
                     android:textAppearance="@style/AlertTextAppearance"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:theme="@style/Theme.MaterialComponents"
                     app:backgroundTint="@android:color/transparent"
                     app:cornerRadius="6dp"
                     app:layout_constraintEnd_toEndOf="parent"

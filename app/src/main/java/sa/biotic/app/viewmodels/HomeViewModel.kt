@@ -111,7 +111,7 @@ class HomeViewModel : ViewModel() {
 //        prods.add(Product(prods.size+1.toLong(),"https://grist.files.wordpress.com/2015/11/organic.jpg?w=1024&h=576&crop=1","organic with Rice","20 SR","good meal for bla bla oats !!i love it"))
 //        prods.add(Product(prods.size+1.toLong(),"https://s1.r29static.com/bin/entry/57f/277,2,1488,837/1200xbm,80/2251087/image.jpg","chips pips Vitamin","30 SR","good meal for bla bla oats !!i love it"))
 //        prods.add(Product(prods.size+1.toLong(),"https://www.wegmans.com/content/dam/wegmans/products/881/97881.jpg","Corn Flakes Product","13 SR","good meal for bla bla oats !!i love it"))
-        prodsLive = Repository.prods
+        prodsLive = Repository.cats_prods
     }
 
     private fun getBundles() {

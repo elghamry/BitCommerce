@@ -18,6 +18,7 @@ class SplashActivity : AppCompatActivity() {
         Repository.getOffers(1, 3)
         Repository.getBundles(1, 6)
         Repository.getAllProducts(1, 6)
+
         RxSplashScreen.Builder(this)
 //2300
             .setSplashScreen(R.layout.activity_splash_modified, 2300, TimeUnit.MILLISECONDS)

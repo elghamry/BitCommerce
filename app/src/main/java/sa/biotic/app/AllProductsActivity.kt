@@ -3,6 +3,7 @@ package sa.biotic.app
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.content.Intent
+import android.graphics.Paint
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -94,7 +95,7 @@ class AllProductsActivity : AppCompatActivity() {
 //
 //        })
         productsAdapterCreation()
-//        binding.toolbar.title = "Products"
+//        binding.toolbar.title = "products"
 
 
 
@@ -309,6 +310,7 @@ class AllProductsActivity : AppCompatActivity() {
             val story3 = viewBinder.findViewById<TextView>(R.id.price)
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
             val story5 = viewBinder.findViewById<TextView>(R.id.calories)
+            val story6 = viewBinder.findViewById<TextView>(R.id.oldprice)
 
 //            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
 
@@ -319,9 +321,22 @@ class AllProductsActivity : AppCompatActivity() {
                 .load(model.ProductImage).centerCrop().into(story1)
 
             story2.text = model.ProductName_En
-            story3.text = model.ProductPrice + " SR"
+            story3.text = model.ProductPrice + " " + getString(R.string._sar)
             story4.text = model.ProductDescription_En
             story5.text = model.ProductCallories.toString()
+
+
+            story6.paintFlags =
+                story6.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+
+
+
+            if (model.ProductOfferPrice.toFloat() > 0) {
+                story3.text = model.ProductOfferPrice + " " + getString(R.string._sar)
+                story6.text = model.ProductPrice + " " + getString(R.string._sar)
+                story6.visibility = TextView.VISIBLE
+            }
+
 
 
         }
@@ -347,6 +362,8 @@ class AllProductsActivity : AppCompatActivity() {
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
             val story5 = viewBinder.findViewById<TextView>(R.id.calories)
             val story6 = viewBinder.findViewById<ImageView>(R.id.cal_icon)
+//            val story7 = viewBinder.findViewById<CardView>(R.id.cal_card)
+            val story8 = viewBinder.findViewById<TextView>(R.id.oldprice)
 //            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
 
 //
@@ -356,10 +373,12 @@ class AllProductsActivity : AppCompatActivity() {
                 .load(model.BundleImage).centerCrop().into(story1)
 
             story2.text = model.BundleName_En
-            story3.text = model.BundlePrice + " SR"
+            story3.text = model.BundlePrice + " " + getString(R.string._sar)
             story4.text = model.BundleDescription_En
             story5.visibility = TextView.INVISIBLE
             story6.visibility = ImageView.INVISIBLE
+//            story7.visibility= CardView.INVISIBLE
+            story8.visibility = TextView.INVISIBLE
 
 
 //            story2.setText(model.title)

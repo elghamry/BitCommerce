@@ -135,7 +135,7 @@
 
                 <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="84dp"
+                        android:layout_height="70dp"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="20dp"
                         android:background="@color/white"
@@ -149,8 +149,9 @@
                     <com.google.android.material.button.MaterialButton
                             android:id="@+id/add_to_cart"
                             android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:gravity="center"
 
-                            android:layout_height="60dp"
 
                             android:layout_marginStart="32dp"
                             android:layout_marginEnd="32dp"
@@ -158,11 +159,13 @@
                             android:fontFamily="@font/ubuntu_regular"
 
 
-                            android:paddingTop="16dp"
                             android:text="@string/add_to_cart"
                             android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                            android:theme="@style/Theme.MaterialComponents"
 
-                            android:textAppearance="@style/TextAppearance.AppCompat"
+
+
                             android:textColor="@color/white"
                             android:textStyle="bold"
                             android:visibility="visible"

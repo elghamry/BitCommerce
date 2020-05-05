@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
             android:id="@+id/home"
@@ -11,12 +12,14 @@
             android:id="@+id/search"
             android:contentDescription="@string/title_search"
             android:icon="@drawable/search_colored"
+
             android:title="@string/title_search" />
 
     <item
             android:id="@+id/cart"
             android:contentDescription="@string/title_cart"
             android:icon="@drawable/cart_colored"
+            app:actionLayout="@layout/menu_cartcount"
             android:title="@string/title_cart" />
     <item
             android:id="@+id/profile"

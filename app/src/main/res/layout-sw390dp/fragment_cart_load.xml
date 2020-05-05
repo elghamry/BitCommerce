@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp">
+
+        <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/cartRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                        android:id="@+id/subtotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/grenale_conbla"
+
+
+                        android:maxLength="30"
+                        android:maxLines="1"
+                        android:text="@string/subtotal"
+                        android:textColor="@color/text_header"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/cartRecycler" />
+
+                <TextView
+                        android:id="@+id/taxes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/grenale_conbla"
+
+
+                        android:maxLength="30"
+                        android:maxLines="1"
+                        android:text="@string/taxes"
+                        android:textColor="@color/text_header"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/subtotal" />
+
+
+                <TextView
+                        android:id="@+id/subtotal_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:fontFamily="@font/grenale_conbla"
+
+
+                        android:maxLength="30"
+                        android:maxLines="1"
+                        android:text="122 SAR"
+                        android:textColor="@color/line_color"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/cartRecycler" />
+
+                <TextView
+                        android:id="@+id/taxes_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:fontFamily="@font/grenale_conbla"
+
+
+                        android:maxLength="30"
+                        android:maxLines="1"
+                        android:text="0 SAR"
+                        android:textColor="@color/line_color"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/subtotal_value" />
+
+
+                <View
+                        android:id="@+id/line1"
+                        android:layout_width="0dp"
+                        android:layout_height=".9dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+
+                        android:layout_marginBottom="24dp"
+
+
+                        android:background="@color/line_color"
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/taxes"
+
+                        />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/before_apply"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line1">
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/apply_promo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="56dp"
+                            android:fontFamily="@font/ubuntu_regular"
+
+
+                            android:gravity="center"
+                            android:padding="10dp"
+
+
+                            android:text="@string/apply"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+
+
+                            android:theme="@style/Theme.MaterialComponents.Light"
+                            android:visibility="visible"
+                            app:backgroundTint="@color/purple"
+                            app:cornerRadius="6dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/etPromoCodeLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/apply_promo"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etPromoCode"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+
+                                android:drawablePadding="6dp"
+                                android:fontFamily="@font/ubuntu_regular"
+                                android:hint="@string/promo_code"
+                                android:inputType="text"
+                                android:padding="16dp"
+                                android:paddingStart="6dp"
+                                android:textColor="@color/line_color"
+                                android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/after_apply"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line1">
+
+
+                    <androidx.cardview.widget.CardView
+                            android:id="@+id/promo_applied_card"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:fontFamily="@font/ubuntu_regular"
+
+
+                            android:gravity="center"
+                            android:padding="10dp"
+
+
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+
+
+                            android:theme="@style/Theme.MaterialComponents.Light"
+                            android:visibility="visible"
+                            app:backgroundTint="@color/purple"
+                            app:cardBackgroundColor="@color/purple"
+
+                            app:cardCornerRadius="6dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                            <ImageView
+                                    android:id="@+id/cancel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="0dp"
+                                    android:layout_marginStart="12dp"
+                                    android:src="@drawable/cancel_icon"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                    android:id="@+id/promo_code_"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="16dp"
+                                    android:fontFamily="@font/grenale_conbla"
+                                    android:text="@string/promo_code_"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toStartOf="@+id/textView6"
+                                    app:layout_constraintStart_toEndOf="@+id/cancel"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                    android:id="@+id/promo_code_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="2dp"
+                                    android:layout_marginBottom="2dp"
+                                    android:fontFamily="@font/ubuntu_regular"
+                                    android:text="@string/app_name"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/promo_code_"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <TextView
+                                    android:id="@+id/textView6"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="12dp"
+                                    android:fontFamily="@font/ubuntu_regular"
+                                    android:text="@string/percentage"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.core.widget.NestedScrollView>
+
+
+        <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_gravity="bottom"
+                android:background="@color/white"
+
+
+                app:layout_anchorGravity="bottom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+            <!--                    android:translationY="-40dp"-->
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/checkout"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="56dp"
+
+
+                    android:layout_marginEnd="56dp"
+                    android:layout_marginBottom="56dp"
+                    android:fontFamily="@font/ubuntu_regular"
+                    android:gravity="center"
+
+
+                    android:text="@string/checkout"
+                    android:textAlignment="center"
+
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    android:visibility="visible"
+
+
+                    app:backgroundTint="@color/colorPrimary"
+                    app:cornerRadius="6dp" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

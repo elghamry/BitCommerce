@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".PurchaseActivity">
+
+
+        <androidx.appcompat.widget.Toolbar
+
+                style="@style/ToolBarStyle.Event"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/toolbar_background_white"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:gravity="center"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                android:visibility="visible"
+                android:minHeight="@dimen/abc_action_bar_default_height_material"
+                android:paddingEnd="15dp"
+                android:paddingRight="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/purchase"
+                app:titleMarginStart="160dp"
+                app:titleTextColor="@color/colorPrimary" />
+
+
+        <sa.biotic.app.components.stepper.StepperView
+                android:id="@+id/stepper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="56dp"
+
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="56dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:quantity="3"
+                app:titles="@array/test_array"
+                tools:ignore="MissingConstraints" />
+
+
+        <fragment
+                android:id="@+id/my_nav_host_fragment"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:defaultNavHost="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+
+                app:layout_constraintTop_toBottomOf="@id/stepper"
+                app:navGraph="@navigation/purchase" />
+
+
+        <!--        <Button-->
+        <!--                android:id="@+id/button_test1"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="previous"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--        <Button-->
+        <!--                android:id="@+id/button_test2"-->
+        <!--                android:layout_width="88dp"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginEnd="8dp"-->
+        <!--                android:text="next"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

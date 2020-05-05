@@ -3,10 +3,7 @@ package sa.biotic.app.retrofit_service
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-import sa.biotic.app.model.BundleProds
-import sa.biotic.app.model.Category
-import sa.biotic.app.model.Offer
-import sa.biotic.app.model.Product
+import sa.biotic.app.model.*
 
 
 interface HomeService {
@@ -31,6 +28,26 @@ interface HomeService {
         @Query("currentpage") currentpage: Int,
         @Query("pageSize") pageSize: Int
     ): Response<MutableList<BundleProds>>
+
+
+    @GET("general/getCategoryProduct")
+    suspend fun getCategoryProducts(
+        @Query("categoryId") categoryId: Int
+    ): Response<MutableList<Product>>
+
+    @GET("general/Search")
+    suspend fun Search(
+        @Query("word") word: String,
+        @Query("pageSize") pageSize: Int,
+        @Query("currentpage") currentpage: Int,
+        @Query("lang") lang: String
+    ): Response<MutableList<SearchItem>>
+
+
+    @GET("general/getBundleProduct")
+    suspend fun getBundleProduct(
+        @Query("BundleId") BundleId: Int
+    ): Response<ProductsOfBundle>
 
 
 }

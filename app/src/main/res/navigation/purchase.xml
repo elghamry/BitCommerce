@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/purchase"
+        app:startDestination="@id/addressFragment">
+
+    <fragment
+            android:id="@+id/addressFragment"
+            android:name="sa.biotic.app.fragments.AddressFragment"
+            android:label="fragment_address"
+            tools:layout="@layout/fragment_address">
+        <action
+                android:id="@+id/action_addressFragment_to_showAddressFragment"
+                app:destination="@id/showAddressFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_addressFragment_to_getMyLocationFragment"
+                app:destination="@id/getMyLocationFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+            android:id="@+id/paymentFragment"
+            android:name="sa.biotic.app.fragments.PaymentFragment"
+            android:label="fragment_payment"
+            tools:layout="@layout/fragment_payment">
+        <action
+                android:id="@+id/action_paymentFragment_to_confimationFragment"
+                app:destination="@id/confimationFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+            android:id="@+id/confimationFragment"
+            android:name="sa.biotic.app.fragments.ConfimationFragment"
+            android:label="fragment_confimation"
+            tools:layout="@layout/fragment_confimation" />
+    <fragment
+            android:id="@+id/showAddressFragment"
+            android:name="sa.biotic.app.fragments.ShowAddressFragment"
+            android:label="fragment_show_address"
+            tools:layout="@layout/fragment_show_address">
+        <action
+                android:id="@+id/action_showAddressFragment_to_paymentFragment"
+                app:destination="@id/paymentFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+            android:id="@+id/getMyLocationFragment"
+            android:name="sa.biotic.app.fragments.GetMyLocationFragment"
+            android:label="fragment_get_my_location"
+            tools:layout="@layout/fragment_get_my_location">
+        <action
+                android:id="@+id/action_getMyLocationFragment_to_showAddressFragment"
+                app:destination="@id/showAddressFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+</navigation>

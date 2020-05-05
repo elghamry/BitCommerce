@@ -1,0 +1,162 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+
+    <!--        android:background="@drawable/white_bg"-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            tools:context=".fragments.ShowAddressFragment">
+
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/hello_blank_fragment"
+                android:visibility="gone" />
+
+
+        <androidx.cardview.widget.CardView
+                android:id="@+id/cv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+
+
+                android:layout_marginTop="60dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="60dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="10dp"
+
+                app:cardElevation="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/remember_comp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="center"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                <ImageView
+                        android:id="@+id/default_radio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/radio_filled"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/textView5"
+
+
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+
+                        android:fontFamily="@font/grenale_conbla"
+
+                        android:text="@string/cash_on_delivery"
+
+                        android:textColor="@color/text_header"
+                        android:textSize="18sp"
+
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/default_radio"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/back_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="156dp"
+
+
+                android:layout_height="60dp"
+                android:layout_marginStart="24dp"
+
+                android:layout_marginBottom="40dp"
+
+                android:background="@color/colorPrimary"
+                android:fontFamily="@font/ubuntu_medium"
+
+                android:gravity="center"
+
+                android:text="@string/back"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+
+
+                android:theme="@style/Theme.MaterialComponents"
+
+                app:backgroundTint="@android:color/transparent"
+                app:cornerRadius="12dp"
+                app:iconGravity="textStart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp" />
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/confirm_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="156dp"
+
+
+                android:layout_height="60dp"
+                android:layout_marginEnd="24dp"
+
+                android:layout_marginBottom="40dp"
+
+                android:background="@color/colorPrimary"
+                android:fontFamily="@font/ubuntu_medium"
+
+                android:gravity="center"
+
+                android:text="@string/confirm"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:textColor="@color/purple"
+                android:textSize="16sp"
+
+
+                android:theme="@style/Theme.MaterialComponents"
+
+                app:backgroundTint="@color/white"
+                app:cornerRadius="12dp"
+                app:iconGravity="textStart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>
