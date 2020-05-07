@@ -3,6 +3,9 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="SENDER_ID">347339339621</string>
+    <string name="notifications_admin_channel_name">Biotic</string>
+    <string name="notifications_admin_channel_description">Firebase PushNotification</string>
     <string name="newest_product">Newest Products</string>
     <string name="see_all">See All</string>
     <string name="product_name_demo">product_name_demo</string>
@@ -185,5 +188,45 @@
     <string name="shipping_date">Shipping Date:</string>
     <string name="finish">Finish</string>
     <string name="start_shopping">Start Shopping</string>
+    <string name="logout">Logout</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="registration">Registration</string>
+    <string name="your_information">Your Information</string>
+    <string name="save">Save</string>
+    <string name="acc_mange">Account Management</string>
+    <string name="country">Country</string>
+    <string name="city">City</string>
+    <string name="street_name">Street Name</string>
+    <string name="apartment_number">Apartment Number</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="arabic">Arabic</string>
+    <string name="your_orders">Your Orders</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="past">Past</string>
+    <string name="delivery_date">Delivery date:</string>
+    <string name="track_order">Track my order</string>
+    <string name="payment_details">Payment Details</string>
+    <string name="delivery_method">Delivery Method</string>
+    <string name="customer_support">Reach one of our customer support</string>
+    <string name="message">Message</string>
+    <string name="Name">Name</string>
+    <string name="send">Send</string>
+    <string name="technical_support">Reach one of our technical support</string>
+    <string name="only_5_left">Only 5 left</string>
+    <string name="offers">Offers</string>
+    <string name="only">only</string>
+    <string name="left">left</string>
+    <string name="sold_out">Sold out</string>
+    <string name="hero_image">Hero Image</string>
+    <string name="hero_name">hero_name</string>
+    <string name="enter_code">Enter Code</string>
+    <string name="submit">Submit</string>
+    <string name="create_a_new_password">Create a new password</string>
+    <string name="not_available">Not available now</string>
+    <string name="account_notifications">Account Notifications</string>
+    <string name="edit">Edit</string>
+
 
 </resources>

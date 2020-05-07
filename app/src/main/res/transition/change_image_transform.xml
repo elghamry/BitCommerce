@@ -1,0 +1,10 @@
+<transitionSet>
+    <changeImageTransform />
+
+    <!--    <targets>-->
+    <!--        &lt;!&ndash; if using a custom Toolbar container, specify the ID of the AppBarLayout &ndash;&gt;-->
+    <!--        <target android:excludeId="@id/app_bar" />-->
+    <!--        <target android:excludeId="@android:id/statusBarBackground"/>-->
+    <!--        <target android:excludeId="@android:id/navigationBarBackground"/>-->
+    <!--    </targets>-->
+</transitionSet>

@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/profile"
-        app:startDestination="@id/profileFragment">
+        app:startDestination="@id/loginFragment">
 
     <fragment
             android:id="@+id/profileFragment"
@@ -17,10 +17,208 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_profileFragment_to_ordersFragment"
+                app:destination="@id/ordersFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_profileFragment_to_helpFragment"
+                app:destination="@id/helpFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_profileFragment_to_contactUsFragment"
+                app:destination="@id/contactUsFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
             android:id="@+id/accountMangementFragment"
             android:name="sa.biotic.app.fragments.AccountMangementFragment"
             android:label="Account Management"
-            tools:layout="@layout/fragment_account_mangement" />
+            tools:layout="@layout/fragment_account_mangement">
+        <action
+                android:id="@+id/action_accountMangementFragment_to_informationFragment"
+                app:destination="@id/informationFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_accountMangementFragment_to_deliveryAddressFragment"
+                app:destination="@id/deliveryAddressFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_accountMangementFragment_to_changePasswordFragment"
+                app:destination="@id/changePasswordFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_accountMangementFragment_to_changeLanguageFragment"
+                app:destination="@id/changeLanguageFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_accountMangementFragment_to_loginFragment"
+                app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/loginFragment"
+            android:name="sa.biotic.app.fragments.LoginFragment"
+            android:label="@string/login"
+            tools:layout="@layout/fragment_login">
+        <action
+                android:id="@+id/action_loginFragment_to_registerFragment"
+                app:destination="@id/registerFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/action_loginFragment_to_profileFragment"
+                app:destination="@id/profileFragment" />
+        <action
+                android:id="@+id/action_loginFragment_to_forgetPassFragment"
+                app:destination="@id/forgetPassFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+
+    </fragment>
+    <fragment
+            android:id="@+id/registerFragment"
+            android:name="sa.biotic.app.fragments.RegisterFragment"
+            android:label="@string/registration"
+            tools:layout="@layout/fragment_register">
+        <action
+                android:id="@+id/action_registerFragment_to_regsiterCompletedFragment"
+                app:destination="@id/regsiterCompletedFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+            android:id="@+id/regsiterCompletedFragment"
+            android:name="sa.biotic.app.fragments.RegsiterCompletedFragment"
+            android:label="@string/registration"
+            tools:layout="@layout/fragment_regsiter_completed" />
+    <fragment
+            android:id="@+id/forgetPassFragment"
+            android:name="sa.biotic.app.fragments.ForgetPassFragment"
+            android:label="Forget Password"
+            tools:layout="@layout/fragment_forget_pass">
+        <action
+                android:id="@+id/action_forgetPassFragment_to_enterCodeFragment"
+                app:destination="@id/enterCodeFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+            android:id="@+id/informationFragment"
+            android:name="sa.biotic.app.fragments.InformationFragment"
+            android:label="@string/acc_mange"
+            tools:layout="@layout/fragment_information" />
+    <fragment
+            android:id="@+id/deliveryAddressFragment"
+            android:name="sa.biotic.app.fragments.DeliveryAddressFragment"
+            android:label="@string/acc_mange"
+            tools:layout="@layout/fragment_delivery_address">
+        <action
+                android:id="@+id/action_deliveryAddressFragment_to_addressFragmentProfile"
+                app:destination="@id/addressFragmentProfile"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+            android:id="@+id/changePasswordFragment"
+            android:name="sa.biotic.app.fragments.ChangePasswordFragment"
+            android:label="@string/acc_mange"
+            tools:layout="@layout/fragment_change_password" />
+    <fragment
+            android:id="@+id/changeLanguageFragment"
+            android:name="sa.biotic.app.fragments.ChangeLanguageFragment"
+            android:label="@string/acc_mange"
+            tools:layout="@layout/fragment_change_language" />
+    <fragment
+            android:id="@+id/ordersFragment"
+            android:name="sa.biotic.app.fragments.OrdersFragment"
+            android:label="@string/your_orders"
+            tools:layout="@layout/fragment_orders" />
+    <fragment
+            android:id="@+id/upcomingOrdersFragment"
+            android:name="sa.biotic.app.fragments.UpcomingOrdersFragment"
+            android:label="UpcomingOrdersFragment"
+            tools:layout="@layout/fragment_orders_for_tab" />
+    <fragment
+            android:id="@+id/contactUsFragment"
+            android:name="sa.biotic.app.fragments.ContactUsFragment"
+            android:label="Contact Us"
+            tools:layout="@layout/fragment_contact_us" />
+    <fragment
+            android:id="@+id/helpFragment"
+            android:name="sa.biotic.app.fragments.HelpFragment"
+            android:label="Help"
+            tools:layout="@layout/fragment_help" />
+    <fragment
+            android:id="@+id/enterCodeFragment"
+            android:name="sa.biotic.app.fragments.EnterCodeFragment"
+            android:label="fragment_enter_code"
+            tools:layout="@layout/fragment_enter_code">
+        <action
+                android:id="@+id/action_enterCodeFragment_to_changeResetPassword"
+                app:destination="@id/changeResetPassword"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+            android:id="@+id/changeResetPassword"
+            android:name="sa.biotic.app.fragments.ChangeResetPasswordFragment"
+            android:label="fragment_change_reset_password"
+            tools:layout="@layout/fragment_change_reset_password" />
+    <fragment
+            android:id="@+id/addressFragmentProfile"
+            android:name="sa.biotic.app.fragments.AddressFragmentProfile"
+            android:label="AddressFragment"
+            tools:layout="@layout/fragment_address">
+        <action
+                android:id="@+id/action_addressFragmentProfile_to_getMyLocationFragmentProfile"
+                app:destination="@id/getMyLocationFragmentProfile"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+            android:id="@+id/getMyLocationFragmentProfile"
+            android:name="sa.biotic.app.fragments.GetMyLocationFragmentProfile"
+            android:label="GetMyLocationFragmentProfile"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            tools:layout="@layout/fragment_get_my_location" />
+
 </navigation>

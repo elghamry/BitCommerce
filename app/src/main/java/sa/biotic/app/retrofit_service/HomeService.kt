@@ -23,11 +23,24 @@ interface HomeService {
         @Query("pageSize") pageSize: Int
     ): Response<MutableList<Product>>
 
+    @GET("general/getHomeprouducts")
+    suspend fun getHomeprouducts(
+        @Query("currentpage") currentpage: Int,
+        @Query("pageSize") pageSize: Int
+    ): Response<MutableList<Product>>
+
+
     @GET("general/getBundles")
     suspend fun getBundles(
         @Query("currentpage") currentpage: Int,
         @Query("pageSize") pageSize: Int
-    ): Response<MutableList<BundleProds>>
+    ): Response<MutableList<BundleProduct>>
+
+    @GET("general/getHomeBundles")
+    suspend fun getHomeBundles(
+        @Query("currentpage") currentpage: Int,
+        @Query("pageSize") pageSize: Int
+    ): Response<MutableList<BundleProduct>>
 
 
     @GET("general/getCategoryProduct")
@@ -48,6 +61,18 @@ interface HomeService {
     suspend fun getBundleProduct(
         @Query("BundleId") BundleId: Int
     ): Response<ProductsOfBundle>
+
+
+    @GET("general/getProduct")
+    suspend fun getProduct(
+        @Query("productid") productid: Int
+    ): Response<Product>
+
+
+    @GET("general/getOffer")
+    suspend fun getOfferList(
+        @Query("offerId") offerId: Int
+    ): Response<MutableList<OfferProduct>>
 
 
 }

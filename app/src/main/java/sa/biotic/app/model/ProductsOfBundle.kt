@@ -9,6 +9,7 @@ data class ProductsOfBundle(
     val BundleName_En: String,
     val BundlePrice: String,
     val BundleReview: Int,
+    val BundletStockQuantity: Int,
     val Products: MutableList<ProductBund>
 
 )

@@ -3,11 +3,14 @@ package sa.biotic.app.fragments
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +19,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -25,9 +29,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.eftimoff.viewpagertransformers.ZoomOutTranformer
 import com.idanatz.oneadapter.OneAdapter
-import com.idanatz.oneadapter.external.events.ClickEventHook
+import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.external.modules.ItemSelectionModule
@@ -36,15 +41,16 @@ import com.idanatz.oneadapter.internal.holders.ViewBinder
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import sa.biotic.app.AllProductsActivity
+import sa.biotic.app.OnDetailsActivity
 import sa.biotic.app.R
-import sa.biotic.app.ScrollingActivity
 import sa.biotic.app.adapters.OfferPagerAdapter
 import sa.biotic.app.components.LinearLayoutManagerWrapper
 import sa.biotic.app.databinding.FragmentHomeBinding
-import sa.biotic.app.model.BundleProds
+import sa.biotic.app.model.BundleProduct
 import sa.biotic.app.model.Category
 import sa.biotic.app.model.Product
 import sa.biotic.app.retrofit_service.Repository
+import sa.biotic.app.utils.TransitionHelper
 import sa.biotic.app.utils.margin
 import sa.biotic.app.viewmodels.HomeViewModel
 
@@ -136,7 +142,7 @@ class HomeFragment : Fragment() {
 
 
         /** Setting up LiveData observation relationship **/
-        viewModel.offersLive.observe(this, Observer { newOffers ->
+        viewModel.offersLive.observe(viewLifecycleOwner, Observer { newOffers ->
             //            binding.wordText.text = newWord
 
             view_pager.adapter = OfferPagerAdapter(requireContext(), newOffers)
@@ -215,11 +221,7 @@ class HomeFragment : Fragment() {
     private fun productsAdapterCreation() {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
-        prodsAdapter = OneAdapter(binding.productsRecycler)
-            .attachItemModule(
-                productItem()
-                    .addEventHook(clickProductEventHook())
-            )
+
 //            .attachItemModule(headerItem())
 //            .attachItemModule(messageItem()
 
@@ -243,11 +245,21 @@ class HomeFragment : Fragment() {
 
 
 
-        viewModel.bundlesLive.observe(this, Observer { newBunds ->
+        viewModel.bundlesLive.observe(viewLifecycleOwner, Observer { newBunds ->
+
             bundlesAdapter.setItems(newBunds)
         })
 
-        viewModel.prodsLive.observe(this, Observer { newProds ->
+        viewModel.prodsLive.observe(viewLifecycleOwner, Observer { newProds ->
+
+            if (newProds.size == 0) {
+                Repository.getHomeProducts(1, 6)
+            }
+            prodsAdapter = OneAdapter(binding.productsRecycler)
+                .attachItemModule(
+                    productItem()
+                        .addEventHook(clickProductEventHook())
+                )
             prodsAdapter.setItems(newProds)
 
 
@@ -274,7 +286,7 @@ class HomeFragment : Fragment() {
 //            .attachItemSelectionModule(itemSelectionModule())
 
 
-        viewModel.catsLive.observe(this, Observer { newCats ->
+        viewModel.catsLive.observe(viewLifecycleOwner, Observer { newCats ->
 
             Repository.getCategoryProducts(newCats[0].CategoryID)
             categoryRecycler.post {
@@ -333,14 +345,17 @@ class HomeFragment : Fragment() {
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
             val story5 = viewBinder.findViewById<TextView>(R.id.calories)
             val story6 = viewBinder.findViewById<TextView>(R.id.oldprice)
-
-//            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
-
+            val story8 = viewBinder.findViewById<TextView>(R.id.stock_tv)
+            val story7 = viewBinder.findViewById<TextView>(R.id.discount_value)
+            val story9 = viewBinder.findViewById<CardView>(R.id.discount_card)
 //
             Glide.with(requireContext())
 //                .load(model.img)
 
-                .load(model.ProductImage).centerCrop().into(story1)
+                .load(model.ProductImage).centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .skipMemoryCache(false)
+                .into(story1)
 
             story2.text = model.ProductName_En
             story3.text = model.ProductPrice + " " + getString(R.string._sar)
@@ -353,22 +368,54 @@ class HomeFragment : Fragment() {
 
 
 
+
             if (model.ProductOfferPrice.toFloat() > 0) {
                 story3.text = model.ProductOfferPrice + " " + getString(R.string._sar)
                 story6.text = model.ProductPrice + " " + getString(R.string._sar)
                 story6.visibility = TextView.VISIBLE
+                story3.visibility = TextView.VISIBLE
+
+
+            } else {
+
+                story6.visibility = TextView.INVISIBLE
+
+
+            }
+            if ((model.ProductOfferDicountValue.toFloat() * 100).toInt() <= 0) {
+                story9.visibility = CardView.GONE
             }
 
+            story7.text = (model.ProductOfferDicountValue.toFloat() * 100).toInt().toString() + "%"
 
-//            story2.setText(model.title)
+
+
+            if (model.ProductStockQuantity <= 5) {
+                if (model.ProductStockQuantity <= 0) {
+                    story3.text = getString(R.string.sold_out)
+                    story3.setTextColor(resources.getColor(R.color.stockColor))
+//                    story3.visibility=TextView.INVISIBLE
+                    story6.visibility = TextView.INVISIBLE
+                    story8.visibility = TextView.INVISIBLE
+
+                } else
+                    story8.text =
+                        getString(R.string.only) + " " + model.ProductStockQuantity.toString() + " " + getString(
+                            R.string.left
+                        )
+            } else {
+
+//                    story8.text=getString(R.string.only)+" "+model.ProductStockQuantity.toString()+" "+getString(R.string.left)
+                story8.visibility = TextView.INVISIBLE
+            }
 
 
         }
     }
 
-    private fun bundleItem(): ItemModule<BundleProds> = object : ItemModule<BundleProds>() {
+    private fun bundleItem(): ItemModule<BundleProduct> = object : ItemModule<BundleProduct>() {
         override fun provideModuleConfig(): ItemModuleConfig = object : ItemModuleConfig() {
-            override fun withLayoutResource(): Int = R.layout.product_item
+            override fun withLayoutResource(): Int = R.layout.bundle_item
 
             override fun withFirstBindAnimation(): Animator {
                 // can be implemented by inflating Animator Xml
@@ -376,16 +423,15 @@ class HomeFragment : Fragment() {
             }
         }
 
-        override fun onBind(model: BundleProds, viewBinder: ViewBinder) {
+        override fun onBind(model: BundleProduct, viewBinder: ViewBinder) {
             val story1 = viewBinder.findViewById<ImageView>(R.id.product_image)
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 = viewBinder.findViewById<TextView>(R.id.price)
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
-            val story5 = viewBinder.findViewById<TextView>(R.id.calories)
-            val story6 = viewBinder.findViewById<ImageView>(R.id.cal_icon)
-//            val story7 = viewBinder.findViewById<CardView>(R.id.cal_card)
+
             val story8 = viewBinder.findViewById<TextView>(R.id.oldprice)
-//            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
+            val story9 = viewBinder.findViewById<TextView>(R.id.stock_tv)
+
 
 //
             Glide.with(requireContext())
@@ -396,13 +442,28 @@ class HomeFragment : Fragment() {
             story2.text = model.BundleName_En
             story3.text = model.BundlePrice + " " + getString(R.string._sar)
             story4.text = model.BundleDescription_En
-            story5.visibility = TextView.INVISIBLE
-            story6.visibility = ImageView.INVISIBLE
-//            story7.visibility= CardView.INVISIBLE
+
             story8.visibility = TextView.INVISIBLE
 
+            if (model.BundleStockAvaliable == 0) {
 
-//            story2.setText(model.title)
+                story9.visibility = TextView.VISIBLE
+                story3.visibility = TextView.INVISIBLE
+                story9.text = "Sold out"
+//                story3.setTextColor(resources.getColor(R.color.stockColor))
+
+            } else {
+                if (model.BundleStockAvaliable <= 5) {
+                    Log.d("iam here bitch", "hello friend")
+                    story9.text =
+                        getString(R.string.only) + " " + model.BundleStockAvaliable.toString() + " " + getString(
+                            R.string.left
+                        )
+                    story9.visibility = TextView.VISIBLE
+
+                }
+            }
+
 
 
         }
@@ -432,7 +493,39 @@ class HomeFragment : Fragment() {
 //                    android.graphics.PorterDuff.Mode.SRC_IN)
 //
 //            prevRecyclerBinderView = viewBinder
-                val intent = Intent(activity, ScrollingActivity::class.java)
+                val intent = Intent(activity, OnDetailsActivity::class.java)
+
+                var sharedView = viewBinder.rootView.findViewById<View>(R.id.product_image)
+                var transitionName = getString(R.string.hero_image)
+                var sharedView2 = viewBinder.rootView.findViewById<View>(R.id.product_title)
+                var transitionName2 = getString(R.string.hero_name)
+                var participants: Array<android.util.Pair<View, String>> = arrayOf()
+
+
+//                participants[0]=android.util.Pair(sharedView,transitionName)
+//                participants[1]=Pair(sharedView2,transitionName2)
+
+
+                val pairs: Array<Pair<View, String>> =
+                    TransitionHelper.createSafeTransitionParticipants(
+                        requireActivity(), false,
+                        android.util.Pair<View, String>(
+                            sharedView,
+                            transitionName
+                        ),
+                        android.util.Pair<View, String>(
+                            sharedView2,
+                            transitionName2
+                        )
+                    )
+
+
+                var transitionActivityOptions: ActivityOptions =
+                    ActivityOptions.makeSceneTransitionAnimation(
+                        requireActivity(),
+                        *pairs
+                    )
+
 //                intent.putExtra("product_name", model.title)
 //                intent.putExtra("product_image", model.img)
 //                intent.putExtra("product_price", model.price)
@@ -441,7 +534,7 @@ class HomeFragment : Fragment() {
 
 
 //            intent.putExtra(EXTRA_MESSAGE, message)
-                startActivityForResult(intent, 1)
+                startActivity(intent, transitionActivityOptions.toBundle())
 
             }
 
@@ -449,21 +542,42 @@ class HomeFragment : Fragment() {
         }
 
 
-    private fun clickBundleEventHook(): ClickEventHook<BundleProds> =
-        object : ClickEventHook<BundleProds>() {
-            override fun onClick(model: BundleProds, viewBinder: ViewBinder) {
-//            Toast.makeText(requireContext(), "${model.title} clicked", Toast.LENGTH_SHORT).show()
+    private fun clickBundleEventHook(): ClickEventHook<BundleProduct> =
+        object : ClickEventHook<BundleProduct>() {
+            override fun onClick(model: BundleProduct, viewBinder: ViewBinder) {
 
-                val intent = Intent(activity, ScrollingActivity::class.java)
-//                intent.putExtra("product_name", model.title)
-//                intent.putExtra("product_image", model.img)
-//                intent.putExtra("product_price", model.price)
+
+                var sharedView = viewBinder.rootView.findViewById<View>(R.id.product_image)
+                var transitionName = getString(R.string.hero_image)
+                var sharedView2 = viewBinder.rootView.findViewById<View>(R.id.product_title)
+                var transitionName2 = getString(R.string.hero_name)
+
+                val pairs: Array<Pair<View, String>> =
+                    TransitionHelper.createSafeTransitionParticipants(
+                        requireActivity(), false,
+                        android.util.Pair<View, String>(
+                            sharedView,
+                            transitionName
+                        ),
+                        android.util.Pair<View, String>(
+                            sharedView2,
+                            transitionName2
+                        )
+                    )
+
+
+                var transitionActivityOptions: ActivityOptions =
+                    ActivityOptions.makeSceneTransitionAnimation(
+                        requireActivity(),
+                        *pairs
+                    )
+
+                val intent = Intent(activity, OnDetailsActivity::class.java)
+
                 intent.putExtra("BundleItem", model)
                 intent.putExtra("type", "bundle")
 
-
-//            intent.putExtra(EXTRA_MESSAGE, message)
-                startActivityForResult(intent, 1)
+                startActivity(intent, transitionActivityOptions.toBundle())
             }
 
 

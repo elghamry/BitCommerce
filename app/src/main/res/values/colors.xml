@@ -10,6 +10,8 @@
     <color name="line_color">#848484</color>
     <color name="colorText">#FFFFFF</color>
     <color name="oldPrice">#C2C2C2</color>
+    <color name="textEnter">#121212</color>
+    <color name="stockColor">#FF1200</color>
 
 
     <color name="alerter_default_success_background">#4CAF50</color>

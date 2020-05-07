@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/tvPleaseVerify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_gravity="center"
+            android:elevation="5dp"
+
+            android:fontFamily="@font/grenale_conbla"
+            android:gravity="center"
+            android:text="Please verify your email "
+            android:textColor="@color/text_header"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:transitionName="tvLogin" />
+
+
+    <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_gravity="center"
+            android:elevation="5dp"
+
+            android:fontFamily="@font/ubuntu_regular"
+            android:gravity="center"
+            android:text="Your account is ready, just one more step!"
+            android:textColor="@color/line_color"
+            android:textSize="24sp"
+
+            android:transitionName="tvLogin" />
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/verify_btn"
+            android:layout_width="280dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/ubuntu_medium"
+            android:gravity="center"
+            android:text="Send a verification email"
+
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            app:backgroundTint="@color/colorPrimary"
+
+            app:cornerRadius="12dp"
+            app:iconGravity="textStart" />
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancel_btn"
+            android:layout_width="280dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/ubuntu_medium"
+            android:gravity="center"
+            android:text="@string/cancel"
+
+
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            app:backgroundTint="@color/white"
+            app:cornerRadius="12dp"
+            app:iconGravity="textStart"
+
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="2dp" />
+
+
+</LinearLayout>

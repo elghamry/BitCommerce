@@ -7,11 +7,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".ScrollingActivity"
+            android:layout_marginBottom="90dp"
         android:id="@+id/nested_product"
-        android:layout_marginBottom="80dp"
+            android:translationY="80dp"
         android:background="@drawable/bg"
         android:fillViewport="true"
+            tools:context=".OnDetailsActivity"
 
 
         app:behavior_overlapTop="40dp"
@@ -34,20 +35,23 @@
 
         <TextView
                 android:id="@+id/product_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
                 android:layout_marginStart="16dp"
                 android:fontFamily="@font/grenale_conbla"
-                android:maxLength="20"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:paddingLeft="20dp"
                 android:paddingTop="0dp"
                 android:text="@string/item_name"
+                android:transitionName="@string/hero_name"
 
 
                 android:textColor="@color/text_header"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/smart_rating_bar"
                 app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -182,6 +186,7 @@
             <RelativeLayout
                     android:layout_width="96dp"
                     android:layout_height="40dp"
+                    android:id="@+id/counter_box"
 
                     android:background="@drawable/background"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -237,12 +242,33 @@
                     android:textColor="@color/colorPrimary"
                     android:fontFamily="@font/ubuntu_regular"
                     android:textStyle="bold"
-                    android:textSize="21sp"
+                    android:textSize="18sp"
 
 
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/now" />
+
+            <TextView
+                    android:id="@+id/stock_tv"
+                    android:layout_width="wrap_content"
+
+
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+
+                    android:fontFamily="@font/ubuntu_regular"
+                    android:text="@string/only_5_left"
+                    android:textColor="@color/stockColor"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/product_price" />
+
 
             <TextView
                     android:id="@+id/was"
@@ -269,7 +295,7 @@
                     android:textColor="@color/line_color"
                     android:fontFamily="@font/ubuntu_regular"
                     android:textStyle="bold"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
 
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -1,6 +1,9 @@
 package sa.biotic.app.fragments
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +18,28 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import com.aminography.choosephotohelper.ChoosePhotoHelper
+import com.bumptech.glide.Glide
+import com.chibatching.kotpref.livedata.asLiveData
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import sa.biotic.app.ProgressRequestBody
+import sa.biotic.app.PurchaseActivity
 import sa.biotic.app.R
 import sa.biotic.app.databinding.FragmentProfileBinding
+import sa.biotic.app.retrofit_service.Repository
+import sa.biotic.app.shared_prefrences_model.UserInfo
+import sa.biotic.app.shared_prefrences_model.UserRoute
 import sa.biotic.app.utils.margin
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,16 +54,20 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ProfileFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), ProgressRequestBody.UploadCallbacks {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var temp_tv: TextView? = null
     private var temp_image: ImageView? = null
     private var temp_card: CardView? = null
+    lateinit var bottomNavigationView: BottomNavigationView
+    lateinit var byteArray: ByteArray
+    lateinit var mBitmap: Bitmap
 
 
     lateinit var binding: FragmentProfileBinding
+    private lateinit var choosePhotoHelper: ChoosePhotoHelper
 //    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,9 +100,106 @@ class ProfileFragment : Fragment() {
         if (searchView.isVisible)
             searchView.visibility = ConstraintLayout.GONE
 
+//        toolbar.navigationIcon?.setVisible(false,true)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
+
+//        binding.textView4.setOnClickListener {
+//            choosePhotoHelper.showChooser()
+//
+//        }
+        UserInfo.asLiveData(UserInfo::image)
+            .observe(viewLifecycleOwner, Observer<String> {
+
+                Glide.with(this)
+                    .load(UserInfo.image)
+                    .placeholder(R.drawable.default_user_image_placeholder)
+                    .into(binding.profileImg)
+
+
+            })
+
+        UserInfo.asLiveData(UserInfo::name)
+            .observe(viewLifecycleOwner, Observer<String> {
+
+                //                Glide.with(this)
+////                    .load(UserInfo.image)
+////                    .placeholder(R.drawable.default_user_image_placeholder)
+////                    .into(binding.profileImg)
+                binding.username.text = it
+
+
+            })
+        UserInfo.asLiveData(UserInfo::email)
+            .observe(viewLifecycleOwner, Observer<String> {
+
+                //                Glide.with(this)
+////                    .load(UserInfo.image)
+////                    .placeholder(R.drawable.default_user_image_placeholder)
+////                    .into(binding.profileImg)
+                binding.email.text = it
+
+
+            })
+
+
+        bottomNavigationView =
+            (activity as AppCompatActivity).findViewById<BottomNavigationView>(sa.biotic.app.R.id.nav_view)
+        UserRoute.asLiveData(UserRoute::next_step)
+            .observe(viewLifecycleOwner, Observer<String> {
+                Log.d("shareddata", it.toString())
+
+                if (it == "purchase") {
+//                    Navigation.findNavController(binding.root)
+//                        .navigate(R.id.action_loginFragment_to_profileFragment)
+
+                    val intent = Intent(activity, PurchaseActivity::class.java)
+                    startActivityForResult(intent, 1)
+
+                    bottomNavigationView.selectedItemId = R.id.cart
+
+
+                }
+            })
+
+
+//        choosePhotoHelper = ChoosePhotoHelper.with(this)
+//            .asFilePath()
+//            .build(ChoosePhotoCallback {
+////                Log.d("userResp",it)
+//
+//                Glide.with(this)
+//                    .load(it)
+//                    .into(binding.profileImg)
+//
+//                var file = File(it)
+//
+//                Log.d("userResp",file.path)
+//                multipartImageUpload(file)
+//
+////                mBitmap = BitmapFactory.decodeFile(it)
+////                getByteArrayInBackground()
+//
+////                imageView.setImageBitmap(mBitmap);mBitmap
+//            })
 
         return binding.root
     }
+
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        choosePhotoHelper.onActivityResult(requestCode, resultCode, data)
+//    }
+//
+//    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        choosePhotoHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//    }
+
+
+
+
 
     private fun cardsController() {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -130,6 +251,10 @@ class ProfileFragment : Fragment() {
             temp_image = binding.myOrders
             temp_tv = binding.myOrdersTv
 
+
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_profileFragment_to_ordersFragment)
+
         }
 
 
@@ -151,6 +276,9 @@ class ProfileFragment : Fragment() {
             temp_card = it
             temp_image = binding.helpImage
             temp_tv = binding.helpTv
+
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_profileFragment_to_helpFragment)
 
         }
 
@@ -175,6 +303,10 @@ class ProfileFragment : Fragment() {
             temp_image = binding.contactUsImage
             temp_tv = binding.contactUsTv
 
+
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_profileFragment_to_contactUsFragment)
+
         }
 
 
@@ -195,6 +327,103 @@ class ProfileFragment : Fragment() {
         }
 
     }
+
+
+    private fun getByteArrayInBackground() {
+        val thread: Thread = object : Thread() {
+            override fun run() {
+                val bos = ByteArrayOutputStream()
+                mBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos)
+                byteArray = bos.toByteArray()
+                Log.d("userResp", "getByteArrayInBackground")
+//                multipartImageUpload()
+//                UiThreadStatement.runOnUiThread(Runnable {
+////                    frameLayout.setVisibility(View.VISIBLE)
+//                })
+            }
+        }
+        thread.start()
+    }
+
+
+//     private fun initRetrofitClient() {
+//        var client : OkHttpClient =  OkHttpClient.Builder().build()
+//
+//        //change the ip to yours.
+//        apiService = new Retrofit.Builder().baseUrl("http://172.20.10.3:3000").client(client).build().create(ApiService.class);
+//    }
+
+
+    private fun multipartImageUpload(file: File) {
+//        initRetrofitClient()
+        try {
+//            if (byteArray != null) {
+
+//                val filesDir: File = requireActivity().getApplicationContext().getFilesDir()
+//                val file = File(filesDir, "image" + ".png")
+//                val fos = FileOutputStream(file)
+//                fos.write(byteArray)
+//                Log.d("userResp",byteArray.toString())
+//                fos.flush()
+//                fos.close()
+//                textView.setTextColor(Color.BLUE)
+
+            var map: HashMap<String, RequestBody> = HashMap()
+
+            val fileBody = ProgressRequestBody(file, this)
+
+//                val body =
+//                    MultipartBody.Part.createFormData("ggg", file.getName(), fileBody)
+
+
+            val uid = RequestBody.create(MediaType.parse("text/plain"), UserInfo.uid.toString())
+            val access_token =
+                RequestBody.create(MediaType.parse("text/plain"), UserInfo.access_token)
+
+
+
+            map.put("UserId", uid)
+            map.put("AccessToken", access_token)
+            map.put("Image\"; filename=\"${file.name}\"", fileBody)
+
+            Repository.updateUserImage(map)
+//                val req: Call<ResponseBody> = apiService.postImage(body, name)
+//
+//                req.enqueue(object : Callback<ResponseBody?>() {
+//                    fun onResponse(
+//                        call: Call<ResponseBody?>?,
+//                        response: Response<ResponseBody?>
+//                    ) {
+//                        Toast.makeText(
+//                            getApplicationContext(),
+//                            response.code().toString() + " ",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//
+//                    fun onFailure(
+//                        call: Call<ResponseBody?>?,
+//                        t: Throwable
+//                    ) {
+//                        textView.setText("Uploaded Failed!")
+//                        textView.setTextColor(Color.RED)
+//                        Toast.makeText(
+//                            getApplicationContext(),
+//                            "Request failed",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                        t.printStackTrace()
+//                    }
+//                })
+//            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
 //    fun onButtonPressed(uri: Uri) {
@@ -249,5 +478,21 @@ class ProfileFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onProgressUpdate(percentage: Int) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onError() {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onFinish() {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun uploadStart() {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

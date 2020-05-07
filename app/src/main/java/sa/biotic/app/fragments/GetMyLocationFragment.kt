@@ -2,6 +2,8 @@ package sa.biotic.app.fragments
 
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
@@ -10,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -25,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -59,6 +63,8 @@ class GetMyLocationFragment : Fragment(), OnMapReadyCallback,
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
+
+    lateinit var markerCenter: Marker
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -112,7 +118,7 @@ class GetMyLocationFragment : Fragment(), OnMapReadyCallback,
                 super.onLocationResult(p0)
 
                 lastLocation = p0.lastLocation
-                placeMarkerOnMap(LatLng(lastLocation.latitude, lastLocation.longitude))
+//                placeMarkerOnMap(LatLng(lastLocation.latitude, lastLocation.longitude))
             }
         }
 
@@ -125,10 +131,14 @@ class GetMyLocationFragment : Fragment(), OnMapReadyCallback,
                 (activity as AppCompatActivity).findViewById<sa.biotic.app.components.stepper.StepperView>(
                     R.id.stepper
                 )
-//
-//            stepper.goToNextStep()
-//            stepper.goToNextStep()
 
+
+            getAddress(markerCenter.position)
+            stepper.goToNextStep()
+            stepper.goToNextStep()
+
+
+//                    naviaget from here
             Navigation.findNavController(binding.root)
                 .navigate(R.id.action_getMyLocationFragment_to_showAddressFragment)
 
@@ -198,6 +208,29 @@ class GetMyLocationFragment : Fragment(), OnMapReadyCallback,
         map.setOnMarkerClickListener(this)
 
         setUpMap()
+
+
+//        var height = 100
+//        var width = 100
+//        var bitmapdraw = getResources().getDrawable(R.drawable.home_marker) as BitmapDrawable
+//        var b = bitmapdraw.bitmap
+//        var smallMarker = Bitmap.createScaledBitmap(b, width, height, false)
+
+        var marker: Bitmap = BitmapFactory.decodeResource(
+            requireContext().resources,
+            R.drawable.pin
+        )
+
+
+        val markerOptions = MarkerOptions()
+        markerOptions.position(map.cameraPosition.target)
+        markerCenter = map.addMarker(markerOptions)
+        markerCenter.setIcon(BitmapDescriptorFactory.fromBitmap(marker))
+        map.setOnCameraMoveListener(GoogleMap.OnCameraMoveListener {
+            markerCenter.position = map.cameraPosition.target
+        })
+
+
     }
 
     override fun onMarkerClick(p0: Marker?) = false
@@ -224,7 +257,7 @@ class GetMyLocationFragment : Fragment(), OnMapReadyCallback,
             if (location != null) {
                 lastLocation = location
                 val currentLatLng = LatLng(location.latitude, location.longitude)
-                placeMarkerOnMap(currentLatLng)
+//                placeMarkerOnMap(currentLatLng)
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
             }
         }
@@ -238,12 +271,30 @@ class GetMyLocationFragment : Fragment(), OnMapReadyCallback,
 
         markerOptions.title(titleStr)
 
+        markerOptions.draggable(true)
+
+//        markerOptions.position(map.getCameraPosition().target);
+////        markerCenter = mMap.addMarker(markerOptions);
+
+
         map.addMarker(markerOptions)
     }
 
+
+//@Override
+//    private  fun onMapReady(googleMap: GoogleMap) {
+//        mMap = googleMap
+//        val markerOptions = MarkerOptions()
+//        markerOptions.position(mMap.getCameraPosition().target)
+//        markerCenter = mMap.addMarker(markerOptions)
+//        mMap.setOnCameraMoveListener(GoogleMap.OnCameraMoveListener { markerCenter.setPosition(mMap.getCameraPosition().target) })
+//    }
+
+
+
     private fun getAddress(latLng: LatLng): String {
         // 1
-        var loc = Locale("en", "US")
+        var loc = Locale("en", "US")//en US
         var aLocale = Locale.Builder().setLanguage("en").setScript("Latn").setRegion("RS").build()
         val geocoder = Geocoder(requireContext(), loc)
         val addresses: List<Address>?
@@ -272,11 +323,14 @@ class GetMyLocationFragment : Fragment(), OnMapReadyCallback,
                 var knownName = addresses.get(0).featureName
                 var var1 = addresses.get(0).thoroughfare
                 var var2 = addresses.get(0).subThoroughfare
-                var var3 = addresses.get(0).premises
+                var premises = addresses.get(0).premises
 
                 addressText =
-                    address + "\n" + city + "\n" + state + "\n" + country + "\n" + postalCode + "\n" + knownName + "\n" + var1 + "\n" + var2 + "\n" + var3
+                    address + "\n" + city + "\n" + state + "\n" + country + "\n" + postalCode + "\n" + knownName + "\n" + var1 + "\n" + var2 + "\n" + premises
                 Log.d("addresss", addressText.toString())
+
+
+                Toast.makeText(context, address, Toast.LENGTH_LONG).show()
 
                 purchaseViewModel.setAddress(addresses.get(0))
             }

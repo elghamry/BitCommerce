@@ -7,7 +7,7 @@ import android.os.Build
 import android.os.Bundle
 
 /**
- * Kotlin Extensions for simpler, easier and funw way
+ * Kotlin Extensions for simpler, easier and fun way
  * of launching of Activities
  */
 

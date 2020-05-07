@@ -15,14 +15,15 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.idanatz.oneadapter.OneAdapter
-import com.idanatz.oneadapter.external.events.ClickEventHook
+import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
+
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
 import sa.biotic.app.R
 import sa.biotic.app.components.LinearLayoutManagerWrapper
 import sa.biotic.app.databinding.FragmentProdsBundsRelaBinding
-import sa.biotic.app.model.BundleProds
+import sa.biotic.app.model.BundleProduct
 import sa.biotic.app.model.ProductBund
 import sa.biotic.app.retrofit_service.Repository
 import sa.biotic.app.viewmodels.ProdsBundsRelaViewModel
@@ -73,7 +74,7 @@ class ProdsBundsRelaFragment : Fragment() {
 //
 //            }    // Attach your view model here
 //        }.root
-        val bundle: BundleProds? = activity?.intent?.getParcelableExtra("BundleItem")
+        val bundle: BundleProduct? = activity?.intent?.getParcelableExtra("BundleItem")
         Repository.getBundleProduct(bundle!!.BundleID)
 
         binding = DataBindingUtil.inflate(
@@ -109,7 +110,7 @@ class ProdsBundsRelaFragment : Fragment() {
 
 
 //
-        prodsRelatedViewModel.prodsLive.observe(this, Observer { newRevs ->
+        prodsRelatedViewModel.prodsLive.observe(viewLifecycleOwner, Observer { newRevs ->
             prodsAdapter.setItems(newRevs)
 
 

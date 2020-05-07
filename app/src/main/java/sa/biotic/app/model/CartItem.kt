@@ -6,11 +6,15 @@ import com.idanatz.oneadapter.external.interfaces.Diffable
 data class CartItem(
     val id: Long,
     val typeId: Int,
+    val offerId: Int,
     val type: String,
     val img: String,
     val name: String,
     val description: String,
     var quantity: Int,
+    var stockQuantity: Int,
+    var discount: String,
+
     val price: String,
     var isExpanded: Boolean = false
 ) : Diffable {

@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import kotlinx.android.synthetic.main.activity_purchase.*
 import sa.biotic.app.databinding.ActivityPurchaseBinding
+import sa.biotic.app.shared_prefrences_model.UserRoute
 import sa.biotic.app.viewmodels.SearchViewModel
 
 
@@ -21,6 +22,9 @@ class PurchaseActivity : AppCompatActivity() {
 //        setContentView(R.layout.activity_search)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_purchase)
+
+//
+        UserRoute.next_step = "cart"
 
 
         setSupportActionBar(toolbar)

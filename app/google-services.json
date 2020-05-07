@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "347339339621",
+    "firebase_url": "https://biotic-saudi-arabia.firebaseio.com",
+    "project_id": "biotic-saudi-arabia",
+    "storage_bucket": "biotic-saudi-arabia.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347339339621:android:d3d3d709e920480d98938c",
+        "android_client_info": {
+          "package_name": "sa.biotic.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "347339339621-510c774kngum7tad8slfs57rmpobaiqf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpS569_lQHPwvwwR6w9GjXtsMjV9m0jcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "347339339621-510c774kngum7tad8slfs57rmpobaiqf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

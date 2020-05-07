@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -13,10 +14,15 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
+import com.chibatching.kotpref.livedata.asLiveData
 import com.github.ybq.android.spinkit.style.Wave
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_register.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import sa.biotic.app.R
@@ -24,7 +30,10 @@ import sa.biotic.app.components.FillRequiredRule
 import sa.biotic.app.components.MissMatchRule
 import sa.biotic.app.components.PhoneLengthRule
 import sa.biotic.app.databinding.FragmentRegisterBinding
+import sa.biotic.app.model.User
+import sa.biotic.app.shared_prefrences_model.UserInfo
 import sa.biotic.app.utils.margin
+import sa.biotic.app.viewmodels.RegisterationViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,6 +54,7 @@ class RegisterFragment : Fragment() {
     private var param2: String? = null
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var binding: FragmentRegisterBinding
+    private lateinit var viewModel: RegisterationViewModel
 
     lateinit var mWaveDrawable: Wave
 //    private var listener: OnFragmentInteractionListener? = null
@@ -54,6 +64,11 @@ class RegisterFragment : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+        }
+
+
+        viewModel = ViewModelProviders.of(this).get(RegisterationViewModel::class.java).apply {
+            //
         }
     }
 
@@ -254,6 +269,89 @@ class RegisterFragment : Fragment() {
 //                binding.registerBtn.setCompoundDrawables(null, mWaveDrawable, null, null)
 //
 //                mWaveDrawable.start()
+
+
+                var user: User = User(
+                    etFirst.text.toString(),
+                    etLast.text.toString(),
+                    etEmail.text.toString(),
+                    etPhone.text.toString(),
+                    etConPassword.text.toString()
+                    ,
+                    etPassword.text.toString()
+                )
+                viewModel.registerUser(user)
+
+
+
+                viewModel.userRegisterationResponseLiveData.observe(
+                    viewLifecycleOwner,
+                    Observer { userResponse ->
+
+                        Log.d(
+                            "userResp",
+                            "\n" + userResponse.StatusDesc + "\n" + userResponse.ValidationStatusNumber
+                        )
+
+
+                        if (userResponse.Status) {
+
+//                        UserInfo.access_token=userResponse.UserAccessTaken
+//                        UserInfo.signed=userResponse.Status
+//                        UserInfo.image=userResponse.UserImage
+                            UserInfo.uid = userResponse.UserID
+                            UserInfo.email = etEmail.text.toString()
+                            UserInfo.validation_status_number = userResponse.ValidationStatusNumber
+
+
+                            Navigation.findNavController(binding.root)
+                                .navigate(R.id.action_registerFragment_to_regsiterCompletedFragment)
+
+//
+                            Log.d("userResp", "\n" + UserInfo.email)
+
+//                        userResponse.Status=false
+//                        userResponse.UserID=1000
+
+
+                            UserInfo.asLiveData(UserInfo::access_token)
+                                .observe(viewLifecycleOwner, Observer<String> {
+                                    //                Log.d("shared",it.toString())
+
+//                                if(UserInfo.signed){
+//
+//
+//                                    Navigation.findNavController(binding.root)
+//                                        .navigate(R.id.action_loginFragment_to_profileFragment)
+                                    Log.d(
+                                        "userResp",
+                                        "\n" + UserInfo.access_token + "\n" + UserInfo.signed + "\n" + UserInfo.image + "\n" + UserInfo.uid
+                                    )
+//
+//                                }
+                                })
+
+
+                        } else {
+
+                            if (userResponse.UserID == 0) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Error in Registeration , try it later",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+
+                        }
+
+
+//                    Log.d("userResp",UserInfo.signed.toString())
+
+
+                    })
+
+
             }
         }
 

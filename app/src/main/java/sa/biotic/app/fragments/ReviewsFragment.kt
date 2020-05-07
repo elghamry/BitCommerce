@@ -16,7 +16,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.idanatz.oneadapter.OneAdapter
-import com.idanatz.oneadapter.external.events.ClickEventHook
+import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
+
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
@@ -106,7 +107,7 @@ class ReviewsFragment : Fragment() {
 
 
 //
-        reviewsViewModel.revsLive.observe(this, Observer { newRevs ->
+        reviewsViewModel.revsLive.observe(viewLifecycleOwner, Observer { newRevs ->
             reviewsAdapter.setItems(newRevs)
 
 

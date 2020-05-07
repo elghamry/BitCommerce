@@ -1,7 +1,9 @@
 package sa.biotic.app.fragments
 
+
 import android.animation.Animator
 import android.animation.AnimatorInflater
+import android.app.ActivityOptions
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Paint
@@ -9,6 +11,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +21,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -29,7 +33,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.idanatz.oneadapter.OneAdapter
-import com.idanatz.oneadapter.external.events.ClickEventHook
+import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
@@ -39,10 +43,13 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventList
 import pl.droidsonroids.gif.GifDrawable
 import pl.droidsonroids.gif.GifImageView
 import sa.biotic.app.GridLayoutManagerWrapper
+import sa.biotic.app.OnDetailsActivity
 import sa.biotic.app.R
-import sa.biotic.app.ScrollingActivity
 import sa.biotic.app.databinding.FragmentSearchBinding
+import sa.biotic.app.model.BundleProduct
+import sa.biotic.app.model.Product
 import sa.biotic.app.model.SearchItem
+import sa.biotic.app.utils.TransitionHelper
 import sa.biotic.app.utils.margin
 import sa.biotic.app.viewmodels.SearchViewModel
 
@@ -62,6 +69,7 @@ private const val ARG_PARAM2 = "param2"
 class SearchFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private lateinit var viewModel: SearchViewModel
+    private lateinit var product: Product
     private var param1: String? = null
     private var param2: String? = null
     lateinit var image_loader: GifImageView
@@ -69,6 +77,10 @@ class SearchFragment : Fragment() {
     lateinit var binding: FragmentSearchBinding
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var gifFromResource: GifDrawable
+    var products: MutableList<Product> = mutableListOf()
+    var bundles: MutableList<BundleProduct> = mutableListOf()
+    var productsAsOffer: MutableList<Product> = mutableListOf()
+    var sharedViewtopass: ViewBinder? = null
 //    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,6 +116,21 @@ class SearchFragment : Fragment() {
         gifFromResource.stop()
         image_loader.setImageDrawable(gifFromResource)
 
+
+//        Repository.bundleItem.observe(viewLifecycleOwner, Observer { bund ->
+//
+//
+//            if (!bundles.contains(bund)) {
+//
+//
+//                bundles.add(bund)
+//
+//            }
+//
+//
+//        })
+
+
         var container: FragmentContainerView =
             (activity as AppCompatActivity).findViewById<FragmentContainerView>(R.id.nav_host_container)
         container.margin(top = 40F)
@@ -131,7 +158,6 @@ class SearchFragment : Fragment() {
 //
 
 
-
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -143,9 +169,8 @@ class SearchFragment : Fragment() {
                 gifFromResource.start()
                 image_loader.setImageDrawable(gifFromResource)
                 binding.bottle.visibility = GifImageView.VISIBLE
-                binding.noOfPr.visibility = TextView.INVISIBLE
+//                binding.noOfPr.visibility = TextView.INVISIBLE
                 binding.prodsRecycler.visibility = RecyclerView.INVISIBLE
-
 
 
             }
@@ -209,7 +234,150 @@ class SearchFragment : Fragment() {
 
         productsAdapterCreation()
 
+        goOnDetails()
+
         return binding.root
+    }
+
+    private fun goOnDetails() {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+
+        val intent = Intent(requireContext(), OnDetailsActivity::class.java)
+
+
+        viewModel.bundleLive.observe(viewLifecycleOwner, Observer { bund ->
+
+            if (bund.BundleID != -1) {
+
+                if (sharedViewtopass != null) {
+                    var sharedView =
+                        sharedViewtopass!!.rootView.findViewById<View>(R.id.product_image)
+                    var transitionName = getString(R.string.hero_image)
+                    var sharedView2 =
+                        sharedViewtopass!!.rootView.findViewById<View>(R.id.product_title)
+                    var transitionName2 = getString(R.string.hero_name)
+
+                    val pairs: Array<Pair<View, String>> =
+                        TransitionHelper.createSafeTransitionParticipants(
+                            requireActivity(), false,
+                            android.util.Pair<View, String>(
+                                sharedView,
+                                transitionName
+                            )
+                            ,
+                            android.util.Pair<View, String>(
+                                sharedView2,
+                                transitionName2
+                            )
+                        )
+                    var parsingBundle: BundleProduct = bund.copy()
+
+                    bund.BundleID = -1
+
+                    Log.d("checkerbund", parsingBundle.toString())
+                    var transitionActivityOptions: ActivityOptions =
+                        ActivityOptions.makeSceneTransitionAnimation(
+                            requireActivity(),
+                            *pairs
+                        )
+
+                    intent.putExtra("BundleItem", parsingBundle)
+                    intent.putExtra("type", "bundle")
+
+                    startActivity(intent, transitionActivityOptions.toBundle())
+
+                }
+
+            }
+
+
+        })
+
+        viewModel.prodLive.observe(viewLifecycleOwner, Observer { prod ->
+
+
+            if (prod.ProductID != -1) {
+
+                if (sharedViewtopass != null) {
+
+                    var sharedView =
+                        sharedViewtopass!!.rootView.findViewById<View>(R.id.product_image)
+                    var transitionName = getString(R.string.hero_image)
+                    var sharedView2 =
+                        sharedViewtopass!!.rootView.findViewById<View>(R.id.product_title)
+                    var transitionName2 = getString(R.string.hero_name)
+
+                    val pairs: Array<Pair<View, String>> =
+                        TransitionHelper.createSafeTransitionParticipants(
+                            requireActivity(), false,
+                            android.util.Pair<View, String>(
+                                sharedView,
+                                transitionName
+                            ),
+                            android.util.Pair<View, String>(
+                                sharedView2,
+                                transitionName2
+                            )
+                        )
+
+
+                    var transitionActivityOptions: ActivityOptions =
+                        ActivityOptions.makeSceneTransitionAnimation(
+                            requireActivity(),
+                            *pairs
+                        )
+                    var productParsing: Product = prod.copy()
+
+                    prod.ProductID = -1
+//                    if(prod.ProductOfferDicountValue.toFloat() > 0F)
+//                    {
+//
+//                        intent.putExtra("type", "offer")
+//                        var productWithOffer = OfferProduct(
+//                            "dssd",
+//                            "sdds",
+//                            prod.ProductOfferDicountValue,
+//                            "daadad"
+//                            ,
+//                            0,
+//                            "asdds",
+//                            "adadas",
+//                            "adsdasd",
+//                            prod.ProductOfferPrice,
+//                            "dasds",
+//                            prod.ProductCallories,
+//                            prod.ProductDescription_Ar,
+//                            prod.ProductDescription_En,
+//                            prod.ProductID,
+//                            prod.ProductImage,
+//                            prod.ProductName_Ar,
+//                            prod.ProductName_En,
+//                            prod.ProductPrice,
+//                            prod.ProductReviews,
+//                            prod.ProductStockQuantity
+//                        )
+//                        intent.putExtra("OfferItem", productWithOffer)
+//                        startActivity(intent, transitionActivityOptions.toBundle())
+//                    }
+//                    else
+//                    {
+                    intent.putExtra("type", "product")
+                    Log.d("checkerProd", productParsing.toString())
+                    intent.putExtra("ProductItem", productParsing)
+                    startActivity(intent, transitionActivityOptions.toBundle())
+//                    }
+
+
+                }
+
+
+            }
+
+
+        })
+
+
     }
 
 
@@ -219,66 +387,168 @@ class SearchFragment : Fragment() {
 
         viewModel.searchItemsLive
 //        Repository.searchItems
-            .observe(this, Observer { newProds ->
+            .observe(viewLifecycleOwner, Observer { newProds ->
+
+
                 prodsAdapter = OneAdapter(binding.prodsRecycler)
                     .attachItemModule(
                         productItem()
-//                    .addEventHook(clickProductEventHook())
+                            .addEventHook(clickProductEventHook())
                     )
 
 //                prodsAdapter.clear()
 //                prodsAdapter.update()
                 prodsAdapter.setItems(newProds)
 
+//                products.clear()
+//                bundles.clear()
+
                 Log.d("noIs", newProds.size.toString())
 
 //            gifFromResource.stop()
 //            image_loader.setImageDrawable(gifFromResource)
 
-                binding.noOfPr.text = newProds.size.toString() + " Items"
+//                binding.noOfPr.text = newProds.size.toString() + " Items"
                 binding.bottle.visibility = GifImageView.GONE
-                binding.noOfPr.visibility = TextView.VISIBLE
+//                binding.noOfPr.visibility = TextView.VISIBLE
                 binding.prodsRecycler.visibility = RecyclerView.VISIBLE
 
 
             })
+
+
+//        viewModel.prodLive.observe(viewLifecycleOwner, Observer { prod ->
+//
+//
+//            //Log.d("fffff",prod.ProductOfferPrice)
+////            if(prod.ProductOfferPrice.toFloat()>1F){
+////
+////
+////                if(!productsAsOffer.contains(prod)) {
+////
+////                    productsAsOffer.add(prod)
+////
+////                }
+////
+////            }
+////            else{
+//
+//            if (!products.contains(prod) && prod.ProductID != 0) {
+//
+//                products.add(prod)
+//                Log.d("getdatafor", prod.ProductID.toString())
+//
+//            }
+//
+////
+////
+////            }
+////
+//        })
     }
 
 
     private fun clickProductEventHook(): ClickEventHook<SearchItem> =
         object : ClickEventHook<SearchItem>() {
             override fun onClick(model: SearchItem, viewBinder: ViewBinder) {
-//            Toast.makeText(requireContext(), "${model.title} clicked", Toast.LENGTH_SHORT).show()
+//                var product : Product  = Product(0,"","",
+//                    "",0,"","",""
+//                ,"","","","","",0)
+//                    Repository.getProduct(model.ID)
+//                    Repository.prod.observe(viewLifecycleOwner, Observer { prod ->
+//
+//                      product = prod
 
-//            if(prevRecyclerBinderView!=null){
+                //                    if(product.ProductName_En.isNotEmpty()&&!product.ProductName_En.isNullOrBlank())
+                //                    {
+
 //
-//                prevRecyclerBinderView!!.findViewById<LinearLayout>(R.id.category_background)
-//                    .setBackgroundResource(R.drawable.category_frame)
-//                prevRecyclerBinderView!!.findViewById<ImageView>(R.id.category_image)
-//                    .setColorFilter(
-//                        ContextCompat.getColor(this@MainActivity, R.color.purple),
-//                        android.graphics.PorterDuff.Mode.SRC_IN)
+//                var product = products.find {
+//                    it.ProductID == model.ID
 //
-//            }
+//                }
 //
-//            viewBinder.findViewById<LinearLayout>(R.id.category_background)
-//                .setBackgroundResource(R.drawable.category_frame_clicked)
-//            viewBinder.findViewById<ImageView>(R.id.category_image)
-//                .setColorFilter(
-//                    ContextCompat.getColor(this@MainActivity, R.color.white),
-//                    android.graphics.PorterDuff.Mode.SRC_IN)
-//
-//            prevRecyclerBinderView = viewBinder
-                val intent = Intent(requireContext(), ScrollingActivity::class.java)
-//                intent.putExtra("product_name", model.title)
-//                intent.putExtra("product_image", model.img)
-//                intent.putExtra("product_price", model.price)
-                intent.putExtra("type", "search")
-                intent.putExtra("SearchItem", model)
+
+                sharedViewtopass = viewBinder
+
+                if (model.TypeIsProduct.equals("1")) {
 
 
-//            intent.putExtra(EXTRA_MESSAGE, message)
-                startActivityForResult(intent, 1)
+                    viewModel.getThisProd(model.ID)
+
+
+//                    if (product != null) {
+//                        if (model.ProductOfferDicountValue.toFloat() > 0F) {
+//
+//
+////                            var productWithOffer = OfferProduct(
+////                                "dssd",
+////                                "sdds",
+////                                "asads",
+////                                "daadad"
+////                                ,
+////                                0,
+////                                "asdds",
+////                                "adadas",
+////                                "adsdasd",
+////                                "adasas",
+////                                "dasds",
+////                                product!!.ProductCallories,
+////                                product!!.ProductDescription_Ar,
+////                                product!!.ProductDescription_En,
+////                                product!!.ProductID,
+////                                product!!.ProductImage,
+////                                product!!.ProductName_Ar,
+////                                product!!.ProductName_En,
+////                                product!!.ProductPrice,
+////                                product!!.ProductReviews,
+////                                product!!.ProductStockQuantity
+////                            )
+//
+//                            intent.putExtra("type", "offer")
+//
+//                            intent.putExtra("OfferItem", productWithOffer)
+//
+//                            startActivity(intent, transitionActivityOptions.toBundle())
+//                        } else {
+//
+//                            intent.putExtra("type", "product")
+//
+//
+//
+//                            intent.putExtra("ProductItem", product)
+//                            startActivity(intent, transitionActivityOptions.toBundle())
+//                        }
+//                    }
+
+
+                } else {
+
+//                    var bundle: BundleProduct? = bundles.find {
+//                        it.BundleID == model.ID
+//                    }
+//                    if (bundle != null) {
+//                        intent.putExtra("BundleItem", bundle)
+//                        intent.putExtra("type", "bundle")
+//
+//                        startActivity(intent, transitionActivityOptions.toBundle())
+//                    }
+
+                    viewModel.getThisBundle(model.ID)
+
+
+                }
+
+
+//                        }
+
+
+//                    })
+
+//                Log.d("countsPro", products.size.toString())
+//                Log.d("countsOf", productsAsOffer.size.toString())
+//                Log.d("countsBund", bundles.size.toString())
+
 
             }
 
@@ -307,11 +577,13 @@ class SearchFragment : Fragment() {
             val story4 = viewBinder.findViewById<TextView>(R.id.product_description)
             val story5 = viewBinder.findViewById<TextView>(R.id.calories)
             val story6 = viewBinder.findViewById<TextView>(R.id.oldprice)
-//            val story7 = viewBinder.findViewById<CardView>(R.id.cal_card)
-            val story8 = viewBinder.findViewById<TextView>(R.id.oldprice)
+            val story8 = viewBinder.findViewById<TextView>(R.id.stock_tv)
+            val story7 = viewBinder.findViewById<TextView>(R.id.discount_value)
+            val story9 = viewBinder.findViewById<CardView>(R.id.discount_card)
+            val story10 = viewBinder.findViewById<ImageView>(R.id.cal_icon)
 
-//            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
 
+//            sharedViewtopass = viewBinder
 //
             Glide.with(requireContext())
 //                .load(model.img)
@@ -322,6 +594,11 @@ class SearchFragment : Fragment() {
             story3.text = model.Price + " " + getString(R.string._sar)
             story4.text = model.Description_En
             story5.text = model.Callories.toString()
+//            story6.text=model.ProductOfferPrice+ " " + getString(R.string._sar)
+            story7.text = (model.ProductOfferDicountValue.toFloat() * 100).toInt().toString() + "%"
+
+
+
 
 
             story6.paintFlags =
@@ -333,15 +610,86 @@ class SearchFragment : Fragment() {
                 story3.text = model.ProductOfferPrice + " " + getString(R.string._sar)
                 story6.text = model.Price + " " + getString(R.string._sar)
                 story6.visibility = TextView.VISIBLE
+            } else {
+                story9.visibility = CardView.INVISIBLE
+                story6.visibility = TextView.INVISIBLE
+
             }
+
+            if (model.TypeIsProduct == "1") {
+
+
+                if (model.ProductStockQuantity <= 5) {
+                    if (model.ProductStockQuantity <= 0) {
+                        story3.text = getString(R.string.sold_out)
+                        story3.setTextColor(resources.getColor(R.color.stockColor))
+//                    story3.visibility=TextView.INVISIBLE
+                        story6.visibility = TextView.INVISIBLE
+                        story8.visibility = TextView.INVISIBLE
+
+                    } else
+                        story8.text =
+                            getString(R.string.only) + " " + model.ProductStockQuantity.toString() + " " + getString(
+                                R.string.left
+                            )
+                } else {
+
+//                    story8.text=getString(R.string.only)+" "+model.ProductStockQuantity.toString()+" "+getString(R.string.left)
+                    story8.visibility = TextView.INVISIBLE
+                }
+
+            } else {
+                story5.visibility = TextView.INVISIBLE
+
+
+                if (model.ProductStockQuantity == 0) {
+
+//                    story8.visibility=TextView.VISIBLE
+                    story3.visibility = TextView.INVISIBLE
+
+                    story5.text = "Sold out"
+                    story5.visibility = TextView.VISIBLE
+                    story5.setTextColor(resources.getColor(R.color.stockColor))
+
+                } else {
+                    if (model.ProductStockQuantity <= 5) {
+                        Log.d("iam here bitch", "hello friend")
+                        story5.text =
+                            getString(R.string.only) + " " + model.ProductStockQuantity.toString() + " " + getString(
+                                R.string.left
+                            )
+                        story5.visibility = TextView.VISIBLE
+                        story5.setTextColor(resources.getColor(R.color.stockColor))
+
+                    }
+                }
+
+            }
+
+
+
 
             if (model.TypeIsProduct == "0") {
 
-//                story7.visibility= CardView.INVISIBLE
+                story9.visibility = CardView.INVISIBLE
+                story6.visibility = TextView.INVISIBLE
+                story10.visibility = ImageView.INVISIBLE
+//
                 story8.visibility = TextView.INVISIBLE
 
 
             }
+
+
+//Log.d("countsA",model.TypeIsProduct)
+//            if (model.TypeIsProduct == "1") {
+//                Log.d("countsA", model.Name_En)
+//                viewModel.getThisProd(model.ID)
+//            } else {
+//
+//                Repository.getBundleProduct(model.ID)
+//
+//            }
 
 
         }

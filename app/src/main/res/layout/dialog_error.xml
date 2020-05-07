@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_done"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+
+
+            android:layout_gravity="center"
+
+            />
+
+    <TextView
+            android:id="@+id/tvErrorMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_gravity="center"
+            android:elevation="5dp"
+
+            android:fontFamily="@font/grenale_conbla"
+            android:gravity="center"
+            android:text="Password has Changed Successfully"
+            android:textColor="@color/text_header"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:transitionName="tvLogin" />
+
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/ok_btn"
+            android:layout_width="120dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/ubuntu_medium"
+            android:gravity="center"
+            android:text="Ok"
+
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            app:backgroundTint="@color/colorPrimary"
+
+            app:cornerRadius="12dp"
+            app:iconGravity="textStart" />
+
+
+</LinearLayout>

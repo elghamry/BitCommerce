@@ -19,7 +19,6 @@
             app:cardCornerRadius="5dp"
             app:cardElevation="4dp"
             app:layout_constraintTop_toTopOf="parent">
-
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -31,69 +30,82 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:scaleType="centerCrop"
+                    android:transitionName="@string/hero_image"
                     app:layout_constraintTop_toTopOf="parent" />
 
-            <!--            <androidx.cardview.widget.CardView-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                    android:id="@+id/cal_card"-->
-            <!--                    app:cardCornerRadius="0dp"-->
-            <!--                    android:alpha=".7"-->
-            <!--                    app:cardBackgroundColor="@color/purple">-->
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/discount_card"
+                    android:layout_width="47dp"
+                    android:layout_height="24dp"
+                    android:layout_marginBottom="-10dp"
+                    android:alpha=".7"
+                    android:translationX="4dp"
+                    android:translationY="4dp"
 
 
-            <!--                <LinearLayout-->
-            <!--                        android:layout_width="wrap_content"-->
-            <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:orientation="horizontal"-->
-            <!--                        android:layout_gravity="center"-->
-            <!--                        android:gravity="center"-->
-            <!--                        android:layout_margin="4dp">-->
-            <!--                    <ImageView-->
-            <!--                            android:id="@+id/cal_icon"-->
-            <!--                            android:layout_marginTop="1.1dp"-->
-            <!--                            android:layout_marginEnd="2dp"-->
-            <!--                            android:layout_width="9dp"-->
-            <!--                            android:layout_height="9dp"-->
-            <!--                            android:src="@drawable/calories_white_icon"-->
-            <!--                            android:layout_gravity="center"-->
+                    app:cardBackgroundColor="@color/purple"
+                    app:cardCornerRadius="6dp"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+                <!--                            android:translationY="4dp"-->
+                <!--                            android:translationX="4dp"-->
 
 
-            <!--                            />-->
-
-            <!--                    <TextView-->
-            <!--                            android:id="@+id/calories"-->
-            <!--                            android:layout_width="wrap_content"-->
-            <!--                            android:layout_height="wrap_content"-->
-            <!--                            android:layout_marginEnd="1dp"-->
-
-
-            <!--                            android:fontFamily="@font/ubuntu_medium"-->
-            <!--                            android:text="@string/cal"-->
-
-            <!--                            android:layout_gravity="center-->
-            <!--"     android:textColor="@color/white"-->
-            <!--                            android:gravity="center"-->
-            <!--                            android:textSize="11sp"-->
-            <!--                            />-->
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="1dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                    <!--                                <ImageView-->
+                    <!--                                        android:id="@+id/cal_icon"-->
+                    <!--                                        android:layout_marginTop="1.1dp"-->
+                    <!--                                        android:layout_marginEnd="2dp"-->
+                    <!--                                        android:layout_width="9dp"-->
+                    <!--                                        android:layout_height="9dp"-->
+                    <!--                                        android:src="@drawable/calories_white_icon"-->
+                    <!--                                        android:layout_gravity="center"-->
 
 
-            <!--                </LinearLayout>-->
+                    <!--                                         />-->
+
+                    <TextView
+                            android:id="@+id/discount_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
 
 
-            <!--            </androidx.cardview.widget.CardView>-->
+                            android:layout_gravity="center"
+                            android:layout_marginStart="6dp"
+
+
+                            android:layout_marginEnd="6dp"
+                            android:fontFamily="@font/grenale_conbla"
+
+                            android:gravity="center"
+                            android:text="30%"
+                            android:textColor="@color/white"
+                            android:textSize="11sp" />
+
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
     </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/title_and_price"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
 
             app:layout_constraintEnd_toEndOf="parent"
@@ -102,14 +114,14 @@
 
         <TextView
                 android:id="@+id/product_title"
-                android:layout_width="151dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/grenale_conbla"
-                android:maxLength="16"
-
+                android:layout_marginEnd="4dp"
                 android:maxLines="1"
+                android:ellipsize="end"
                 android:text="newwww"
                 android:textColor="@color/text_header"
                 android:textSize="17sp"
@@ -133,6 +145,65 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title_and_price" />
 
+
+    <TextView
+            android:id="@+id/calories"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="3dp"
+            android:fontFamily="@font/ubuntu_medium"
+
+            android:text="@string/cal"
+            android:textColor="@color/purple"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_description" />
+    <TextView
+            android:id="@+id/stock_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+
+
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="3dp"
+            android:fontFamily="@font/ubuntu_regular"
+            android:text="@string/only_5_left"
+
+            android:textColor="@color/stockColor"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/calories" />
+
+    <ImageView
+            android:id="@+id/cal_icon"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/calorie_icon"
+            app:layout_constraintEnd_toStartOf="@id/calories"
+            app:layout_constraintTop_toBottomOf="@+id/product_description" />
+
+    <TextView
+            android:id="@+id/oldprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/ubuntu_regular"
+            android:text="@string/price_demo"
+            android:textColor="@color/oldPrice"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/price" />
+
+
     <TextView
             android:id="@+id/price"
             android:layout_width="0dp"
@@ -145,50 +216,10 @@
             android:text="@string/price_demo"
             android:textColor="@color/colorPrimary"
             android:textSize="12sp"
+            android:visibility="visible"
 
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/product_description" />
-
-    <TextView
-            android:id="@+id/oldprice"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="3dp"
-            android:fontFamily="@font/ubuntu_medium"
-            android:text="@string/price_demo"
-            android:textColor="@color/oldPrice"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/price" />
-
-    <TextView
-            android:id="@+id/calories"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-
-
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="6dp"
-            android:fontFamily="@font/ubuntu_regular"
-            android:text="@string/cal"
-
-            android:textColor="@color/purple"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/product_description" />
-
-    <ImageView
-            android:id="@+id/cal_icon"
-            android:layout_width="11dp"
-            android:layout_height="11dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="1dp"
-            android:src="@drawable/calorie_icon"
-            app:layout_constraintEnd_toStartOf="@+id/calories"
-            app:layout_constraintTop_toBottomOf="@+id/product_description" />
+            app:layout_constraintTop_toBottomOf="@id/product_description" />
+    <!--    <TextView-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,27 +16,32 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.idanatz.oneadapter.OneAdapter
-import com.idanatz.oneadapter.external.events.ClickEventHook
+import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
+import com.mikhaellopez.rxanimation.RxAnimation
+import com.mikhaellopez.rxanimation.translation
 import com.rowland.cartcounter.view.CartCounterActionView
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_scrolling.*
 import kotlinx.android.synthetic.main.content_scrolling.*
 import sa.biotic.app.components.alerter.Alerter
-import sa.biotic.app.components.alerter.OnHideAlertListener
-import sa.biotic.app.components.alerter.OnShowAlertListener
 import sa.biotic.app.databinding.ActivityScrollingBinding
 import sa.biotic.app.model.*
 import sa.biotic.app.retrofit_service.Repository
+import sa.biotic.app.shared_prefrences_model.UserInfo
+import sa.biotic.app.viewmodels.OnDetailsViewModel
 
 
-class ScrollingActivity : AppCompatActivity() {
+class OnDetailsActivity : AppCompatActivity() {
 
 
     private lateinit var reviewsAdapter: OneAdapter
@@ -46,17 +51,25 @@ class ScrollingActivity : AppCompatActivity() {
     lateinit var main_alert_background: LinearLayout
     lateinit var nested: NestedScrollView
     private lateinit var binding: ActivityScrollingBinding
-
     lateinit var alert_title: String
+    private val composite = CompositeDisposable()
+    lateinit var viewModel: OnDetailsViewModel
     var no_items = 0
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_scrolling)
+
+        viewModel = ViewModelProviders.of(this).get(OnDetailsViewModel::class.java).apply {
+            //
+        }
+
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_scrolling)
+
+
+
+
         setSupportActionBar(toolbar)
+
 
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
         val sectionsPagerAdapterNotBundle =
@@ -65,7 +78,7 @@ class ScrollingActivity : AppCompatActivity() {
 
 
         val tabs: TabLayout = findViewById<TabLayout>(R.id.tabs)
-        nested = findViewById<NestedScrollView>(R.id.nested_product)
+        nested = findViewById(R.id.nested_product)
 
 
         var addToCartButton: MaterialButton = findViewById(R.id.add_to_cart)
@@ -74,188 +87,17 @@ class ScrollingActivity : AppCompatActivity() {
         addToCartButton.setOnClickListener {
             //                                enableDisableActivty(false)
 
-            main_alert_background.visibility = ConstraintLayout.VISIBLE
-            main_alert_background.background.alpha = 200
-//
-            alerter =
-//                   alerter
-                Alerter.create(this@ScrollingActivity)
-
-
-            alerter
-                .setTitle(
-//                    "X3 Rocky Road Protein bar\n" +
-//                            "Peanut Butter 55g               12 SR"
-                    alert_title
-                )
-//                .setText("Alert text...")
-                .setDuration(200000)
-                .enableSwipeToDismiss()
-                .disableOutsideTouch()
-                .setDismissable(true)
-                .setOnClickListener(View.OnClickListener {
-                    //                    Toast.makeText(this@ScrollingActivity, "OnClick Called", Toast.LENGTH_LONG).show();
-
-
-                }).hideIcon()
-
-                .setOnShowListener(OnShowAlertListener {
-                    //                    Toast.makeText(this@KotlinDemoActivity, "Show Alert", Toast.LENGTH_LONG).show()
-
-//                    main_container.setEnabledRecursively(false)
-                    setViewAndChildrenEnabled(main_container, false)
-                    setViewAndChildrenEnabled(nested, false)
-                    nested.stopNestedScroll()
-                    nested.isNestedScrollingEnabled = false
-
-
-                })
-                .setOnHideListener(OnHideAlertListener {
-                    //                    Toast.makeText(this@KotlinDemoActivity, "Hide Alert", Toast.LENGTH_LONG).show()
-                    main_alert_background.visibility = ConstraintLayout.GONE
-                    setViewAndChildrenEnabled(main_container, true)
-                    setViewAndChildrenEnabled(nested, true)
-                    nested.stopNestedScroll()
-                    nested.isNestedScrollingEnabled = true
-                })
-
-//                            .setOnClickListener()
-//                            .addButton("hello",R.style.AlertStyle,onClick = )
-
-
-                .show()
+            addToCart()
 
 
         }
 
-//        if(Alerter.isShowing)
-//        {
-//            alert_view.findViewById<MaterialButton>(R.id.checkout)
-//                .setOnClickListener {
-//                    Toast.makeText(this@ScrollingActivity, "checkout", Toast.LENGTH_SHORT).show()
-//                    Alerter.hide()
-//                }
-//            checkout.setOnClickListener {
-//                Toast.makeText(this@ScrollingActivity, "checkout", Toast.LENGTH_SHORT).show()
-//                Alerter.hide()
-//            }
-//            this.findViewById<MaterialButton>(R.id.contin).setOnClickListener {
-//                Toast.makeText(this@ScrollingActivity, "continue", Toast.LENGTH_SHORT).show()
-//                Alerter.hide()
-//            }
-//
-//
-//        }
+
 
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-//        revsRec.layoutManager = LinearLayoutManager(this@ScrollingActivity, RecyclerView.VERTICAL,false)
-//
-//        reviewsAdapter = OneAdapter(revsRec)
-//        reviewsAdapter.attachItemModule(reviewItem())
-//        reviewsAdapter.add(Review(1,"hello",2,"name"))
-
-////        if(!nested_product.canScrollVertically(-1)) {
-////            // we have reached the top of the list
-////            toolbar.elevation = 0f
-////            app_bar.elevation=0f
-////            toolbar_layout.elevation=0f
-////        } else {
-////            // we are not at the top yet
-////            toolbar.elevation = 50f
-////        }
-//supportActionBar?.elevation=0f
-
-//        nested.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-//            if (scrollY > oldScrollY) {
-//                Log.d("tag", "Scroll DOWN")
-//            }
-//            if (scrollY < oldScrollY) {
-//                Log.d("tag", "Scroll UP")
-//            }
-//
-//            if (scrollY == 0) {
-//                Log.d("tag", "TOP SCROLL")
-//            }
-//
-//            if (scrollY == v.measuredHeight - v.getChildAt(0).measuredHeight) {
-//                Log.d("tag", "BOTTOM SCROLL")
-//            }
-//        }
-//        )
-
-//        nested.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-//
-//            Toast.makeText(this@ScrollingActivity, "hello clicked", Toast.LENGTH_SHORT).show()
-//        })
-//        nested_product.setOnScrollChangeListener {
-//                _: NestedScrollView?, _: Int, scrollY: Int, _: Int, _:
-//            Int ->
-////            Log.d("hello")
-//
-//            if (scrollY >= 1)
-//            {
-//                Toast.makeText(this@ScrollingActivity, "hello clicked", Toast.LENGTH_SHORT).show()
-//            }
-//
-////            if (nested_product.canScrollVertically(-1) ){
-//
-////                    // Remove elevation
-////                app_bar.elevation = 0f
-////                toolbar_layout.elevation = 0f
-////                }
-////            else {
-////                // Show elevation
-////                app_bar.elevation = 4f
-////
-//            }
-//            if (scrollY >= 1) {
-//
-////                if (isExpanded) {
-////                    isExpanded = false
-////                    animator.start()
-////                }
-////                app_bar.elevation = 0f
-////                toolbar_layout.elevation=0f
-//////
-//////                toolbar_layout.visibility=LinearLayout.INVISIBLE
-//////
-////                toolbar.elevation=0f
-//////                nested_product.elevation=0f
-////                app_bar.elevation=0f
-////            } else {
-////                if (!isExpanded) {
-////                    isExpanded = true
-////                    animator.cancel()
-////                app_bar.elevation = 0f
-////                toolbar_layout.elevation = 0f
-////
-//////                }
-//////            }
-////            }
-////            else
-////            {
-////                app_bar.elevation = 100f
-////                toolbar_layout.elevation = 0f
-//            }
-
-//            if (nested_product.canScrollVertically(-1) {
-//                    // Remove elevation
-//                }
-//            else {
-//                // Show elevation
-//            }
-//        }
-//        toolbar.setBackgroundColor(resources.getColor(android.R.color.transparent))
-//        toolbar.setBackground(resources.getDrawable(R.drawable.toolbar_background))
-//        toolbar.setElevation(0.0f)
-
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
         val product_iv = findViewById<ImageView>(R.id.product_image)
         val product_tv = findViewById<TextView>(R.id.product_name)
         val product_price = findViewById<TextView>(R.id.product_price)
@@ -263,7 +105,7 @@ class ScrollingActivity : AppCompatActivity() {
 
 
         if (intent.getStringExtra("type") == "bundle") {
-            val bundle: BundleProds? = intent.getParcelableExtra("BundleItem")
+            val bundle: BundleProduct? = intent.getParcelableExtra("BundleItem")
 
             alert_title =
                 bundle?.BundleName_En + "\n" + bundle?.BundleDescription_En + "\n" + bundle?.BundlePrice + " " + getString(
@@ -280,9 +122,26 @@ class ScrollingActivity : AppCompatActivity() {
 
             product_name.text = bundle?.BundleName_En
             product_price.text = bundle?.BundlePrice + " " + getString(R.string._sar)
-            smart_rating_bar.ratingNum = bundle?.BundleReviews!!.toFloat()
+            smart_rating_bar.ratingNum = bundle?.BundleReview!!.toFloat()
             calories.visibility = TextView.INVISIBLE
             cal_icon.visibility = ImageView.INVISIBLE
+
+            if (bundle.BundleStockAvaliable <= 0) {
+                stock_tv.text = getString(R.string.sold_out)
+                binding.addToCart.setBackgroundColor(resources.getColor(R.color.oldPrice))
+                binding.addToCart.text = getString(R.string.not_available)
+                binding.addToCart.isEnabled = false
+                product_price.visibility = TextView.INVISIBLE
+                counter_box.visibility = View.INVISIBLE
+            } else {
+                if (bundle.BundleStockAvaliable <= 5) {
+                    stock_tv.text =
+                        getString(R.string.only) + " " + bundle.BundleStockAvaliable.toString() + " " + getString(
+                            R.string.left
+                        )
+                } else
+                    stock_tv.visibility = TextView.INVISIBLE
+            }
             viewPager.adapter = sectionsPagerAdapter
 
 
@@ -303,8 +162,30 @@ class ScrollingActivity : AppCompatActivity() {
 
 
                 product_name.text = product?.ProductName_En
-                product_price.text = product?.ProductPrice + " " + getString(R.string._sar)
-                smart_rating_bar.ratingNum = product?.ProductReviews!!.toFloat()
+
+                if (product?.ProductStockQuantity!! <= 5) {
+                    if (product.ProductStockQuantity <= 0) {
+                        stock_tv.text = getString(R.string.sold_out)
+                        binding.addToCart.setBackgroundColor(resources.getColor(R.color.oldPrice))
+                        binding.addToCart.text = getString(R.string.not_available)
+                        binding.addToCart.isEnabled = false
+                        product_price.visibility = TextView.INVISIBLE
+                        counter_box.visibility = View.INVISIBLE
+
+
+                    } else
+                        stock_tv.text =
+                            getString(R.string.only) + " " + product.ProductStockQuantity.toString() + " " + getString(
+                                R.string.left
+                            )
+                } else {
+
+//                    story8.text=getString(R.string.only)+" "+model.ProductStockQuantity.toString()+" "+getString(R.string.left)
+                    stock_tv.visibility = TextView.INVISIBLE
+                }
+//                stock_tv.text= product?.ProductStockQuantity
+                product_price.text = product.ProductPrice + " " + getString(R.string._sar)
+                smart_rating_bar.ratingNum = product.ProductReviews.toFloat()
                 calories.text =
                     product.ProductCallories.toString() + " " + getString(R.string.calName)
 
@@ -323,31 +204,55 @@ class ScrollingActivity : AppCompatActivity() {
             } else {
 
                 viewPager.adapter = sectionsPagerAdapterNotBundle
-                val offer: Offer? = intent.getParcelableExtra("OfferItem")
+                val offer: OfferProduct? = intent.getParcelableExtra("OfferItem")
 
-                alert_title =
-                    offer?.ProductName_En + "\n" + offer?.OfferDescription_En + "\n" + offer?.OfferPrice + " " + getString(
-                        R.string._sar
-                    )
+                Log.d("offerTest", offer.toString())
+
+//                alert_title =
+//                    offer?.ProductName_En + "\n" + offer?.OfferDescription_En + "\n" + offer?.OfferPrice + " " + getString(
+//                        R.string._sar
+//                    )
                 Glide.with(this)
 //                .load(model.img)
 
-                    .load(offer?.OfferImage)
+                    .load(offer?.ProductImage)
                     .centerCrop()
                     .into(binding.productImage)
-
-
+//
+//
                 product_name.text = offer?.ProductName_En
                 product_price.text = offer?.OfferPrice + " " + getString(R.string._sar)
                 product_prev_price.text = offer?.ProductPrice + " " + getString(R.string._sar)
                 smart_rating_bar.ratingNum = offer?.ProductReviews!!.toFloat()
-                calories.text = offer.ProductCallories
+//                calories.text = offer.ProductCallories.toString()
                 product_prev_price.paintFlags =
                     product_prev_price.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-//                calories.setText(offer?.ProductCallories.toString()+" "+getString(R.string.calName))
+                calories.text =
+                    offer.ProductCallories.toString() + " " + getString(R.string.calName)
                 now.visibility = TextView.VISIBLE
                 was.visibility = TextView.VISIBLE
                 product_prev_price.visibility = TextView.VISIBLE
+
+                if (offer.ProductStockQuantity <= 5) {
+                    if (offer.ProductStockQuantity <= 0) {
+                        stock_tv.text = getString(R.string.sold_out)
+                        binding.addToCart.setBackgroundColor(resources.getColor(R.color.oldPrice))
+                        binding.addToCart.text = getString(R.string.not_available)
+                        binding.addToCart.isEnabled = false
+                        product_price.visibility = TextView.INVISIBLE
+                        counter_box.visibility = View.INVISIBLE
+
+                    } else
+                        stock_tv.text =
+                            getString(R.string.only) + " " + offer.ProductStockQuantity.toString() + " " + getString(
+                                R.string.left
+                            )
+                } else {
+
+//                    story8.text=getString(R.string.only)+" "+model.ProductStockQuantity.toString()+" "+getString(R.string.left)
+                    stock_tv.visibility = TextView.INVISIBLE
+                }
+
 
             }
 
@@ -424,13 +329,14 @@ class ScrollingActivity : AppCompatActivity() {
 //    }
 
     override fun onSupportNavigateUp(): Boolean {
+//        supportFinishAfterTransition()
         finish()
         return super.onSupportNavigateUp()
     }
 
     private fun clickEventHook(): ClickEventHook<Review> = object : ClickEventHook<Review>() {
         override fun onClick(model: Review, viewBinder: ViewBinder) {
-            Toast.makeText(this@ScrollingActivity, "${model.name} clicked", Toast.LENGTH_SHORT)
+            Toast.makeText(this@OnDetailsActivity, "${model.name} clicked", Toast.LENGTH_SHORT)
                 .show()
 
 
@@ -537,6 +443,13 @@ class ScrollingActivity : AppCompatActivity() {
 
         Log.d("nofitem", Repository.cartLocalItems.value?.size.toString())
 
+        var item: AddToCartModel = AddToCartModel(
+            UserInfo.uid, UserInfo.access_token,
+            -1, false, number_button2.number.toInt(), UserInfo.device_token
+        )
+
+
+
         if (Repository.cartLocalItems.value?.size != null) {
             Log.d("nofitem", "heyyy")
             no_items = Repository.cartLocalItems.value?.size!!
@@ -545,18 +458,27 @@ class ScrollingActivity : AppCompatActivity() {
         }
         if (intent.getStringExtra("type") == "bundle") {
 
+
+            item.Isbundle = true
+
+
             Log.d("nofitem", "bundle")
-            val bundle: BundleProds? = intent.getParcelableExtra("BundleItem")
+            val bundle: BundleProduct? = intent.getParcelableExtra("BundleItem")
+            item.ProductID = bundle!!.BundleID
+
             Repository.addItemCartLocal(
                 CartItem(
                     no_items + 1.toLong(),
-                    bundle!!.BundleID
+                    bundle.BundleID
                     ,
+                    -1,
                     "bundle",
                     bundle.BundleImage,
                     bundle.BundleName_En,
                     bundle.BundleDescription_En,
                     number_button2.number.toInt(),
+                    bundle.BundleStockAvaliable,
+                    0F.toString(),
                     bundle.BundlePrice,
                     false
                 )
@@ -571,25 +493,61 @@ class ScrollingActivity : AppCompatActivity() {
 
 
         } else {
+            item.Isbundle = false
             if (intent.getStringExtra("type") == "product") {
+
+
                 Log.d("nofitem", "product")
 //                viewPager.adapter = sectionsPagerAdapterNotBundle
                 val product: Product? = intent.getParcelableExtra("ProductItem")
 
-                Repository.addItemCartLocal(
-                    CartItem(
-                        no_items + 1.toLong(),
-                        product!!.ProductID
-                        ,
-                        "product",
-                        product.ProductImage,
-                        product.ProductName_En,
-                        product.ProductDescription_En,
-                        number_button2.number.toInt(),
-                        product.ProductPrice,
-                        false
+
+                item.ProductID = product!!.ProductID
+
+                if (product.ProductOfferDicountValue.toFloat() > 0F) {
+
+                    Repository.addItemCartLocal(
+                        CartItem(
+
+                            no_items + 1.toLong(),
+                            product.ProductID
+                            ,
+                            product.ProductOfferID.toInt(),
+                            "productOff",
+                            product.ProductImage,
+                            product.ProductName_En,
+                            product.ProductDescription_En,
+                            number_button2.number.toInt(),
+                            product.ProductStockQuantity,
+                            product.ProductOfferDicountValue,
+                            product.ProductOfferPrice,
+                            false
+                        )
                     )
-                )
+
+
+                } else {
+                    Repository.addItemCartLocal(
+                        CartItem(
+                            no_items + 1.toLong(),
+                            product.ProductID
+                            ,
+                            -1,
+                            "product",
+                            product.ProductImage,
+                            product.ProductName_En,
+                            product.ProductDescription_En,
+                            number_button2.number.toInt(),
+                            product.ProductStockQuantity,
+                            0F.toString(),
+                            product.ProductPrice,
+                            false
+                        )
+                    )
+                }
+
+
+
 //                Glide.with(this)
 ////                .load(model.img)
 //
@@ -606,41 +564,53 @@ class ScrollingActivity : AppCompatActivity() {
 
             } else {
 //                viewPager.adapter = sectionsPagerAdapterNotBundle
-                val offer: Offer? = intent.getParcelableExtra("OfferItem")
-
+                val offer: OfferProduct? = intent.getParcelableExtra("OfferItem")
+                item.ProductID = offer!!.ProductID
                 Repository.addItemCartLocal(
                     CartItem(
                         no_items + 1.toLong(),
-                        offer!!.OfferID
+                        offer.ProductID
                         ,
-                        "bundle",
-                        offer.OfferImage,
+                        offer.OfferID,
+                        "productOff",
+                        offer.ProductImage,
                         offer.ProductName_En,
-                        offer.OfferDescription_En,
+                        offer.ProductDescreption_En,
                         number_button2.number.toInt(),
+                        offer.ProductStockQuantity,
+                        offer.OfferDicountValuePercentage,
                         offer.OfferPrice,
                         false
                     )
                 )
-//                Glide.with(this)
-////                .load(model.img)
-//
-//                    .load(offer?.OfferImage)
-//                    .centerCrop()
-//                    .into(binding.productImage)
-//
-//
-//                product_name.text = offer?.ProductName_En
-//                product_price.text = offer?.OfferPrice + " " + getString(R.string._sar)
-//                product_prev_price.text = offer?.ProductPrice + " " + getString(R.string._sar)
-////                calories.setText(offer?.ProductCallories.toString()+" "+getString(R.string.calName))
-//                now.visibility = TextView.VISIBLE
-//                was.visibility = TextView.VISIBLE
-//                product_prev_price.visibility = TextView.VISIBLE
+//                Log.d("checker",offer.OfferDicountValuePercentage)
 
             }
 
         }
+
+        item.Devicetoken = UserInfo.device_token
+
+        if (!UserInfo.signed) {
+
+//old work for No login Backend on Mine
+//           Repository.getCartDetailsNoLogin(Repository.prodsLocal,Repository.priceLocal,Repository.isbundLocal,Repository.offeridsLocal,
+//               Repository.discountLocal,Repository.stockquanLocal,Repository.quantityLocal)
+
+
+            item.AccessToken = "rr"
+            item.UserID = 0
+
+
+            Repository.addToCart(item)
+
+
+        } else {
+            viewModel.addCartItemOn(item)
+
+        }
+
+
     }
 
 
@@ -675,6 +645,18 @@ class ScrollingActivity : AppCompatActivity() {
             }
             android.R.id.home -> {
                 finish()
+
+
+//                RxAnimation.together(
+//                    RxAnimation.together(
+//                                toolbar.translation(0F, -60F,duration = 100L),
+//                                nested_product.translation(0F, 90F,duration = 100L))
+//                    ,
+//                               Completable.fromRunnable { supportFinishAfterTransition()
+//                               }
+//                                )  .subscribe().addTo(composite)
+
+
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -687,10 +669,24 @@ class ScrollingActivity : AppCompatActivity() {
         val itemData = menu?.findItem(R.id.action_cart)
         val actionView = itemData?.actionView as CartCounterActionView
         actionView.setItemData(menu, itemData)
-        Repository.getCartLocal().observe(this, Observer { count ->
+//        Repository.getCartLocal().observe(this, Observer { count ->
+//
+//            actionView.count = count.size
+//            //            binding.wordText.text = newWord
+//
+//
+//        })
 
-            actionView.count = count.size
-            //            binding.wordText.text = newWord
+
+        Repository.getCartCount.observe(this, Observer { count ->
+
+            actionView.count = count
+//            badgeDrawable.isVisible = true
+//
+//            badgeDrawable.number = count
+//            if (count == 0)
+//                badgeDrawable.isVisible = false
+//            //            binding.wordText.text = newWord
 
 
         })
@@ -700,4 +696,28 @@ class ScrollingActivity : AppCompatActivity() {
     }
 
 
+    fun setupWindowAnimations() { // We are not interested in defining a new Enter Transition. Instead we change default transition duration
+        window.enterTransition.duration =
+            resources.getInteger(R.integer.anim_duration_long).toLong()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        RxAnimation.together(
+            toolbar.translation(0F, .60F, duration = 1000L),
+            nested_product.translation(0F, -.90F, duration = 1000L)
+        )
+            .subscribe().addTo(composite)
+
+
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        composite.clear()
+    }
+
+
 }
+

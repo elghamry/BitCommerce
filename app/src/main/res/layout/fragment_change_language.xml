@@ -1,0 +1,340 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:fitsSystemWindows="true">
+        <!--        android:background="@drawable/white_bg"-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+
+                tools:context=".fragments.InformationFragment">
+
+
+            <!-- TODO: Update blank fragment layout -->
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/hello_blank_fragment"
+                    android:visibility="gone" />
+
+            <!--    <RelativeLayout-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="match_parent"-->
+            <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--            app:layout_constraintEnd_toEndOf="parent"-->
+            <!--            app:layout_constraintStart_toStartOf="parent"-->
+            <!--            app:layout_constraintTop_toTopOf="parent"-->
+            <!--            tools:context=".MainActivity"-->
+            <!--            tools:ignore="VectorDrawableCompat">-->
+
+            <!--        <android.support.v7.widget.Toolbar-->
+            <!--                android:id="@+id/bgHeader"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="220dp"-->
+            <!--                android:background="@drawable/header_login"-->
+            <!--                android:elevation="5dp" />-->
+
+            <!--        <TextView-->
+            <!--                android:id="@+id/tvDesc"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginLeft="30dp"-->
+            <!--                android:layout_marginTop="40dp"-->
+            <!--                android:elevation="5dp"-->
+            <!--                android:text="Welcome to Biotic"-->
+            <!--                android:textColor="@color/text_header"-->
+            <!--                android:textSize="17sp" />-->
+
+            <TextView
+                    android:id="@+id/tvLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+
+                    android:layout_marginTop="70dp"
+                    android:drawablePadding="10dp"
+                    android:elevation="5dp"
+                    android:fontFamily="@font/grenale_conbla"
+                    android:text="@string/change_language"
+                    android:textColor="@color/text_header"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:transitionName="tvLogin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="200dp"
+
+                    android:layout_marginEnd="24dp"
+
+                    android:fitsSystemWindows="true"
+                    android:visibility="visible"
+
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLogin">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="4dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/arabic_card"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.cardview.widget.CardView
+                                android:id="@+id/arabic_btn"
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+
+                                android:elevation="0dp"
+
+                                app:cardBackgroundColor="@android:color/transparent"
+                                app:cardCornerRadius="12dp"
+
+
+                                app:cardElevation="0dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                    android:id="@+id/arabic_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="start"
+                                    android:fontFamily="@font/grenale_conbla"
+                                    android:paddingStart="20dp"
+                                    android:text="@string/arabic"
+                                    android:textColor="@color/text_header"
+                                    android:textSize="20sp"
+                                    android:textStyle="normal" />
+                        </androidx.cardview.widget.CardView>
+
+                        <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:background="@color/acc_info_line_color"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/arabic_btn" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/english_card"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/arabic_card">
+
+                        <androidx.cardview.widget.CardView
+                                android:id="@+id/english_btn"
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:elevation="0dp"
+
+                                app:cardBackgroundColor="@android:color/transparent"
+                                app:cardCornerRadius="12dp"
+
+
+                                app:cardElevation="0dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                    android:id="@+id/english_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="start"
+                                    android:fontFamily="@font/grenale_conbla"
+                                    android:paddingStart="20dp"
+                                    android:text="English"
+                                    android:textColor="@color/text_header"
+                                    android:textSize="20sp"
+                                    android:textStyle="normal" />
+                        </androidx.cardview.widget.CardView>
+
+                        <!--                            <View-->
+
+                        <!--                                    android:layout_width="0dp"-->
+                        <!--                                    android:layout_height="1dp"-->
+                        <!--                                    android:layout_marginStart="20dp"-->
+                        <!--                                    android:layout_marginTop="4dp"-->
+                        <!--                                    android:layout_marginEnd="20dp"-->
+                        <!--                                    android:background="@color/acc_info_line_color"-->
+                        <!--                                    app:layout_constraintEnd_toEndOf="parent"-->
+                        <!--                                    app:layout_constraintStart_toStartOf="parent"-->
+                        <!--                                    app:layout_constraintTop_toBottomOf="@id/delivery_btn" />-->
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+            <!--            <RelativeLayout-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_alignTop="@+id/cv"-->
+            <!--                    android:layout_alignRight="@+id/cv"-->
+            <!--                    android:layout_marginTop="-20dp"-->
+            <!--                    android:layout_marginRight="-20dp"-->
+            <!--                    android:elevation="10dp">-->
+
+            <!--                    <ImageButton-->
+            <!--                            android:id="@+id/btRegister"-->
+            <!--                            android:layout_width="50dp"-->
+            <!--                            android:layout_height="50dp"-->
+            <!--                            android:background="@drawable/bg_ui"-->
+            <!--                            android:src="@drawable/ic_add" />-->
+            <!--            </RelativeLayout>-->
+
+            <!--            <TextView-->
+            <!--                    android:id="@+id/tvForgot"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_below="@+id/cv"-->
+            <!--                    android:layout_centerHorizontal="true"-->
+            <!--                    android:layout_marginTop="10dp"-->
+            <!--                    android:elevation="5dp"-->
+            <!--                    android:text="Forgot your password?"-->
+            <!--                    android:textSize="14sp" />-->
+
+            <!--                <Button-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_below="@+id/tvForgot"-->
+            <!--                        android:layout_alignLeft="@+id/cv"-->
+            <!--                        android:layout_alignRight="@+id/cv"-->
+            <!--                        android:layout_marginLeft="20dp"-->
+            <!--                        android:layout_marginTop="20dp"-->
+            <!--                        android:layout_marginRight="20dp"-->
+            <!--                        -->
+            <!--                        android:background="@drawable/bt_uifb"-->
+            <!--                        android:drawableLeft="@drawable/logofacebook"-->
+            <!--                        android:paddingLeft="20dp"-->
+            <!--                        android:paddingRight="20dp"-->
+            <!--                        android:text="LOGIN WITH FACEBOOK"-->
+            <!--                        android:textColor="@color/purple" />-->
+            <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+            <!--    </androidx.core.widget.NestedScrollView>-->
+
+            <!--    </RelativeLayout>-->
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cancel_btn"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="156dp"
+
+
+                    android:layout_height="60dp"
+                    android:layout_marginStart="24dp"
+
+                    android:layout_marginBottom="40dp"
+
+                    android:background="@color/colorPrimary"
+                    android:fontFamily="@font/ubuntu_medium"
+
+                    android:gravity="center"
+
+                    android:text="@string/cancel"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                    android:textColor="@color/purple"
+                    android:textSize="16sp"
+                    android:theme="@style/Theme.MaterialComponents"
+
+                    android:visibility="gone"
+
+                    app:backgroundTint="@android:color/transparent"
+                    app:cornerRadius="12dp"
+                    app:iconGravity="textStart"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:strokeColor="@color/purple"
+                    app:strokeWidth="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save_btn"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="156dp"
+
+
+                    android:layout_height="60dp"
+
+                    android:layout_marginBottom="40dp"
+
+                    android:background="@color/purple"
+                    android:fontFamily="@font/ubuntu_medium"
+
+                    android:gravity="center"
+
+                    android:text="@string/save"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+
+
+                    android:theme="@style/Theme.MaterialComponents"
+
+                    app:backgroundTint="@color/purple"
+                    app:cornerRadius="12dp"
+                    app:iconGravity="textStart"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="1dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</layout>

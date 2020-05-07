@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
-import sa.biotic.app.ScrollingActivity
+import sa.biotic.app.AllProductsActivity
 import sa.biotic.app.databinding.OfferItemBinding
 import sa.biotic.app.model.Offer
 
@@ -28,7 +28,7 @@ class OfferPagerAdapter(val context: Context, val offers: MutableList<Offer>) : 
             //            Toast.makeText(context, position.toString()+" clicked", Toast.LENGTH_SHORT).show()
 
 
-            val intent = Intent(binding.root.context, ScrollingActivity::class.java)
+            val intent = Intent(binding.root.context, AllProductsActivity::class.java)
 //            intent.putExtra("product_name", offers.get(position).OfferDescription_En)
 //            intent.putExtra("product_image", offers.get(position).OfferImage)
 //            intent.putExtra("product_price", offers.get(position).OfferPrice)
@@ -38,14 +38,16 @@ class OfferPagerAdapter(val context: Context, val offers: MutableList<Offer>) : 
 //                intent.putExtra("product_name", model.title)
 //                intent.putExtra("product_image", model.img)
 //                intent.putExtra("product_price", model.price)
-            intent.putExtra("OfferItem", offers.get(position))
+//            intent.putExtra("OfferItem", offers.get(position))
 //            intent.putExtra("type", "bundle")
 
 
 //            intent.putExtra(EXTRA_MESSAGE, message)
 //            startActivityForResult(intent, 1)
 
-            intent.putExtra("type", "offer")
+            intent.putExtra("offerId", offers.get(position).OfferID)
+            intent.putExtra("type", "OfferProducts")
+
             context.startActivity(intent)
         }
 

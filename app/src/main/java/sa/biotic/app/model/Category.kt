@@ -8,7 +8,10 @@ data class Category(
     val CategoryIconPurble: String,
     val CategoryIconWhite: String,
     val CategoryName_Ar: String,
-    val CategoryName_En: String
+    val CategoryName_En: String,
+    val CategoryDesc_En: String,
+    val CategoryDesc_Ar: String
+
 ) : Diffable {
     override fun areContentTheSame(other: Any): Boolean
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -17,6 +20,9 @@ data class Category(
             && CategoryIconWhite == other.CategoryIconWhite
             && CategoryName_Ar == other.CategoryName_Ar
             && CategoryName_En == other.CategoryName_En
+            && CategoryDesc_Ar == other.CategoryDesc_Ar
+            && CategoryDesc_En == other.CategoryDesc_En
+
 
 
     override fun getUniqueIdentifier(): Long {

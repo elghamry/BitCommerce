@@ -87,7 +87,7 @@ class ShowAddressFragment : Fragment() {
         }
 
 
-        purchaseViewModel.getAddress().observe(this, Observer<Address> {
+        purchaseViewModel.getAddress().observe(viewLifecycleOwner, Observer<Address> {
 
 
             var address =

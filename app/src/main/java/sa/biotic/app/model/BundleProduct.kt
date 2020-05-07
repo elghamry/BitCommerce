@@ -5,17 +5,19 @@ import com.idanatz.oneadapter.external.interfaces.Diffable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class BundleProds(
+data class BundleProduct(
     val BundleDescription_Ar: String,
     val BundleDescription_En: String,
-    val BundleID: Int,
+    var BundleID: Int = -1,
     val BundleImage: String,
     val BundleName_Ar: String,
     val BundleName_En: String,
     val BundlePrice: String,
-    val BundleReviews: String
+    val BundleReview: Int,
+    val BundleStockAvaliable: Int
+
 ) : Diffable, Parcelable {
-    override fun areContentTheSame(other: Any): Boolean = other is BundleProds &&
+    override fun areContentTheSame(other: Any): Boolean = other is BundleProduct &&
             BundleID == other.BundleID
             && BundleName_Ar == other.BundleName_Ar
             && BundleDescription_Ar == other.BundleDescription_Ar
@@ -23,7 +25,9 @@ data class BundleProds(
             && BundleImage == other.BundleImage
             && BundleName_En == other.BundleName_En
             && BundlePrice == other.BundlePrice
-            && BundleReviews == other.BundleReviews
+            && BundleReview == other.BundleReview
+            && BundleStockAvaliable == other.BundleStockAvaliable
+
 
 
 

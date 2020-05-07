@@ -17,7 +17,8 @@ data class SearchItem(
     val ProductOfferID: String,
     val ProductOfferPrice: String,
     val SImage: String,
-    val TypeIsProduct: String
+    val TypeIsProduct: String,
+    val ProductStockQuantity: Int
 ) : Diffable, Parcelable {
     override fun areContentTheSame(other: Any): Boolean = other is SearchItem &&
             Callories == other.Callories
@@ -32,6 +33,7 @@ data class SearchItem(
             && ProductOfferPrice == other.ProductOfferPrice
             && ProductOfferID == other.ProductOfferID
             && ProductOfferDicountValue == other.ProductOfferDicountValue
+            && ProductStockQuantity == other.ProductStockQuantity
 
     override fun getUniqueIdentifier(): Long {
         return ID.toLong()

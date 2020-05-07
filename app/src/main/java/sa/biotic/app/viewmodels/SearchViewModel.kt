@@ -3,6 +3,8 @@ package sa.biotic.app.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import sa.biotic.app.model.BundleProduct
+import sa.biotic.app.model.Product
 import sa.biotic.app.model.SearchItem
 import sa.biotic.app.retrofit_service.Repository
 
@@ -13,13 +15,20 @@ class SearchViewModel : ViewModel() {
 //    var offersLive: MutableLiveData<MutableList<Offer>> = MutableLiveData<MutableList<Offer>>()
 //    var catsLive: MutableLiveData<MutableList<Category>> = MutableLiveData<MutableList<Category>>()
     var searchItemsLive: MutableLiveData<MutableList<SearchItem>> =
+
         MutableLiveData<MutableList<SearchItem>>()
-//    var bundlesLive: MutableLiveData<MutableList<BundleProds>> =
-//        MutableLiveData<MutableList<BundleProds>>()
+    var prodLive: MutableLiveData<Product> =
+        MutableLiveData<Product>()
+
+    var bundleLive: MutableLiveData<BundleProduct> =
+        MutableLiveData<BundleProduct>()
 
 
     init {
         Log.i("HomeViewModel", "HomeViewModel created!")
+
+        prodLive = Repository.prod
+        bundleLive = Repository.bundleItem
 //        val offer = Offer(
 //            "Hello Offer ",
 //            "This is the descreption of the called offer ... !!!",
@@ -50,6 +59,16 @@ class SearchViewModel : ViewModel() {
         Repository.getSearchItems(word, pageSize, currentpage, lang)
 
     }
+
+    fun getThisProd(Id: Int) {
+        Repository.getProduct(Id)
+    }
+
+
+    fun getThisBundle(Id: Int) {
+        Repository.getBundleProductAsItem(Id)
+    }
+
 
 
 }

@@ -3,7 +3,7 @@ package sa.biotic.app.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import sa.biotic.app.model.BundleProds
+import sa.biotic.app.model.BundleProduct
 import sa.biotic.app.model.Category
 import sa.biotic.app.model.Offer
 import sa.biotic.app.model.Product
@@ -13,14 +13,15 @@ class HomeViewModel : ViewModel() {
     var offers : MutableList<Offer> = mutableListOf<Offer>()
     var cats : MutableList<Category> = mutableListOf<Category>()
     var prods : MutableList<Product> = mutableListOf<Product>()
-    var bundles : MutableList<BundleProds> = mutableListOf<BundleProds>()
+    var bundles: MutableList<BundleProduct> = mutableListOf<BundleProduct>()
 
 
     //livedata
     var offersLive : MutableLiveData<MutableList<Offer>> = MutableLiveData<MutableList<Offer>>()
     var catsLive : MutableLiveData<MutableList<Category>> = MutableLiveData<MutableList<Category>>()
     var prodsLive : MutableLiveData<MutableList<Product>> = MutableLiveData<MutableList<Product>>()
-    var bundlesLive : MutableLiveData<MutableList<BundleProds>> = MutableLiveData<MutableList<BundleProds>>()
+    var bundlesLive: MutableLiveData<MutableList<BundleProduct>> =
+        MutableLiveData<MutableList<BundleProduct>>()
 
 
     init {
@@ -148,7 +149,7 @@ class HomeViewModel : ViewModel() {
 //        bundles.add(BundleProds(bundles.size+1.toLong(),"https://www.fastandup.in/images/product-img//xcalcium-bundle-fortify-buy5-get-2-free-2-301.png.pagespeed.ic.NNX-WvN15z.png","organic Bundle","20 SR","good meal for bla bla oats !!i love it"))
 //        bundles.add(BundleProds(bundles.size+1.toLong(),"https://goodmorning.com.sg/wp-content/uploads/vgrains-1kg-x2-small-3-400x500.jpg","Grains pips Vitamin","30 SR","good meal for bla bla oats !!i love it"))
 //        bundles.add(BundleProds(bundles.size+1.toLong(),"https://www.wegmans.com/content/dam/wegmans/products/881/97881.jpg","Corn Flakes Product","13 SR","good meal for bla bla oats !!i love it"))
-        bundlesLive = Repository.bunds
+        bundlesLive = Repository.bundsHome
     }
 
     private fun getCats() {

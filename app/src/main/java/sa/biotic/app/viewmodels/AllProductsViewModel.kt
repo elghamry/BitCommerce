@@ -3,25 +3,24 @@ package sa.biotic.app.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import sa.biotic.app.model.BundleProds
-import sa.biotic.app.model.Category
-import sa.biotic.app.model.Offer
-import sa.biotic.app.model.Product
+import sa.biotic.app.model.*
 import sa.biotic.app.retrofit_service.Repository
 
 class AllProductsViewModel : ViewModel() {
     var offers: MutableList<Offer> = mutableListOf<Offer>()
     var cats: MutableList<Category> = mutableListOf<Category>()
     var prods: MutableList<Product> = mutableListOf<Product>()
-    var bundles: MutableList<BundleProds> = mutableListOf<BundleProds>()
+    var bundles: MutableList<BundleProduct> = mutableListOf<BundleProduct>()
 
 
     //livedata
     var offersLive: MutableLiveData<MutableList<Offer>> = MutableLiveData<MutableList<Offer>>()
     var catsLive: MutableLiveData<MutableList<Category>> = MutableLiveData<MutableList<Category>>()
     var prodsLive: MutableLiveData<MutableList<Product>> = MutableLiveData<MutableList<Product>>()
-    var bundlesLive: MutableLiveData<MutableList<BundleProds>> =
-        MutableLiveData<MutableList<BundleProds>>()
+    var bundlesLive: MutableLiveData<MutableList<BundleProduct>> =
+        MutableLiveData<MutableList<BundleProduct>>()
+    var offersProdsLive: MutableLiveData<MutableList<OfferProduct>> =
+        MutableLiveData<MutableList<OfferProduct>>()
 
 
     init {
@@ -43,6 +42,8 @@ class AllProductsViewModel : ViewModel() {
 //        getCats()
         getProds()
         getBundles()
+
+        offersProdsLive = Repository.offerProds
 //        Log.d("initViw",offers.toString());
         Log.d("initViw", prodsLive.value.toString())
         offersLive.value = offers
@@ -181,6 +182,10 @@ class AllProductsViewModel : ViewModel() {
 //            )
 //        )
         bundlesLive = Repository.bunds
+    }
+
+    fun getOfferList(offerId: Int) {
+        Repository.getOfferList(offerId)
     }
 
 //    private fun getCats() {

@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import sa.biotic.app.R
 import sa.biotic.app.databinding.FragmentConfimationBinding
+import sa.biotic.app.shared_prefrences_model.UserRoute
 import sa.biotic.app.viewmodels.PurchaseViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -50,10 +51,11 @@ class ConfimationFragment : Fragment() {
         )
 
         binding.confirmBtn.setOnClickListener {
+            UserRoute.next_step = "home"
             activity?.finish()
         }
 
-        purchaseViewModel.getAddress().observe(this, Observer<Address> {
+        purchaseViewModel.getAddress().observe(viewLifecycleOwner, Observer<Address> {
 
 
             var address =
@@ -63,9 +65,32 @@ class ConfimationFragment : Fragment() {
             var country = it.countryName
             var postalCode = it.postalCode
             var knownName = it.featureName
+            var premises = it.premises
 
-            binding.addressDetails.text =
-                "Firas Alateeq\n" + it.subThoroughfare + " " + it.thoroughfare + "\n" + city + "\n" + postalCode
+
+            var addressToShow = "Firas Alateeq\n"
+            if (!it.premises.isNullOrEmpty() && !it.premises.isNullOrBlank())
+                addressToShow += it.premises + " \n" else ""
+
+            if (!it.subThoroughfare.isNullOrEmpty() && !it.subThoroughfare.isNullOrBlank())
+                addressToShow += it.subThoroughfare + " \n" else ""
+            if (!it.thoroughfare.isNullOrEmpty() && !it.thoroughfare.isNullOrBlank())
+                addressToShow += it.thoroughfare + " \n" else ""
+            if (!it.thoroughfare.isNullOrEmpty() && !it.thoroughfare.isNullOrBlank())
+                addressToShow += it.thoroughfare + " \n" else ""
+            if (!it.adminArea.isNullOrEmpty() && !it.adminArea.isNullOrBlank())
+                addressToShow += it.adminArea + " \n" else ""
+            if (!it.locality.isNullOrEmpty() && !it.locality.isNullOrBlank())
+                addressToShow += it.locality + " \n" else ""
+            if (!it.countryName.isNullOrEmpty() && !it.countryName.isNullOrBlank())
+                addressToShow += it.countryName + " \n" else ""
+            if (!it.postalCode.isNullOrEmpty() && !it.postalCode.isNullOrBlank())
+                addressToShow += it.postalCode + " " else ""
+
+
+//            +it.featureName+ "\n" + city + "\n" + postalCode
+
+            binding.addressDetails.text = addressToShow
 
 
         })

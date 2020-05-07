@@ -68,7 +68,7 @@ class ProgressBottle : RelativeLayout {
         imageFile = arr.getDrawable(sa.biotic.app.R.styleable.ProgBar_barType)
         customMsg = arr.getString(sa.biotic.app.R.styleable.ProgBar_text)
         textColor = arr.getColor(sa.biotic.app.R.styleable.ProgBar_androidtextColor, Color.BLACK)
-        textSize = arr.getDimension(sa.biotic.app.R.styleable.ProgBar_textSize, 16f)
+        textSize = arr.getDimension(sa.biotic.app.R.styleable.ProgBar_textSize, 8f)
         enlarge = arr.getInt(sa.biotic.app.R.styleable.ProgBar_enlarge, 2)
         imageView = findViewById<ImageView>(sa.biotic.app.R.id.progressImg)
         progBg = findViewById(sa.biotic.app.R.id.progBg)
@@ -86,7 +86,7 @@ class ProgressBottle : RelativeLayout {
 
         setTextColor(textColor)
         setTextSize(textSize)
-        enlarge(enlarge)
+//        enlarge(enlarge)
 
         arr.recycle()
     }

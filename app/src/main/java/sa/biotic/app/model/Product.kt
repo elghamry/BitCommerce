@@ -10,7 +10,7 @@ data class Product(
     val ProductCategoryID: String,
     val ProductDescription_Ar: String,
     val ProductDescription_En: String,
-    val ProductID: Int,
+    var ProductID: Int = -1,
     val ProductImage: String,
     val ProductName_Ar: String,
     val ProductName_En: String,
@@ -18,10 +18,13 @@ data class Product(
     val ProductOfferID: String,
     val ProductOfferPrice: String,
     val ProductPrice: String,
-    val ProductReviews: String
+    val ProductReviews: String,
+    val ProductStockQuantity: Int
+
 ) : Diffable, Parcelable {
     override fun areContentTheSame(other: Any): Boolean = other is Product &&
-            ProductCallories == other.ProductCallories && ProductCategoryID == other.ProductCategoryID
+            ProductCallories == other.ProductCallories
+            && ProductCategoryID == other.ProductCategoryID
             && ProductDescription_Ar == other.ProductDescription_Ar
             && ProductDescription_En == other.ProductDescription_En
             && ProductID == other.ProductID
@@ -33,6 +36,7 @@ data class Product(
             && ProductOfferPrice == other.ProductOfferPrice
             && ProductOfferID == other.ProductOfferID
             && ProductOfferDicountValue == other.ProductOfferDicountValue
+            && ProductStockQuantity == other.ProductStockQuantity
 
     override fun getUniqueIdentifier(): Long {
         return ProductID.toLong()
