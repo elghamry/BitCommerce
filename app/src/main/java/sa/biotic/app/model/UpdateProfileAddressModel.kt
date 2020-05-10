@@ -6,10 +6,10 @@ import com.idanatz.oneadapter.external.interfaces.Diffable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class UpdateDeliveryAddressModel(
+data class UpdateProfileAddressModel(
     val AccessToken: String,
 
-    val UserID: String,
+    val UserID: Int,
 
 
     val longitude: String,
@@ -24,11 +24,13 @@ data class UpdateDeliveryAddressModel(
 
     val postalcode: String,
 
-    val IsDefault: String
+    val DeviceToken : String
+
+//    val IsDefault: String
 
 
 ) : Diffable, Parcelable {
-    override fun areContentTheSame(other: Any): Boolean = other is UpdateDeliveryAddressModel
+    override fun areContentTheSame(other: Any): Boolean = other is UpdateProfileAddressModel
 
             && AccessToken == other.AccessToken
             && UserID == other.UserID
@@ -38,7 +40,7 @@ data class UpdateDeliveryAddressModel(
             && addressL1 == other.addressL1
             && addressL2 == other.addressL2
             && postalcode == other.postalcode
-            && IsDefault == other.IsDefault
+//            && IsDefault == other.IsDefault
 
 
     override fun getUniqueIdentifier(): Long {

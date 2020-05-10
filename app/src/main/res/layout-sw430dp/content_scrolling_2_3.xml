@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_marginBottom="90dp"
+        android:id="@+id/nested_product"
+            android:translationY="80dp"
+        android:background="@drawable/bg"
+        android:fillViewport="true"
+            tools:context=".OnDetailsActivity"
+
+
+        app:behavior_overlapTop="40dp"
+        tools:showIn="@layout/activity_scrolling">
+    <!--    app:behavior_overlapTop="40dp"-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="24dp">
+
+        <!--        android:paddingLeft="20dp"-->
+        <!--        android:paddingTop="24dp"-->
+        <!--        android:paddingRight="20dp"-->
+        <!--        android:paddingBottom="24dp"-->
+        <!--        android:translationY="-20dp"-->
+        <!--        android:translationY="-20dp"-->
+
+
+        <TextView
+                android:id="@+id/product_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/grenale_conbla"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingLeft="20dp"
+                android:paddingTop="0dp"
+                android:text="@string/item_name"
+                android:transitionName="@string/hero_name"
+
+
+                android:textColor="@color/text_header"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/smart_rating_bar"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+                android:id="@+id/cal_icon"
+                android:layout_width="13dp"
+                android:layout_height="13.5dp"
+                android:layout_marginStart="34dp"
+                android:layout_marginTop="7.2dp"
+                android:src="@drawable/calorie_icon"
+
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/product_name" />
+
+
+        <TextView
+                android:id="@+id/calories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+
+
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/ubuntu_medium"
+
+
+                android:maxLength="20"
+                android:text="@string/_500_cal"
+                android:textColor="@color/purple"
+                android:textSize="15sp"
+
+
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintStart_toEndOf="@id/cal_icon"
+                app:layout_constraintTop_toBottomOf="@id/product_name" />
+
+        <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/ubuntu_regular"
+                android:text="@string/type"
+                android:textColor="@color/purple"
+                android:textSize="11sp"
+                android:textStyle="bold"
+
+                app:layout_constraintEnd_toStartOf="@+id/nutrition_text"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/nutrition_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:fontFamily="@font/ubuntu_regular"
+                android:text="@string/nutrition"
+                android:textColor="@color/purple"
+                android:textSize="11sp"
+
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <sa.biotic.app.components.RatingBar
+                android:id="@+id/smart_rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="30dp"
+                android:isIndicator="false"
+                app:backgroundDrawable="@drawable/leaf_rate_background"
+                app:gap="0dp"
+                app:indicator="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nutrition_text"
+                app:maxRating="5"
+                app:orientation="horizontal"
+                app:rating="3.5"
+                app:ratingDrawable="@drawable/leaf_rate" />
+
+
+        <!--        <TextView-->
+        <!--                android:id="@+id/textView2"-->
+        <!--                android:layout_width="match_parent"-->
+
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_marginTop="@dimen/text_margin"-->
+
+        <!--                android:paddingLeft="20dp"-->
+        <!--                android:paddingTop="24dp"-->
+        <!--                android:paddingRight="20dp"-->
+        <!--                android:paddingBottom="24dp"-->
+        <!--                android:text="@string/large_text"-->
+
+
+        <!--                android:textColor="@android:color/black"-->
+        <!--                android:textSize="16sp"-->
+        <!--                app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--                app:layout_constraintRight_toRightOf="parent"-->
+        <!--                tools:layout_editor_absoluteY="16dp" />-->
+
+        <View
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="28dp"
+                android:background="@color/line_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calories" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/price_counter_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+
+                android:layout_marginTop="16dp"
+
+                android:layout_marginEnd="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/line1">
+
+            <RelativeLayout
+                    android:layout_width="96dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/counter_box"
+
+                    android:background="@drawable/background"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                <sa.biotic.app.components.ElegantNumberButton
+                        android:id="@+id/number_button2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="0dp"
+
+
+                        android:gravity="center"
+
+
+                        app:backGroundColor="@android:color/transparent"
+                        app:finalNumber="20"
+                        app:initialNumber="1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:textColor="#1A1818"
+                        app:textSize="6sp" />
+
+
+            </RelativeLayout>
+
+
+            <TextView
+                    android:id="@+id/now"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="0dp"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:text="@string/now"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="10sp"
+
+                    android:visibility="gone"
+
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                    android:id="@+id/product_price"
+                    android:layout_width="wrap_content"
+
+
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/_15_sr"
+                    android:textColor="@color/colorPrimary"
+                    android:fontFamily="@font/ubuntu_regular"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/now" />
+
+            <TextView
+                    android:id="@+id/stock_tv"
+                    android:layout_width="wrap_content"
+
+
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+
+                    android:fontFamily="@font/ubuntu_regular"
+                    android:text="@string/only_5_left"
+                    android:textColor="@color/stockColor"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/product_price" />
+
+
+            <TextView
+                    android:id="@+id/was"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+
+                    android:layout_marginStart="20dp"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:text="@string/was"
+                    android:textColor="@color/line_color"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toEndOf="@id/product_price"
+
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                    android:id="@+id/product_prev_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+
+                    android:text="@string/_15_sr"
+                    android:textColor="@color/line_color"
+                    android:fontFamily="@font/ubuntu_regular"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/product_price"
+                    app:layout_constraintTop_toBottomOf="@id/was" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/price_counter_view">
+
+            <com.google.android.material.tabs.TabLayout
+
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tabBackground="@drawable/tab_color_selector"
+                    app:tabIndicatorColor="@android:color/transparent"
+
+                    app:tabSelectedTextColor="@color/white"
+                    app:tabTextAppearance="@style/tab_text"
+                    app:tabTextColor="@android:color/black" />
+
+            <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    app:layout_constraintTop_toBottomOf="@id/tabs" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.core.widget.NestedScrollView>
+</layout>
