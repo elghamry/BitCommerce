@@ -8,179 +8,195 @@
             android:layout_height="match_parent"
             tools:context="sa.biotic.fragments.HomeFragment">
 
-        <androidx.core.widget.NestedScrollView
-
-                android:id="@+id/scroll_container"
+        <sa.biotic.app.components.swipe_layout.WaveSwipeRefreshLayout
+                android:id="@+id/swipeRefresh"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fillViewport="true"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp"
+                android:translationY="-12dp"
+
 
                 attrs:layout_constraintEnd_toEndOf="parent"
                 attrs:layout_constraintStart_toStartOf="parent"
                 attrs:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/container"
+
+            <androidx.core.widget.NestedScrollView
+
+                    android:id="@+id/scroll_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:fillViewport="true"
 
 
-                <androidx.viewpager.widget.ViewPager
-                        android:id="@+id/viewPager"
-                        android:layout_width="match_parent"
-                        android:layout_height="250dp"
-                        attrs:layout_constraintEnd_toEndOf="parent"
-                        attrs:layout_constraintHorizontal_bias="0.0"
-                        attrs:layout_constraintStart_toStartOf="parent"
-                        attrs:layout_constraintTop_toTopOf="parent" />
-
-                <com.rd.PageIndicatorView
-                        android:id="@+id/pageIndicatorView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="45dp"
-                        android:padding="20dp"
-                        attrs:layout_constraintBottom_toBottomOf="@+id/viewPager"
-                        attrs:layout_constraintEnd_toEndOf="parent"
-                        attrs:layout_constraintStart_toStartOf="parent"
-                        attrs:piv_animationType="worm"
-                        attrs:piv_interactiveAnimation="true"
-                        attrs:piv_padding="15dp"
-                        attrs:piv_radius="6dp"
-                        attrs:piv_selectedColor="@android:color/holo_green_dark"
-                        attrs:piv_strokeWidth="9dp"
-                        attrs:piv_unselectedColor="@android:color/white"
-                        attrs:piv_viewPager="@id/viewPager" />
+                    >
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/container"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/shape"
-                        android:clipChildren="true"
-                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
 
-                        attrs:layout_constraintBottom_toBottomOf="parent"
-                        attrs:layout_constraintEnd_toEndOf="parent"
-                        attrs:layout_constraintStart_toStartOf="parent"
-                        attrs:layout_constraintTop_toBottomOf="@+id/pageIndicatorView">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/categoryRecycler"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:outlineAmbientShadowColor="@android:color/transparent"
-                            android:outlineSpotShadowColor="@android:color/transparent"
-                            android:overScrollMode="never"
+                    <androidx.viewpager.widget.ViewPager
+                            android:id="@+id/viewPager"
+                            android:layout_width="match_parent"
+                            android:layout_height="255dp"
                             attrs:layout_constraintEnd_toEndOf="parent"
+                            attrs:layout_constraintHorizontal_bias="0.0"
                             attrs:layout_constraintStart_toStartOf="parent"
                             attrs:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/constraintLayout2"
-                            android:layout_width="match_parent"
+                    <com.rd.PageIndicatorView
+                            android:id="@+id/pageIndicatorView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginTop="16dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="45dp"
+                            android:padding="20dp"
+                            attrs:layout_constraintBottom_toBottomOf="@+id/viewPager"
                             attrs:layout_constraintEnd_toEndOf="parent"
                             attrs:layout_constraintStart_toStartOf="parent"
-                            attrs:layout_constraintTop_toBottomOf="@+id/categoryRecycler">
+                            attrs:piv_animationType="worm"
+                            attrs:piv_interactiveAnimation="true"
+                            attrs:piv_padding="15dp"
+                            attrs:piv_radius="6dp"
+                            attrs:piv_selectedColor="@android:color/holo_green_dark"
+                            attrs:piv_strokeWidth="9dp"
+                            attrs:piv_unselectedColor="@android:color/white"
+                            attrs:piv_viewPager="@id/viewPager" />
 
-                        <TextView
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/shape"
+                            android:clipChildren="true"
+                            android:orientation="vertical"
 
+                            attrs:layout_constraintBottom_toBottomOf="parent"
+                            attrs:layout_constraintEnd_toEndOf="parent"
+                            attrs:layout_constraintStart_toStartOf="parent"
+                            attrs:layout_constraintTop_toBottomOf="@+id/pageIndicatorView">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/categoryRecycler"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:fontFamily="@font/grenale_conbla"
-                                android:text="@string/newest_product"
-                                android:textColor="@android:color/black"
-                                android:textSize="20sp"
+                                android:layout_marginTop="20dp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:outlineAmbientShadowColor="@android:color/transparent"
+                                android:outlineSpotShadowColor="@android:color/transparent"
+                                android:overScrollMode="never"
+                                attrs:layout_constraintEnd_toEndOf="parent"
                                 attrs:layout_constraintStart_toStartOf="parent"
                                 attrs:layout_constraintTop_toTopOf="parent" />
 
-                        <TextView
-                                android:id="@+id/see_prods"
-                                android:layout_width="wrap_content"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/constraintLayout2"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:layout_marginEnd="19dp"
-                                android:fontFamily="@font/ubuntu_medium"
-                                android:text="@string/see_all"
-                                android:textColor="@android:color/holo_green_dark"
-                                android:textSize="16sp"
+                                android:layout_marginTop="16dp"
+                                android:orientation="vertical"
                                 attrs:layout_constraintEnd_toEndOf="parent"
-                                attrs:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:layout_marginTop="16dp"
-
-                            android:id="@+id/productsRecycler"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            attrs:layout_constraintEnd_toEndOf="parent"
-                            attrs:layout_constraintStart_toStartOf="parent"
-                            attrs:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/constraintLayout3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginTop="16dp"
-                            attrs:layout_constraintEnd_toEndOf="parent"
-                            attrs:layout_constraintStart_toStartOf="parent"
-                            attrs:layout_constraintTop_toBottomOf="@+id/productsRecycler">
-
-                        <TextView
-
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:fontFamily="@font/grenale_conbla"
-                                android:text="@string/newest_bundles"
-                                android:textColor="@android:color/black"
-                                android:textSize="20sp"
                                 attrs:layout_constraintStart_toStartOf="parent"
-                                attrs:layout_constraintTop_toTopOf="parent" />
+                                attrs:layout_constraintTop_toBottomOf="@+id/categoryRecycler">
 
-                        <TextView
-                                android:id="@+id/see_bunds"
-                                android:layout_width="wrap_content"
+                            <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:fontFamily="@font/grenale_conbla"
+                                    android:text="@string/newest_product"
+                                    android:textColor="@android:color/black"
+                                    android:textSize="20sp"
+                                    attrs:layout_constraintStart_toStartOf="parent"
+                                    attrs:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                    android:id="@+id/see_prods"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_marginEnd="19dp"
+                                    android:fontFamily="@font/ubuntu_medium"
+                                    android:text="@string/see_all"
+                                    android:textColor="@android:color/holo_green_dark"
+                                    android:textSize="16sp"
+                                    attrs:layout_constraintEnd_toEndOf="parent"
+                                    attrs:layout_constraintTop_toTopOf="parent" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/productsRecycler"
+
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:layout_marginEnd="19dp"
-                                android:fontFamily="@font/ubuntu_medium"
-                                android:text="@string/see_all"
-                                android:textColor="@android:color/holo_green_dark"
-                                android:textSize="16sp"
+                                android:layout_marginTop="16dp"
                                 attrs:layout_constraintEnd_toEndOf="parent"
-                                attrs:layout_constraintTop_toTopOf="parent" />
+                                attrs:layout_constraintStart_toStartOf="parent"
+                                attrs:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/constraintLayout3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:orientation="vertical"
+                                attrs:layout_constraintEnd_toEndOf="parent"
+                                attrs:layout_constraintStart_toStartOf="parent"
+                                attrs:layout_constraintTop_toBottomOf="@+id/productsRecycler">
+
+                            <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:fontFamily="@font/grenale_conbla"
+                                    android:text="@string/newest_bundles"
+                                    android:textColor="@android:color/black"
+                                    android:textSize="20sp"
+                                    attrs:layout_constraintStart_toStartOf="parent"
+                                    attrs:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                    android:id="@+id/see_bunds"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_marginEnd="19dp"
+                                    android:fontFamily="@font/ubuntu_medium"
+                                    android:text="@string/see_all"
+                                    android:textColor="@android:color/holo_green_dark"
+                                    android:textSize="16sp"
+                                    attrs:layout_constraintEnd_toEndOf="parent"
+                                    attrs:layout_constraintTop_toTopOf="parent" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/bundlesRecycler"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                attrs:layout_constraintEnd_toEndOf="parent"
+                                attrs:layout_constraintStart_toStartOf="parent"
+                                attrs:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:layout_marginTop="16dp"
-                            android:id="@+id/bundlesRecycler"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            attrs:layout_constraintEnd_toEndOf="parent"
-                            attrs:layout_constraintStart_toStartOf="parent"
-                            attrs:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
-
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </androidx.core.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
+
+        </sa.biotic.app.components.swipe_layout.WaveSwipeRefreshLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

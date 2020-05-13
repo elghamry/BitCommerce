@@ -177,7 +177,8 @@ class ChangePasswordFragment : Fragment() {
                         binding.etConfirmPassword.text.toString()
                         ,
                         binding.etNewPassword.text.toString(),
-                        binding.etOldPassword.text.toString()
+                        binding.etOldPassword.text.toString(),
+                        UserInfo.device_token
                     )
                 )
             }
@@ -200,7 +201,14 @@ class ChangePasswordFragment : Fragment() {
 
 
             } else {
-                if (newit.Status == -9) {
+
+                Log.d("changePas", newit.Status.toString())
+                if (newit.Status == -8) {
+
+                    binding.etOldPasswordLayout.error = "Old Password in incorrect !"
+
+                    binding.etOldPasswordLayout.isErrorEnabled = true
+
                     newit.Status = 99
                 }
             }

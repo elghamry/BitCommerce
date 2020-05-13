@@ -25,8 +25,9 @@ import com.bumptech.glide.Glide
 import com.chibatching.kotpref.livedata.asLiveData
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import sa.biotic.app.ProgressRequestBody
 import sa.biotic.app.PurchaseActivity
 import sa.biotic.app.R
@@ -153,8 +154,15 @@ class ProfileFragment : Fragment(), ProgressRequestBody.UploadCallbacks {
 //                    Navigation.findNavController(binding.root)
 //                        .navigate(R.id.action_loginFragment_to_profileFragment)
 
+
+                    Repository.orderModel.AccessToken = UserInfo.access_token
+                    Repository.orderModel.DeviceToken = UserInfo.device_token
+                    Repository.orderModel.UserID = UserInfo.uid
+
                     val intent = Intent(activity, PurchaseActivity::class.java)
                     startActivityForResult(intent, 1)
+
+
 
                     bottomNavigationView.selectedItemId = R.id.cart
 
@@ -196,9 +204,6 @@ class ProfileFragment : Fragment(), ProgressRequestBody.UploadCallbacks {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 //        choosePhotoHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
 //    }
-
-
-
 
 
     private fun cardsController() {
@@ -376,9 +381,9 @@ class ProfileFragment : Fragment(), ProgressRequestBody.UploadCallbacks {
 //                    MultipartBody.Part.createFormData("ggg", file.getName(), fileBody)
 
 
-            val uid = RequestBody.create(MediaType.parse("text/plain"), UserInfo.uid.toString())
+            val uid = UserInfo.uid.toString().toRequestBody("text/plain".toMediaTypeOrNull())
             val access_token =
-                RequestBody.create(MediaType.parse("text/plain"), UserInfo.access_token)
+                UserInfo.access_token.toRequestBody("text/plain".toMediaTypeOrNull())
 
 
 
@@ -422,7 +427,6 @@ class ProfileFragment : Fragment(), ProgressRequestBody.UploadCallbacks {
             e.printStackTrace()
         }
     }
-
 
 
     // TODO: Rename method, update argument and hook method into UI event

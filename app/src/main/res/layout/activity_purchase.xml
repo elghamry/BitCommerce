@@ -79,7 +79,23 @@
         <!--                android:text="next"-->
         <!--                app:layout_constraintEnd_toEndOf="parent"-->
         <!--                app:layout_constraintTop_toTopOf="parent" />-->
+        <sa.biotic.app.components.ProgressBottle
+                android:id="@+id/myProgBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#C8FFFFFF"
+                android:elevation="10dp"
+                android:visibility="gone"
+                app:androidtextColor="@color/purple"
+                app:barType="@raw/drops_loader"
 
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:text=" "
+                app:textSize="7sp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -15,7 +15,7 @@ data class CartItem(
     var stockQuantity: Int,
     var discount: String,
 
-    val price: String,
+    val price: Double,
     var isExpanded: Boolean = false
 ) : Diffable {
 

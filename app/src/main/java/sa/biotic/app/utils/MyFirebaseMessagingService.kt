@@ -25,14 +25,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        UserInfo.device_token = token
+
         Log.i(TAG, token)
+
+        UserInfo.device_token = token
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         remoteMessage.let { message ->
-            Log.i(TAG, message.data.get("message"))
+//            Log.i(TAG, message.data.get("message"))
 
             notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

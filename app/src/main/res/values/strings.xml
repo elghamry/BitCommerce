@@ -12,8 +12,6 @@
     <string name="price_demo">1200 SAR</string>
     <string name="newest_bundles">Bundles</string>'
     <string name="large_text">
-        "Material is the metaphor.\n\n"
-
         "A material metaphor is the unifying theory of a rationalized space and a system of motion."
         "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
         "technologically advanced and open to imagination and magic.\n"
@@ -227,6 +225,12 @@
     <string name="not_available">Not available now</string>
     <string name="account_notifications">Account Notifications</string>
     <string name="edit">Edit</string>
+    <string name="discount">Discount</string>
+    <string name="review_now">Review Now</string>
+    <string name="order_details">Order details</string>
+    <string name="how_was_your_last_order">How was your last order?</string>
+    <string name="not_now">Not Now</string>
+    <string name="your_products">Your Products</string>
 
 
 </resources>

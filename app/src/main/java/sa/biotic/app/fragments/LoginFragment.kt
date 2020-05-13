@@ -221,7 +221,11 @@ class LoginFragment : Fragment() {
                 var userLoginModel: UserLoginModel = UserLoginModel(
                     UserInfo.device_token
                     , etEmail.text.toString(), etPassword.text.toString()
+
                 )
+                var element: String = UserInfo.device_token
+
+                Log.d("checkTo", element)
 
 
                 viewModel.loginUser(userLoginModel)
@@ -254,7 +258,7 @@ class LoginFragment : Fragment() {
                     ErrorDialog.showCustomViewDialog(
                         context = requireContext(),
                         custView = R.layout.dialog_error,
-                        msg = "Password is Worng"
+                        msg = "Incorrect Password"
                     )
                     userResponse.ValidationStatusNumber = 99
                 }
@@ -292,7 +296,11 @@ class LoginFragment : Fragment() {
 
                 userResponse.Status = false
 
-                var get_user = LogoutModel(UserInfo.access_token, UserInfo.uid.toString())
+                var get_user = LogoutModel(
+                    UserInfo.access_token,
+                    UserInfo.uid.toString(),
+                    UserInfo.device_token
+                )
                 viewModel.getUserAccountData(get_user)
 
                 Repository.addToCartAfterLogin(

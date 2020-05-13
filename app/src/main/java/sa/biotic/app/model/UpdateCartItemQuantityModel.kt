@@ -12,7 +12,7 @@ data class UpdateCartItemQuantityModel(
     var ProductID: Int = -1,
     var Isbundle: Boolean,
     var Quantity: Int,
-    var Devicetoken: String
+    var DeviceToken: String
 
 ) : Diffable, Parcelable {
     override fun areContentTheSame(other: Any): Boolean = other is UpdateCartItemQuantityModel &&
@@ -21,7 +21,7 @@ data class UpdateCartItemQuantityModel(
             ProductID == other.ProductID &&
             Isbundle == other.Isbundle &&
             Quantity == other.Quantity &&
-            Devicetoken == other.Devicetoken
+            DeviceToken == other.DeviceToken
 
 
     override fun getUniqueIdentifier(): Long {

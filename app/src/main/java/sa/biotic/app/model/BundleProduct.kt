@@ -12,8 +12,9 @@ data class BundleProduct(
     val BundleImage: String,
     val BundleName_Ar: String,
     val BundleName_En: String,
-    val BundlePrice: String,
+    val BundlePrice: Double,
     val BundleReview: Int,
+    val IsNew: Int,
     val BundleStockAvaliable: Int
 
 ) : Diffable, Parcelable {
@@ -26,6 +27,7 @@ data class BundleProduct(
             && BundleName_En == other.BundleName_En
             && BundlePrice == other.BundlePrice
             && BundleReview == other.BundleReview
+            && IsNew == other.IsNew
             && BundleStockAvaliable == other.BundleStockAvaliable
 
 

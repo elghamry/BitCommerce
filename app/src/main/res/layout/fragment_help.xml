@@ -66,7 +66,7 @@
                     android:fontFamily="@font/grenale_conbla"
                     android:text="@string/technical_support"
                     android:textColor="@color/text_header"
-                    android:textSize="32sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:transitionName="tvLogin"
                     app:layout_constraintStart_toStartOf="parent"
@@ -171,6 +171,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="6dp"
+                                android:clipChildren="false"
+
+                                android:gravity="bottom"
 
 
                                 app:passwordToggleTint="@color/purple">
@@ -182,11 +185,15 @@
                                     android:layout_marginLeft="10dp"
                                     android:layout_marginTop="24dp"
                                     android:layout_marginRight="10dp"
-
+                                    android:layout_marginBottom="16dp"
+                                    android:background="@drawable/et_background"
                                     android:drawablePadding="6dp"
                                     android:fontFamily="@font/ubuntu_regular"
                                     android:hint="@string/Name"
+                                    android:text="dccss"
+                                    android:translationY="5dp"
                                     android:padding="16dp"
+
 
                                     android:paddingStart="6dp"
 
@@ -201,7 +208,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
 
-                                android:layout_marginBottom="6dp">
+                                android:layout_marginBottom="6dp"
+                                android:clipChildren="false">
 
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -210,12 +218,14 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
                                     android:layout_marginRight="10dp"
-
+                                    android:layout_marginBottom="16dp"
+                                    android:background="@drawable/et_background"
                                     android:drawablePadding="6dp"
                                     android:fontFamily="@font/ubuntu_regular"
                                     android:hint="@string/email_address"
                                     android:inputType="text"
                                     android:padding="16dp"
+                                    android:translationY="5dp"
                                     android:paddingStart="6dp"
 
                                     android:textColor="@color/line_color"
@@ -230,27 +240,66 @@
                         <!--                                android:textColor="@color/text_header"-->
                         <!--                                android:textSize="14sp"-->
                         <!--                                android:textStyle="bold" />-->
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/etPhonelLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="6dp"
+                                android:clipChildren="false">
+
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etPhone"
+
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginBottom="16dp"
+                                    android:background="@drawable/et_background"
+                                    android:drawablePadding="6dp"
+                                    android:fontFamily="@font/ubuntu_regular"
+                                    android:hint="@string/phone"
+                                    android:inputType="phone"
+
+                                    android:padding="16dp"
+                                    android:paddingStart="6dp"
+                                    android:textColor="@color/line_color"
+                                    android:textSize="14sp"
+                                    android:translationY="5dp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
                         <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/etMessageLayout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="6dp"
 
+
                                 >
 
                             <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etMessage"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="130dp"
                                     android:layout_marginLeft="10dp"
                                     android:layout_marginTop="24dp"
                                     android:layout_marginRight="10dp"
                                     android:drawablePadding="6dp"
+                                    android:layout_gravity="start"
+
+                                    android:background="@drawable/et_message"
+                                    android:gravity=""
+                                    android:translationY="5dp"
+
+
 
                                     android:fontFamily="@font/ubuntu_regular"
                                     android:hint="@string/message"
-                                    android:padding="16dp"
 
+                                    android:padding="16dp"
                                     android:paddingStart="6dp"
 
                                     android:textColor="@color/line_color"
@@ -401,28 +450,27 @@
 
                     android:layout_height="60dp"
 
-                    android:layout_marginBottom="40dp"
-
+                    android:layout_marginTop="40dp"
                     android:background="@color/purple"
+
                     android:fontFamily="@font/ubuntu_medium"
 
                     android:gravity="center"
-
                     android:text="@string/send"
                     android:textAllCaps="false"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                     android:textColor="@color/white"
+
+
                     android:textSize="16sp"
 
-
                     android:theme="@style/Theme.MaterialComponents"
-
                     app:backgroundTint="@color/purple"
                     app:cornerRadius="12dp"
                     app:iconGravity="textStart"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cv"
                     app:strokeColor="@color/white"
                     app:strokeWidth="1dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>

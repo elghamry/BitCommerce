@@ -14,7 +14,7 @@ data class OfferProduct(
     val OfferImage: String,
     val OfferName_Ar: String,
     val OfferName_En: String,
-    val OfferPrice: String,
+    val OfferPrice: Double,
     val OfferStartDate: String,
     val ProductCallories: Int,
     val ProductDescreption_Ar: String,
@@ -23,9 +23,11 @@ data class OfferProduct(
     val ProductImage: String,
     val ProductName_Ar: String,
     val ProductName_En: String,
-    val ProductPrice: String,
+    val ProductPrice: Double,
     val ProductReviews: String,
+    val IsNew: Int,
     val ProductStockQuantity: Int
+
 ) : Diffable, Parcelable {
     override fun areContentTheSame(other: Any): Boolean =
         other is OfferProduct

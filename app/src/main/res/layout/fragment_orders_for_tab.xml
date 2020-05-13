@@ -2,13 +2,67 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ordsRecycler"
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ordsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <LinearLayout
+                android:id="@+id/view_offers_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/grenale_conbla"
+                    android:gravity="center_horizontal"
+                    android:text="Your haven't feed your body yet! View our hottest offers"
+                    android:textColor="@color/text_header"
+                    android:textSize="24sp" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/view_offers_btn"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="156dp"
+                    android:layout_height="60dp"
+
+                    android:layout_gravity="center_horizontal"
+
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="40dp"
+
+                    android:background="@color/colorPrimary"
+                    android:fontFamily="@font/ubuntu_medium"
+
+
+                    android:text="View Offers"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+
+
+                    android:theme="@style/Theme.MaterialComponents"
+
+                    app:backgroundTint="@color/colorPrimary"
+                    app:cornerRadius="12dp"
+                    app:iconGravity="textStart"
+
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="1dp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </layout>

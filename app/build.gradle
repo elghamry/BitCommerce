@@ -41,6 +41,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
 }
 
 dependencies {
@@ -48,10 +52,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.appcompat:appcompat-resources:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
-    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -69,17 +73,17 @@ dependencies {
 
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
 
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     //glide
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     //viewpager Transformer
     implementation 'com.eftimoff:android-viewpager-transformers:1.0.1@aar'
 
     //oneAdapter
-    implementation "com.ironsource.aura.oneadapter:oneadapter:1.4.0"
+    implementation "com.ironsource.aura.oneadapter:oneadapter:1.5.0"
 
     //Complex View
     implementation 'com.github.BluRe-CN:ComplexView:v1.0'
@@ -90,13 +94,13 @@ dependencies {
     //CirCularImageView
     implementation 'com.rishabhharit.roundedimageview:RoundedImageView:0.8.4'
 
-    //CustomFloatingActionButton
-    implementation 'com.robertlevonyan.view:CustomFloatingActionButton:3.0.0'
+//    //CustomFloatingActionButton
+//    implementation 'com.robertlevonyan.view:CustomFloatingActionButton:3.0.0'
 
 //    //Alerter
 //    implementation 'com.tapadoo.android:alerter:4.1.0'
 
-    implementation 'com.github.mrgames13:SplashScreen:1.0.5'
+//    implementation 'com.github.mrgames13:SplashScreen:1.0.5'
 
     implementation 'com.github.jaidevnaik5886:RxSplashScreen:1.0'
 
@@ -108,7 +112,7 @@ dependencies {
 
 
     // binding
-    kapt 'androidx.databinding:databinding-compiler:3.5.3'
+    kapt 'androidx.databinding:databinding-compiler:3.6.1'
     //SpinKit
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
@@ -116,15 +120,15 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0'
 
     //Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.7.1'
 
 
     //Counter Anim
     implementation 'com.rowland.cartcounter:CartCounter:1.0.0-beta-2'
 
 
-    implementation 'com.google.android.material:material:1.2.0-alpha01'
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
     implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
 
     //maps
@@ -153,7 +157,7 @@ dependencies {
 
 
     //lottie
-    implementation 'com.airbnb.android:lottie:3.3.0'
+    implementation 'com.airbnb.android:lottie:3.3.1'
 
     //rxAnimation
     implementation 'com.mikhaellopez:rxanimation:0.0.7'
@@ -169,8 +173,30 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
 
 
-    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
+
+
+
+//    implementation 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
+
+
+    implementation 'com.github.stfalcon:stfalcon-imageviewer:1.0.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'androidx.transition:transition:1.3.1'
+
+    //ribbon shimmer
+    implementation "com.github.skydoves:androidribbon:1.0.2"
+
+    //remote debugger
+    implementation 'com.github.zerobranch:android-remote-debugger:1.0.0'
+
+
+    //image indicator
+    implementation 'com.github.mazenrashed:DotsIndicatorWithoutViewpager:1.0.0'
+
+
+
 
 
 }

@@ -11,7 +11,8 @@ data class UpdateUserAccountDataModel(
 
     val UserID: String,
     val Email: String,
-    val Phone: String
+    val Phone: String,
+    val DeviceToken: String
 
 
 ) : Diffable, Parcelable {
@@ -21,6 +22,7 @@ data class UpdateUserAccountDataModel(
             && UserID == other.UserID
             && Email == other.Email
             && Phone == other.Phone
+            && DeviceToken == other.DeviceToken
 
 
     override fun getUniqueIdentifier(): Long {

@@ -9,13 +9,15 @@ import kotlinx.android.parcel.Parcelize
 data class LogoutModel(
     val AccessToken: String,
 
-    val UserID: String
+    val UserID: String,
+    val DeviceToken: String
 
 ) : Diffable, Parcelable {
     override fun areContentTheSame(other: Any): Boolean = other is LogoutModel
 
             && AccessToken == other.AccessToken
             && UserID == other.UserID
+            && DeviceToken == other.DeviceToken
 
 
     override fun getUniqueIdentifier(): Long {

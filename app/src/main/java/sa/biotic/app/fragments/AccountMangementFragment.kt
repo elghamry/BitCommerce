@@ -24,8 +24,9 @@ import com.aminography.choosephotohelper.callback.ChoosePhotoCallback
 import com.bumptech.glide.Glide
 import com.chibatching.kotpref.livedata.asLiveData
 import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import sa.biotic.app.ProgressRequestBody
 import sa.biotic.app.R
 import sa.biotic.app.components.ProgressBottle
@@ -292,7 +293,13 @@ class AccountMangementFragment : Fragment(), ProgressRequestBody.UploadCallbacks
             temp_card = binding.logoutBtn
             temp_tv = binding.logoutTv
 
-            viewModel.logoutUser(LogoutModel(UserInfo.access_token, UserInfo.uid.toString()))
+            viewModel.logoutUser(
+                LogoutModel(
+                    UserInfo.access_token,
+                    UserInfo.uid.toString(),
+                    UserInfo.device_token
+                )
+            )
 
 
         }
@@ -329,14 +336,17 @@ class AccountMangementFragment : Fragment(), ProgressRequestBody.UploadCallbacks
 //                    MultipartBody.Part.createFormData("ggg", file.getName(), fileBody)
 
 
-            val uid = RequestBody.create(MediaType.parse("text/plain"), UserInfo.uid.toString())
+            val uid = UserInfo.uid.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            val device_token =
+                UserInfo.device_token.toString().toRequestBody("text/plain".toMediaTypeOrNull())
             val access_token =
-                RequestBody.create(MediaType.parse("text/plain"), UserInfo.access_token)
+                UserInfo.access_token.toRequestBody("text/plain".toMediaTypeOrNull())
 
 
 
             map.put("UserId", uid)
             map.put("AccessToken", access_token)
+            map.put("DeviceToken", device_token)
             map.put("Image\"; filename=\"${file.name}\"", fileBody)
 
             Repository.updateUserImage(map)

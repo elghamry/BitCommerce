@@ -17,12 +17,14 @@ import java.net.ConnectException
 
 
 object Repository {
-    private const val BASE_URL = "http://192.129.178.42/API/"
+    private const val BASE_URL = "https://biotic.store/API/"
     private val service = makeRetrofitService()
     private val serviceUser = makeRetrofitUserService()
     private val serviceShopping = makeRetrofitShoppingService()
 
     lateinit var callBackResponse: MutableLiveData<Boolean>
+
+    var progressbarObservable: MutableLiveData<Boolean> = MutableLiveData(true)
 
 
     var offers: MutableLiveData<MutableList<Offer>> = MutableLiveData<MutableList<Offer>>()
@@ -38,6 +40,8 @@ object Repository {
     var prod: MutableLiveData<Product> =
         MutableLiveData<Product>()
 
+    var images: MutableLiveData<GetImagesResponse> = MutableLiveData<GetImagesResponse>()
+
     var bundleItem: MutableLiveData<BundleProduct> =
         MutableLiveData<BundleProduct>()
 
@@ -50,6 +54,9 @@ object Repository {
     var cartItems: MutableList<CartItem> = mutableListOf<CartItem>()
     var cartLocalItems: MutableLiveData<MutableList<CartItem>> =
         MutableLiveData<MutableList<CartItem>>()
+
+    var reviewsResponse: MutableLiveData<MutableList<GetReviewsResponse>> =
+        MutableLiveData<MutableList<GetReviewsResponse>>()
 
 
     //LoginAndRegisteration
@@ -74,17 +81,41 @@ object Repository {
     var changePasswordResponse: MutableLiveData<ForgetPasswordResponseModel> =
         MutableLiveData<ForgetPasswordResponseModel>()
 
-    var getDeliverAddressResponse: MutableLiveData<GetDeliveryAddressModelResponse> =
-        MutableLiveData<GetDeliveryAddressModelResponse>()
+    var getDeliverAddressResponse: MutableLiveData<GetProfileAddressResponse> =
+        MutableLiveData<GetProfileAddressResponse>()
 
-    var updateDeliverAddressResponse: MutableLiveData<UpdateDeiveryAddressResponseModel> =
-        MutableLiveData<UpdateDeiveryAddressResponseModel>()
+    var updateDeliverAddressResponse: MutableLiveData<UpdateProfileAddressResponse> =
+        MutableLiveData<UpdateProfileAddressResponse>()
 
     var verifyUserResponse: MutableLiveData<VerifyResponseModel> =
         MutableLiveData<VerifyResponseModel>()
 
     var updateUserInfo: MutableLiveData<UpdateUserAccountDataResponse> =
         MutableLiveData<UpdateUserAccountDataResponse>()
+
+
+    var upcomingOrders: MutableLiveData<MutableList<OrderAfterConfResponse>> = MutableLiveData()
+
+
+    var pastOrders: MutableLiveData<MutableList<OrderAfterConfResponse>> = MutableLiveData()
+
+
+    var contactResponse: MutableLiveData<ContactlResponse> = MutableLiveData()
+
+
+    var helpResponse: MutableLiveData<ContactlResponse> = MutableLiveData()
+
+    var getOrderResponse: MutableLiveData<OrderInfoResponse> = MutableLiveData()
+
+    var orderRatingResponse: MutableLiveData<OrderRatingResponse> = MutableLiveData()
+
+    var orderPostboRatingResponse: MutableLiveData<OrderRatingPostboResponse> = MutableLiveData()
+
+    var setItemRatingResponse: MutableLiveData<ItemRatingToSendResponse> = MutableLiveData()
+
+
+    var getOrderLogsResponse: MutableLiveData<GetOrderLogsResponse> = MutableLiveData()
+
 
 
     //shopping
@@ -108,6 +139,15 @@ object Repository {
     var getCartCount: MutableLiveData<Int> =
         MutableLiveData<Int>()
 
+    var checkoutResponse: MutableLiveData<CheckoutResponse> =
+        MutableLiveData<CheckoutResponse>()
+
+    var orderModel = CheckoutModel(
+        UserInfo.uid, UserInfo.access_token, "sdf", "", "", "", "", ""
+        , 0, 0.toDouble(), "", UserInfo.device_token
+    )
+
+
 
     //local cart is here
 
@@ -128,6 +168,10 @@ object Repository {
     var StocksQuantityToString: String = ""
     var QuantityToString: String = ""
 
+
+    var address_checkout = MutableLiveData<android.location.Address>()
+
+    var address_profile = MutableLiveData<android.location.Address>()
 
 //    lateinit var prodsLocal: String
 //    lateinit  var isbundLocal: String
@@ -332,13 +376,13 @@ object Repository {
     }
 
 
-    fun getDeliveryAddr(user: GetDeliveryAddressModel) {
+    fun getProfileAddress(user: GetProfileAddress) {
 
 
         CoroutineScope(Dispatchers.IO).launch {
 
             try {
-                val response = serviceUser.getDeliveryAddress(user)
+                val response = serviceUser.getProfileAddress(user)
                 withContext(Dispatchers.Main) {
                     try {
                         if (response.isSuccessful) {
@@ -350,7 +394,7 @@ object Repository {
 
 
                             getDeliverAddressResponse.value = response.body()
-                            Log.d("userResp", response.body().toString())
+                            Log.d("checkAddress", response.body().toString())
                             callBackResponse.value = true
 
 
@@ -382,13 +426,13 @@ object Repository {
     }
 
 
-    fun updateDeliveryAddr(user: UpdateDeliveryAddressModel) {
+    fun updateProfileAddress(user: UpdateProfileAddressModel) {
 
 
         CoroutineScope(Dispatchers.IO).launch {
 
             try {
-                val response = serviceUser.updateDeliveryAddress(user)
+                val response = serviceUser.updateProfileAddress(user)
                 withContext(Dispatchers.Main) {
                     try {
                         if (response.isSuccessful) {
@@ -400,7 +444,14 @@ object Repository {
 
 
                             updateDeliverAddressResponse.value = response.body()
-                            Log.d("userResp", response.body().toString())
+
+                            getProfileAddress(
+                                GetProfileAddress(
+                                    UserInfo.access_token, UserInfo.uid,
+                                    UserInfo.device_token
+                                )
+                            )
+                            Log.d("checkAddress", response.body().toString())
                             callBackResponse.value = true
 
 
@@ -799,6 +850,9 @@ object Repository {
                             login_response.value = response.body()
                             callBackResponse.value = true
 
+                            Log.d("userResp", user.toString())
+
+
 
                             Log.d("userResp", response.body().toString())
 
@@ -858,7 +912,7 @@ object Repository {
 //                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
                             offers.value = response.body()!!
                             callBackResponse.value = true
-//                        Log.d("offer", offers.size.toString())
+                            Log.d("offer", response.body().toString())
 
 
                         } else {
@@ -964,7 +1018,10 @@ object Repository {
 
 //                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
                             prods.value = response.body()!!
-//                        Log.d("offer", offers.size.toString())
+                            Log.d(
+                                "prodCheck",
+                                response.body()!!.get((response.body()!!.size - 4)).toString()
+                            )
                             callBackResponse.value = true
 
 
@@ -1278,6 +1335,7 @@ object Repository {
                                 response.body()!!.BundleName_En,
                                 response.body()!!.BundlePrice,
                                 response.body()!!.BundleReview,
+                                0,
                                 response.body()!!.BundletStockQuantity
                             )
                             bundleItem.value = tempBund
@@ -1332,6 +1390,60 @@ object Repository {
 
 //                        Log.d("ProdCalled", response.body()?.ProductOfferDicountValue.toString())
                             prod.value = response.body()!!
+                            Log.d("ProdCalled", response.body()?.ProductID.toString())
+
+
+
+
+                            callBackResponse.value = true
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                    } catch (e: IOException) {
+//
+//                    UtilityMethods.hideView(loading_view)
+//                    UtilityMethods.showView(network_error_msg)
+                        callBackResponse.value = false
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+
+                    } catch (e: Exception) {
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+
+            }
+
+        }
+
+
+    }
+
+
+    fun getImages(productid: Int) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = service.getImages(productid)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("ProdCalled", response.body()?.ProductOfferDicountValue.toString())
+                            images.value = response.body()!!
                             Log.d("ProdCalled", response.body()?.ProductID.toString())
 
 
@@ -1473,6 +1585,55 @@ object Repository {
     }
 
 
+    fun getReviews(ID: Int, IsBundle: Int) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = service.getReviews(ID, IsBundle)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+                            reviewsResponse.value = response.body()!!
+                            callBackResponse.value = true
+                            Log.d("bundle", bunds.value!!.size.toString())
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                    } catch (e: IOException) {
+//
+//                    UtilityMethods.hideView(loading_view)
+//                    UtilityMethods.showView(network_error_msg)
+                        callBackResponse.value = false
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+                    } catch (e: Exception) {
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+
+            }
+
+        }
+
+
+    }
+
+
     fun addItemCartLocal(item: CartItem) {
 
 
@@ -1501,7 +1662,7 @@ object Repository {
 
             stockquanLocal.add(item.stockQuantity.toString())
             quantityLocal.add(item.quantity.toString())
-            priceLocal.add(item.price)
+            priceLocal.add(item.price.toString())
             discountLocal.add(item.discount)
 
         } else {
@@ -1520,7 +1681,7 @@ object Repository {
 
             stockquanLocal[position] = item.stockQuantity.toString()
             quantityLocal[position] = item.quantity.toString()
-            priceLocal[position] = item.price
+            priceLocal[position] = item.price.toString()
             discountLocal[position] = item.discount
 
 
@@ -1609,15 +1770,15 @@ object Repository {
 
         cartLocalItems.value = cartItems
 
-        Repository.getCartDetailsNoLogin(
-            Repository.prodsLocal,
-            Repository.priceLocal,
-            Repository.isbundLocal,
-            Repository.offeridsLocal,
-            Repository.discountLocal,
-            Repository.stockquanLocal,
-            Repository.quantityLocal
-        )
+//        Repository.getCartDetailsNoLogin(
+//            Repository.prodsLocal,
+//            Repository.priceLocal,
+//            Repository.isbundLocal,
+//            Repository.offeridsLocal,
+//            Repository.discountLocal,
+//            Repository.stockquanLocal,
+//            Repository.quantityLocal
+//        )
 
 
     }
@@ -1653,7 +1814,8 @@ object Repository {
                                     GetCartDetailsModel(
                                         UserInfo.uid,
                                         UserInfo.access_token,
-                                        UserInfo.device_token
+                                        UserInfo.device_token,
+                                        UserInfo.promo
                                     )
                                 )
 
@@ -1662,7 +1824,8 @@ object Repository {
                                     GetCartDetailsModel(
                                         0,
                                         "rr",
-                                        UserInfo.device_token
+                                        UserInfo.device_token,
+                                        UserInfo.promo
                                     )
                                 )
 
@@ -1693,6 +1856,7 @@ object Repository {
 
             }
         }
+
 
 
     }
@@ -2081,6 +2245,562 @@ object Repository {
 
     }
 
+    fun checkout(item: CheckoutModel) {
+
+        progressbarObservable.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = serviceShopping.checkout(item)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+//                        offers.value = response.body()!!
+                            Log.d("checkoutModel", item.toString())
+
+                            checkoutResponse.value = response.body()
+                            Log.d("checkoutResponse", response.body().toString())
+                            callBackResponse.value = true
+//
+//                            cartItems.clear()
+//                            cartLocalItems.value = cartItems
+//                            priceLocal.clear()
+//                            prodsLocal.clear()
+//                            quantityLocal.clear()
+//                            isbundLocal.clear()
+//                            offeridsLocal.clear()
+//                            discountLocal.clear()
+//                            stockquanLocal.clear()
+
+                            progressbarObservable.value = false
+
+
+                        } else {
+
+                            progressbarObservable.value = false
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+
+                    } catch (e: Exception) {
+
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+
+
+    }
+
+
+    fun getPastUserOrders(item: OrderAfterConfModel) {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = serviceUser.getUserOrders(item)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+//                        offers.value = response.body()!!
+
+
+                            pastOrders.value = response.body()
+
+                            callBackResponse.value = true
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+
+                    } catch (e: Exception) {
+
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+
+
+    }
+
+    fun getUpcomingUserOrders(item: OrderAfterConfModel) {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = serviceUser.getUserOrders(item)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+//                        offers.value = response.body()!!
+
+
+                            upcomingOrders.value = response.body()
+
+                            callBackResponse.value = true
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+
+                    } catch (e: Exception) {
+
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+
+
+    }
+
+    fun help(item: ContactModel) {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = serviceUser.help(item)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+//                        offers.value = response.body()!!
+
+
+                            helpResponse.value = response.body()
+                            Log.d("helpm", response.body().toString())
+
+                            callBackResponse.value = true
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+
+                    } catch (e: Exception) {
+
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+
+
+    }
+
+
+    fun getOrderLogs(item: GetOrderLlogsModel) {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = serviceUser.getOrderLogs(item)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+//                        offers.value = response.body()!!
+
+
+                            getOrderLogsResponse.value = response.body()
+                            Log.d("orderLogs", response.body().toString())
+
+                            callBackResponse.value = true
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+
+                    } catch (e: Exception) {
+
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+
+
+    }
+
+
+    fun contact(item: ContactModel) {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = serviceUser.contactUs(item)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+//                        offers.value = response.body()!!
+
+
+                            contactResponse.value = response.body()
+                            Log.d("helpmC", response.body().toString())
+
+                            callBackResponse.value = true
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+
+                    } catch (e: Exception) {
+
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+
+
+    }
+
+
+    fun getOrderInfo(item: GetOrderModel) {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = serviceUser.getOrderInfo(item)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+//                        offers.value = response.body()!!
+
+
+                            getOrderResponse.value = response.body()
+
+
+                            Log.d("getOrderRes", response.body().toString())
+
+                            callBackResponse.value = true
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+
+                    } catch (e: Exception) {
+
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+
+
+    }
+
+
+    fun getOrderDetailsForRating(item: OrderRatingModel) {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = serviceUser.getOrderDetailsForRating(item)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+//                        offers.value = response.body()!!
+
+
+                            orderRatingResponse.value = response.body()
+
+                            Log.d("rating_is", response.body().toString())
+
+                            callBackResponse.value = true
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                        Log.d("Error", e.toString())
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                        Log.d("Error", e.toString())
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+                        Log.d("Error", e.toString())
+
+                    } catch (e: Exception) {
+                        Log.d("Error", e.toString())
+
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("Error", e.toString())
+
+
+            }
+        }
+
+
+    }
+
+
+    fun getOrderPostboDetailsForRating(item: OrderRatingPostboModel) {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = serviceUser.getOrderPostboDetailsForRating(item)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+//                        offers.value = response.body()!!
+
+
+                            orderPostboRatingResponse.value = response.body()
+
+                            Log.d("rating_is", response.body().toString())
+
+                            callBackResponse.value = true
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                        Log.d("Error", e.toString())
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                        Log.d("Error", e.toString())
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+                        Log.d("Error", e.toString())
+
+                    } catch (e: Exception) {
+                        Log.d("Error", e.toString())
+
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("Error", e.toString())
+
+
+            }
+        }
+
+
+    }
+
+    fun setItemRating(item: ItemRatingToSendModel) {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                val response = serviceUser.setItemRating(item)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            //Do something with response e.g show to the UI.
+
+
+//                        Log.d("OfferCalled", response.body()?.get(0)?.OfferDescription_Ar.toString())
+//                        offers.value = response.body()!!
+
+
+                            Log.d("itemRates", item.toString())
+
+
+                            setItemRatingResponse.value = response.body()
+
+                            Log.d("itemRates", item.toString())
+
+                            Log.d("rating_is", response.body().toString())
+
+                            callBackResponse.value = true
+
+
+                        } else {
+//                        toast("Error: ${response.code()}")
+                            Log.d("Error", response.toString())
+
+                        }
+                    } catch (e: HttpException) {
+//                    toast("Exception ${e.message}")
+                        callBackResponse.value = false
+                        Log.d("Error", e.toString())
+                    } catch (e: Throwable) {
+//                    toast("Ooops: Something else went wrong")
+                        callBackResponse.value = false
+                        Log.d("Error", e.toString())
+                    } catch (e: ConnectException) {
+                        callBackResponse.value = false
+                        Log.d("Error", e.toString())
+
+                    } catch (e: Exception) {
+                        Log.d("Error", e.toString())
+
+                        callBackResponse.value = false
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("Error", e.toString())
+
+
+            }
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     fun getCartCountFn() {
         var count = 0
@@ -2092,6 +2812,34 @@ object Repository {
         }
 
         getCartCount.value = count
+    }
+
+
+    fun setAddressProfile(address: android.location.Address) {
+
+
+        address_profile.value = address
+    }
+
+
+    fun setAddressCheckout(address: android.location.Address) {
+
+
+        address_checkout.value = address
+    }
+
+
+    fun getAddressProfile(): MutableLiveData<android.location.Address> {
+
+
+        return address_profile
+    }
+
+
+    fun getAddressCheckout(): MutableLiveData<android.location.Address> {
+
+
+        return address_checkout
     }
 
 

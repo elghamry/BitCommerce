@@ -8,14 +8,19 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.api.ResolvableApiException
@@ -29,10 +34,17 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
+import kotlinx.android.synthetic.main.activity_main.*
 import sa.biotic.app.R
 import sa.biotic.app.databinding.FragmentGetMyLocationBinding
-import sa.biotic.app.viewmodels.PurchaseViewModel
+import sa.biotic.app.model.GetProfileAddress
+import sa.biotic.app.model.UpdateProfileAddressModel
+import sa.biotic.app.retrofit_service.Repository
+import sa.biotic.app.shared_prefrences_model.UserInfo
+import sa.biotic.app.utils.margin
+import sa.biotic.app.viewmodels.GetMyLocationPViewModel
 import java.io.IOException
 import java.util.*
 
@@ -53,7 +65,8 @@ class GetMyLocationFragmentProfile : Fragment(), OnMapReadyCallback,
     GoogleMap.OnMarkerClickListener {
 
     lateinit var binding: FragmentGetMyLocationBinding
-    lateinit var purchaseViewModel: PurchaseViewModel
+    lateinit var bottomNavigationView: BottomNavigationView
+    lateinit var viewModel: GetMyLocationPViewModel
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
@@ -63,6 +76,16 @@ class GetMyLocationFragmentProfile : Fragment(), OnMapReadyCallback,
     private var locationUpdateState = false
 
     lateinit var markerCenter: Marker
+
+    lateinit var address: String
+    lateinit var city: String
+    lateinit var state: String
+    lateinit var country: String
+    lateinit var postalCode: String
+    lateinit var streetName: String
+    lateinit var apartmentNumber: String
+    lateinit var subThoroughfare: String
+    lateinit var adminArea: String
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -89,8 +112,8 @@ class GetMyLocationFragmentProfile : Fragment(), OnMapReadyCallback,
 //            param2 = it.getString(ARG_PARAM2)
 //        }
 
-        purchaseViewModel =
-            ViewModelProviders.of(requireActivity()).get(PurchaseViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(requireActivity()).get(GetMyLocationPViewModel::class.java)
 
 
     }
@@ -121,6 +144,8 @@ class GetMyLocationFragmentProfile : Fragment(), OnMapReadyCallback,
         }
 
 
+
+
         createLocationRequest()
 
         binding.backBtn.visibility = MaterialButton.INVISIBLE
@@ -134,29 +159,90 @@ class GetMyLocationFragmentProfile : Fragment(), OnMapReadyCallback,
 
 
             getAddress(markerCenter.position)
-////
-//            stepper.goToNextStep()
-//            stepper.goToNextStep()
-
-
-//                    naviaget from here
-//            Navigation.findNavController(binding.root)
-//                .navigate(R.id.action_getMyLocationFragment_to_showAddressFragment)
-
 
         }
 
-//        binding.backBtn.setOnClickListener {
-//            var stepper =
-//                (activity as AppCompatActivity).findViewById<sa.biotic.app.components.stepper.StepperView>(
-//                    R.id.stepper
-//                )
 //
-//            stepper.goToPreviousStep()
-//            stepper.goToPreviousStep()
-//            Navigation.findNavController(binding.root).popBackStack()
+//        Repository.getDeliverAddressResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
 //
-//        }
+//
+//
+//
+//
+//
+//                if(!it.AddressLine1.isNullOrEmpty()){
+//                    Navigation.findNavController(binding.root)
+//                        .popBackStack(R.id.deliveryAddressFragment, false)
+//                }
+//
+//
+//        })
+//
+//
+
+
+        Repository.getDeliverAddressResponse.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer {
+
+
+                if (it.AddressLine1.isNullOrEmpty()) {
+//                Navigation.findNavController(binding.root)
+//                    .navigate(R.id.action_deliveryAddressFragment_to_addressFragmentProfile)
+                } else {
+                    if (it.AddressLine1 != "rr") {
+
+//                   binding.etApartmentNumber.setText(it.AddressLine2)
+//                   binding.etCity.setText(it.City)
+//                   binding.etCountry.setText(it.Country)
+//                   binding.etStreetName.setText(it.AddressLine2)
+//                   binding.etPostalCode.setText(it.PostalCode)
+
+//                    getAddress(LatLng(it.latitude.toDouble(),it.longitude.toDouble()))
+
+
+                        it.AddressLine1 = "rr"
+                        Navigation.findNavController(binding.root)
+                            .popBackStack(R.id.deliveryAddressFragment, false)
+                    }
+                }
+
+
+            })
+
+        Repository.updateDeliverAddressResponse.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer {
+
+
+                if (it.Status == 1) {
+
+                    Repository.getProfileAddress(
+                        GetProfileAddress(
+                            UserInfo.access_token, UserInfo.uid, UserInfo.device_token
+                        )
+                    )
+
+                    it.Status = 0
+                }
+
+
+            })
+
+        var toolbar: Toolbar = ((activity as AppCompatActivity).toolbar)
+        toolbar.visibility = Toolbar.VISIBLE
+        var container: FragmentContainerView =
+            (activity as AppCompatActivity).findViewById<FragmentContainerView>(R.id.nav_host_container)
+        container.margin(top = 40F)
+
+        var searchView: ConstraintLayout =
+            (activity as AppCompatActivity).findViewById<ConstraintLayout>(R.id.search_widget)
+        if (searchView.isVisible)
+            searchView.visibility = ConstraintLayout.GONE
+
+
+
+
 
         return binding.root
     }
@@ -298,7 +384,7 @@ class GetMyLocationFragmentProfile : Fragment(), OnMapReadyCallback,
         var aLocale = Locale.Builder().setLanguage("en").setScript("Latn").setRegion("RS").build()
         val geocoder = Geocoder(requireContext(), loc)
         val addresses: List<Address>?
-        val address: Address?
+
         var addressText = ""
 
         try {
@@ -306,38 +392,92 @@ class GetMyLocationFragmentProfile : Fragment(), OnMapReadyCallback,
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
             // 3
             if (null != addresses && !addresses.isEmpty()) {
-                address = addresses[0]
-                Log.d("helloAdd", address.maxAddressLineIndex.toString())
-//        Log.d("addresss",addresses.toString())
-//        for (i in 0 until address.maxAddressLineIndex) {
+
+
 //
-////          addressText += if (i == 0) address.getAddressLine(i) else "\n" + address.getAddressLine(i)
-//
-//        }
-                var address = addresses.get(0)
+//                address = addresses.get(0).getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//                city = addresses.get(0).locality
+//                state = addresses.get(0).adminArea
+//                country = addresses.get(0).countryName
+//                postalCode = addresses.get(0).postalCode
+//                streetName = addresses.get(0).featureName
+//                apartmentNumber  =""
+//                subThoroughfare =""
+//                adminArea = addresses.get(0).adminArea
+
+
+                address = addresses.get(0)
                     .getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                var city = addresses.get(0).locality
-                var state = addresses.get(0).adminArea
-                var country = addresses.get(0).countryName
-                var postalCode = addresses.get(0).postalCode
-                var knownName = addresses.get(0).featureName
-                var var1 = addresses.get(0).thoroughfare
-                var var2 = addresses.get(0).subThoroughfare
-                var premises = addresses.get(0).premises
-
-                addressText =
-                    address + "\n" + city + "\n" + state + "\n" + country + "\n" + postalCode + "\n" + knownName + "\n" + var1 + "\n" + var2 + "\n" + premises
-                Log.d("addresss", addressText.toString())
+                city = ""
+                state = ""
+                country = ""
+                postalCode = ""
+                streetName = ""
+                apartmentNumber = ""
+                subThoroughfare = ""
+                adminArea = ""
 
 
+
+                if (!addresses.get(0).subThoroughfare.isNullOrEmpty() && !addresses.get(0).subThoroughfare.isNullOrBlank())
+                    apartmentNumber = addresses.get(0).subThoroughfare else ""
+                if (!addresses.get(0).thoroughfare.isNullOrEmpty() && !addresses.get(0).thoroughfare.isNullOrBlank())
+                    streetName = addresses.get(0).thoroughfare else ""
+                if (!addresses.get(0).adminArea.isNullOrEmpty() && !addresses.get(0).adminArea.isNullOrBlank())
+                    adminArea = addresses.get(0).adminArea else ""
+                if (!addresses.get(0).locality.isNullOrEmpty() && !addresses.get(0).locality.isNullOrBlank())
+                    city = addresses.get(0).locality else ""
+                if (!addresses.get(0).countryName.isNullOrEmpty() && !addresses.get(0).countryName.isNullOrBlank())
+                    country = addresses.get(0).countryName else ""
+                if (!addresses.get(0).postalCode.isNullOrEmpty() && !addresses.get(0).postalCode.isNullOrBlank())
+                    postalCode = addresses.get(0).postalCode else ""
+
+
+                if (addresses.get(0).thoroughfare.isNullOrEmpty()) {
+                    if (!addresses.get(0).subLocality.isNullOrEmpty() && !addresses.get(0).subLocality.isNullOrBlank())
+                        streetName = addresses.get(0).subLocality
+                }
+
+                if (addresses.get(0).subThoroughfare.isNullOrEmpty()) {
+                    if (!addresses.get(0).premises.isNullOrEmpty() && !addresses.get(0).premises.isNullOrBlank())
+                        apartmentNumber = addresses.get(0).premises
+                }
+
+
+//                var premises = addresses.get(0).premises
+
+
+//
+//                addressText =
+//                    address + "\n" + city + "\n" + state + "\n" + country + "\n" + postalCode + "\n" + knownName + "\n" + var1 + "\n" + var2 + "\n" + premises
+//                Log.d("addresss", addressText.toString())
+
+//                viewModel.setAddress(addresses.get(0))
 //                Toast.makeText(context,address,Toast.LENGTH_LONG).show()
 
-                purchaseViewModel.setAddress(addresses.get(0))
+                Repository.updateProfileAddress(
+                    UpdateProfileAddressModel(
+                        UserInfo.access_token,
+                        UserInfo.uid,
+                        addresses.get(0).longitude.toString(),
+                        addresses.get(0).latitude.toString(),
+                        city,
+                        address,
+                        apartmentNumber + "," + streetName,
+                        postalCode,
+                        UserInfo.device_token
+
+                    )
+                )
+
+
+
+
             }
 
 
         } catch (e: IOException) {
-            Log.e("MapsActivity", e.localizedMessage)
+//            Log.e("MapsActivity", e.localizedMessage)
         }
 
 

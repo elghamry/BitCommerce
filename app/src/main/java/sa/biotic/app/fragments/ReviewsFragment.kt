@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.idanatz.oneadapter.OneAdapter
 import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
-
+import com.idanatz.oneadapter.external.interfaces.Item
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
@@ -25,7 +24,7 @@ import com.rishabhharit.roundedimageview.RoundedImageView
 import sa.biotic.app.R
 import sa.biotic.app.components.LinearLayoutManagerWrapper
 import sa.biotic.app.databinding.FragmentReviewsBinding
-import sa.biotic.app.model.Review
+import sa.biotic.app.model.GetReviewsResponse
 import sa.biotic.app.viewmodels.ReviewsViewModel
 
 /**
@@ -120,9 +119,10 @@ class ReviewsFragment : Fragment() {
 
     }
 
-    private fun clickEventHook(): ClickEventHook<Review> = object : ClickEventHook<Review>() {
-        override fun onClick(model: Review, viewBinder: ViewBinder) {
-            Toast.makeText(context, "${model.name} clicked", Toast.LENGTH_SHORT).show()
+    private fun clickEventHook(): ClickEventHook<GetReviewsResponse> =
+        object : ClickEventHook<GetReviewsResponse>() {
+            override fun onClick(model: GetReviewsResponse, viewBinder: ViewBinder) {
+//            Toast.makeText(context, "${model.name} clicked", Toast.LENGTH_SHORT).show()
 
 
         }
@@ -131,7 +131,8 @@ class ReviewsFragment : Fragment() {
     }
 
 
-    private fun reviewItem(): ItemModule<Review> = object : ItemModule<Review>() {
+    private fun reviewItem(): ItemModule<GetReviewsResponse> =
+        object : ItemModule<GetReviewsResponse>() {
         override fun provideModuleConfig(): ItemModuleConfig = object : ItemModuleConfig() {
             override fun withLayoutResource(): Int = R.layout.review_item
 
@@ -145,11 +146,13 @@ class ReviewsFragment : Fragment() {
         }
 
 
-        override fun onBind(model: Review, viewBinder: ViewBinder) {
+            override fun onBind(item: Item<GetReviewsResponse>, viewBinder: ViewBinder) {
             val story1 = viewBinder.findViewById<RoundedImageView>(R.id.review_image)
             val story2 = viewBinder.findViewById<TextView>(R.id.review_name)
             val story3 =
                 viewBinder.findViewById<sa.biotic.app.components.RatingBar>(R.id.smart_rating_bar)
+
+                var model = item.model
 
             Log.d("hello", model.toString())
 
@@ -160,11 +163,11 @@ class ReviewsFragment : Fragment() {
             Glide.with(this@ReviewsFragment)
 //                .load(model.img)
 //
-                .load(model.img).centerCrop().into(story1)
+                .load(model.UserImage).centerCrop().into(story1)
 
 
-            story2.text = model.name
-            story3.ratingNum = model.rate.toFloat()
+                story2.text = model.UserName
+                story3.ratingNum = model.UserRate.toFloat()
 
 
 //            story2.setText(model.title)

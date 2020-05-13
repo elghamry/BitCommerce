@@ -3,7 +3,7 @@ package sa.biotic.app.fragments
 
 import android.animation.Animator
 import android.animation.AnimatorInflater
-import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Canvas
@@ -12,6 +12,7 @@ import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
+import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,23 +28,31 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.DialogBehavior
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.ModalDialog
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.customview.getCustomView
 import com.bumptech.glide.Glide
 import com.chibatching.kotpref.livedata.asLiveData
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.idanatz.oneadapter.OneAdapter
 import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
-
+import com.idanatz.oneadapter.external.interfaces.Item
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
+import com.skydoves.androidribbon.ShimmerRibbonView
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_cart.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import sa.biotic.app.OnDetailsActivity
 import sa.biotic.app.PurchaseActivity
 import sa.biotic.app.R
 import sa.biotic.app.components.ElegantNumberButton
@@ -56,9 +65,11 @@ import sa.biotic.app.model.*
 import sa.biotic.app.retrofit_service.Repository
 import sa.biotic.app.shared_prefrences_model.UserInfo
 import sa.biotic.app.shared_prefrences_model.UserRoute
+import sa.biotic.app.utils.TransitionHelper
 import sa.biotic.app.utils.margin
 import sa.biotic.app.viewmodels.CartViewModel
 import java.text.DecimalFormat
+import kotlin.properties.Delegates
 
 /**
  * A placeholder fragment containing a simple view.
@@ -68,6 +79,7 @@ class CartFragment : Fragment() {
 
     private lateinit var cartAdapter: OneAdapter
     private lateinit var cartBundAdapter: OneAdapter
+    private lateinit var cartUpdatedAdapter: OneAdapter
 
     private lateinit var cartViewModel: CartViewModel
     lateinit var bottomNavigationView: BottomNavigationView
@@ -79,6 +91,17 @@ class CartFragment : Fragment() {
     lateinit var alert_title: String
     lateinit var cartbundlesCopy: MutableList<Cartbundle>
     lateinit var cartproductsCopy: MutableList<Cartproduct>
+    lateinit var promocodeTo: String
+    lateinit var materialDialog: MaterialDialog
+
+    var isPromoCanceled = false
+    var promoApplied by Delegates.notNull<Boolean>()
+    var totalpriceTo by Delegates.notNull<Double>()
+
+    var sharedViewtopassProd: ViewBinder? = null
+    var sharedViewtopassBund: ViewBinder? = null
+
+    lateinit var updatedItemsLocal: MutableList<UpdatedItems>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,23 +118,67 @@ class CartFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        if (UserInfo.signed) {
-            Repository.getCartDetails(
-                GetCartDetailsModel(
-                    UserInfo.uid,
-                    UserInfo.access_token,
-                    UserInfo.device_token
-                )
-            )
-        } else {
-            Repository.getCartDetails(GetCartDetailsModel(0, "rr", UserInfo.device_token))
-
-        }
 
 
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_cart, container, false
         )
+
+        materialDialog = MaterialDialog(requireContext())
+
+//        var bany : String = binding.etPromoCode.text.toString()
+
+//        Log.d("HelloCheck","Hello fro create view"+" "+bany)
+
+        promocodeTo = ""
+//        if (UserInfo.signed) {
+//            Repository.getCartDetails(
+//                GetCartDetailsModel(
+//                    UserInfo.uid,
+//                    UserInfo.access_token,
+//                    UserInfo.device_token,
+//                    binding.etPromoCode.text.toString()
+//                )
+//            )
+//        } else {
+//            Repository.getCartDetails(GetCartDetailsModel(0, "rr", UserInfo.device_token,binding.etPromoCode.text.toString()))
+//
+//        }
+
+        promoApplied = false
+
+
+        val color = resources.getColor(R.color.colorPrimary)
+        val red = (color shr 16 and 0xFF.toFloat().toInt()).toFloat()
+        val green = (color shr 8 and 0xFF.toFloat().toInt()).toFloat()
+        val blue = (color and 0xFF.toFloat().toInt()).toFloat()
+        val alpha = (color shr 24 and 0xFF.toFloat().toInt()).toFloat()
+        binding.swipeRefresh.setWaveARGBColor(
+            alpha.toInt(),
+            red.toInt(),
+            green.toInt(),
+            blue.toInt()
+        )
+
+
+        if (UserInfo.signed) {
+            Repository.getCartDetails(
+                GetCartDetailsModel(
+                    UserInfo.uid,
+                    UserInfo.access_token,
+                    UserInfo.device_token,
+                    UserInfo.promo
+                )
+            )
+        } else {
+            Repository.getCartDetails(
+                GetCartDetailsModel(
+                    0, "rr", UserInfo.device_token
+                    , UserInfo.promo
+                )
+            )
+
+        }
         binding.cartRecycler.layoutManager =
 
             LinearLayoutManagerWrapper(this.requireContext(), RecyclerView.VERTICAL, false)
@@ -123,6 +190,31 @@ class CartFragment : Fragment() {
 
         setRecyclerViewItemTouchListener()
         setRecyclerViewBundleItemTouchListener()
+
+
+        binding.swipeRefresh.setOnRefreshListener {
+            if (UserInfo.signed) {
+                Repository.getCartDetails(
+                    GetCartDetailsModel(
+                        UserInfo.uid,
+                        UserInfo.access_token,
+                        UserInfo.device_token,
+                        UserInfo.promo
+                    )
+                )
+            } else {
+                Repository.getCartDetails(
+                    GetCartDetailsModel(
+                        0,
+                        "rr",
+                        UserInfo.device_token,
+                        UserInfo.promo
+                    )
+                )
+
+            }
+        }
+
 
 //        cartViewModel.getTotalPrice()
 
@@ -211,21 +303,23 @@ class CartFragment : Fragment() {
 
         binding.applyPromo.setOnClickListener {
             var pass = false
+            promoApplied = true
             etPromoCode.validator()
-                .minLength(5)
+                .minLength(2)
 
                 .addSuccessCallback {
                     binding.etPromoCodeLayout.isErrorEnabled = false
                 }
                 .addErrorCallback {
-                    binding.etPromoCodeLayout.error = "invalid Promo Code"
+//                    binding.etPromoCodeLayout.error = "invalid Promo Code"
 
-
+                    promoApplied = false
 
                     pass = false
 
                 }
                 .check()
+            UserInfo.promo = binding.etPromoCode.text.toString()
 //            if (etPromoCode.text.toString().toLowerCase() == "biotic19") {
 //                pass = true
 //                promo_code_value.text = etPromoCode.text.toString().toUpperCase()
@@ -233,18 +327,64 @@ class CartFragment : Fragment() {
 //                before_apply.visibility = ConstraintLayout.GONE
 //                after_apply.visibility = ConstraintLayout.VISIBLE
 
-            Repository.checkPromo(etPromoCode.text.toString())
+            //old calls for promo
+//            Repository.checkPromo(etPromoCode.text.toString())
+
+            if (UserInfo.signed) {
+                Repository.getCartDetails(
+                    GetCartDetailsModel(
+                        UserInfo.uid,
+                        UserInfo.access_token,
+                        UserInfo.device_token,
+                        UserInfo.promo
+                    )
+                )
+            } else {
+                Repository.getCartDetails(
+                    GetCartDetailsModel(
+                        0, "rr", UserInfo.device_token,
+                        UserInfo.promo
+                    )
+                )
+
+            }
+
+
 
 //            } else {
-                binding.etPromoCodeLayout.error = "invalid Promo Code"
+//                binding.etPromoCodeLayout.error = "invalid Promo Code"
 //            }
         }
 
 
         binding.cancel.setOnClickListener {
+            UserInfo.promo = "rr"
+            promoApplied = false
+
             etPromoCode.text?.clear()
             after_apply.visibility = ConstraintLayout.GONE
+            etPromoCodeLayout.isErrorEnabled = false
             binding.beforeApply.visibility = ConstraintLayout.VISIBLE
+
+            if (UserInfo.signed) {
+                Repository.getCartDetails(
+                    GetCartDetailsModel(
+                        UserInfo.uid,
+                        UserInfo.access_token,
+                        UserInfo.device_token,
+                        UserInfo.promo
+                    )
+                )
+            } else {
+                Repository.getCartDetails(
+                    GetCartDetailsModel(
+                        0, "rr", UserInfo.device_token
+                        , UserInfo.promo
+                    )
+                )
+
+            }
+
         }
 
 
@@ -253,7 +393,8 @@ class CartFragment : Fragment() {
             (activity as AppCompatActivity).findViewById<BottomNavigationView>(sa.biotic.app.R.id.nav_view)
 
         binding.start.setOnClickListener {
-            bottomNavigationView.selectedItemId = R.id.home
+            ((activity as AppCompatActivity).findViewById<BottomNavigationView>(sa.biotic.app.R.id.nav_view)).selectedItemId =
+                R.id.home
         }
         KeyboardVisibilityEvent.setEventListener(
             activity,
@@ -296,7 +437,8 @@ class CartFragment : Fragment() {
                         GetCartDetailsModel(
                             UserInfo.uid,
                             UserInfo.access_token,
-                            UserInfo.device_token
+                            UserInfo.device_token,
+                            UserInfo.promo
                         )
                     )
                 } else {
@@ -304,7 +446,8 @@ class CartFragment : Fragment() {
                         GetCartDetailsModel(
                             0,
                             "rr",
-                            UserInfo.device_token
+                            UserInfo.device_token,
+                            UserInfo.promo
                         )
                     )
                 }
@@ -326,7 +469,8 @@ class CartFragment : Fragment() {
                         GetCartDetailsModel(
                             UserInfo.uid,
                             UserInfo.access_token,
-                            UserInfo.device_token
+                            UserInfo.device_token,
+                            UserInfo.promo
                         )
                     )
                 } else {
@@ -334,7 +478,8 @@ class CartFragment : Fragment() {
                         GetCartDetailsModel(
                             0,
                             "rr",
-                            UserInfo.device_token
+                            UserInfo.device_token,
+                            UserInfo.promo
                         )
                     )
                 }
@@ -345,27 +490,11 @@ class CartFragment : Fragment() {
 
         })
 
-        Repository.checkPromoResponse.observe(viewLifecycleOwner, Observer { newit ->
-
-            if (newit.Status == true) {
-                binding.promoPercent.text =
-                    (newit.PromoDiscount * 100.toInt()).toString() + " " + "٪"
-                binding.promoCodeValue.text = binding.etPromoCode.text.toString()
-                binding.etPromoCodeLayout.isErrorEnabled = true
-                before_apply.visibility = ConstraintLayout.GONE
-                after_apply.visibility = ConstraintLayout.VISIBLE
 
 
-//                pass=true
+        goOnDetails()
 
 
-                newit.Status = false
-            } else {
-                binding.etPromoCodeLayout.error = "invalid Promo Code"
-            }
-
-
-        })
 
 
         return binding.root
@@ -389,6 +518,7 @@ class CartFragment : Fragment() {
         setRecyclerViewItemTouchListener()
     }
 
+
     private fun cartAdapterCreation() {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
@@ -396,12 +526,13 @@ class CartFragment : Fragment() {
 
         cartAdapter = OneAdapter(binding.cartRecycler).attachItemModule(
             cartItem()
-//            .addEventHook(swipeEventHook())
+                .addEventHook(clickEventHook())
         )
         cartBundAdapter = OneAdapter(binding.carBundRecycler).attachItemModule(
             cartBundleItem()
-//            .addEventHook(swipeEventHook())
+                .addEventHook(clickBundEventHook())
         )
+
 
 //        cartAdapter = OneAdapter(binding.cartRecycler).attachItemModule(
 //            cartItem()
@@ -447,7 +578,7 @@ class CartFragment : Fragment() {
 
 
         cartViewModel.getCartDetailsLiveData.observe(viewLifecycleOwner, Observer { newit ->
-
+            binding.etPromoCodeLayout.isErrorEnabled = false
 
             cartAdapter.setItems(newit.cartproduct)
             cartBundAdapter.setItems(newit.cartbundles)
@@ -455,18 +586,30 @@ class CartFragment : Fragment() {
             cartproductsCopy = newit.cartproduct
             cartbundlesCopy = newit.cartbundles
             checkout.text =
-                getString(R.string.checkout) + "(" + roundTwoDecimals(newit.TotalPrice + newit.TotalPrice * newit.Tax).toString() + " " + getString(
+                getString(R.string.checkout) + "(" + "%.2f".format(roundTwoDecimals(newit.TotalPrice))
+                    .toString() + " " + getString(
                     R.string._sar
                 ) + ")"
-            subtotal_value.text = newit.TotalPrice.toString() + " " + getString(R.string._sar)
+            subtotal_value.text =
+                "%.2f".format(newit.SubTotalPrice).toString() + " " + getString(R.string._sar)
 
             taxes_value.text =
-                roundTwoDecimals(newit.TotalPrice * newit.Tax).toString() + " " + getString(R.string._sar)
+                "%.2f".format(roundTwoDecimals(newit.TaxPrice))
+                    .toString() + " " + getString(R.string._sar)
+
+            disc_value.text =
+                "%.2f".format(roundTwoDecimals(newit.DiscountPrice))
+                    .toString() + " " + getString(R.string._sar)
 
             alert_title =
-                "Total Price : \n" + roundTwoDecimals(newit.TotalPrice).toString() + " " + getString(
+                "Total Price \n" + "%.2f".format(roundTwoDecimals(newit.TotalPrice))
+                    .toString() + " " + getString(
                     R.string._sar
                 )
+
+
+            totalpriceTo = newit.TotalPrice
+
 //            cartViewModel.getTotalPrice()
 
 
@@ -483,6 +626,47 @@ class CartFragment : Fragment() {
             }
 
 
+            if (newit.Promo.Status == true) {
+                binding.etPromoCodeLayout.isErrorEnabled = false
+                UserInfo.promo = binding.etPromoCode.text.toString()
+                binding.promoPercent.text =
+                    (newit.Promo.PromoDiscount * 100.toInt()).toString() + " " + "٪"
+                binding.promoCodeValue.text = UserInfo.promo
+                binding.etPromoCodeLayout.isErrorEnabled = false
+                before_apply.visibility = ConstraintLayout.GONE
+                after_apply.visibility = ConstraintLayout.VISIBLE
+                promocodeTo = UserInfo.promo
+
+
+//                pass=true
+
+
+            } else {
+                if (promoApplied) {
+                    binding.etPromoCodeLayout.error = "Invalid Promo Code"
+                    binding.etPromoCodeLayout.isErrorEnabled = true
+                    UserInfo.promo = ""
+                    promoApplied = false
+                    promocodeTo = UserInfo.promo
+                }
+
+            }
+
+
+            if (newit.UpdatedCartItem.size > 0 && !newit.UpdatedCartItem.isNullOrEmpty() &&
+                !materialDialog.isShowing
+
+            ) {
+                updatedItemsLocal = newit.UpdatedCartItem
+                showCustomViewDialog(items = newit.UpdatedCartItem)
+
+
+            }
+
+
+
+
+
 
 
 
@@ -491,14 +675,148 @@ class CartFragment : Fragment() {
 //
 //
 //
+
+            binding.swipeRefresh.isRefreshing = false
         })
 
 
     }
 
-    private fun clickEventHook(): ClickEventHook<CartItem> = object : ClickEventHook<CartItem>() {
-        override fun onClick(model: CartItem, viewBinder: ViewBinder) {
-            Toast.makeText(context, "${model.name} clicked", Toast.LENGTH_SHORT).show()
+    private fun clickEventHook(): ClickEventHook<Cartproduct> =
+        object : ClickEventHook<Cartproduct>() {
+            override fun onClick(model: Cartproduct, viewBinder: ViewBinder) {
+//            Toast.makeText(context, "${model.name} clicked", Toast.LENGTH_SHORT).show()
+
+                sharedViewtopassProd = viewBinder
+
+                cartViewModel.getThisProd(model.ID)
+
+
+            }
+
+
+        }
+
+
+    private fun goOnDetails() {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+
+        val intent = Intent(requireContext(), OnDetailsActivity::class.java)
+
+
+        cartViewModel.bundleLive.observe(viewLifecycleOwner, Observer { bund ->
+
+            if (bund.BundleID != -1) {
+
+                if (sharedViewtopassBund != null) {
+                    var sharedView =
+                        sharedViewtopassBund!!.rootView.findViewById<View>(R.id.product_image)
+                    var transitionName = getString(R.string.hero_image)
+                    var sharedView2 =
+                        sharedViewtopassBund!!.rootView.findViewById<View>(R.id.product_title)
+                    var transitionName2 = getString(R.string.hero_name)
+
+                    val pairs: Array<Pair<View, String>> =
+                        TransitionHelper.createSafeTransitionParticipants(
+                            requireActivity(), false,
+                            android.util.Pair<View, String>(
+                                sharedView,
+                                transitionName
+                            )
+                            ,
+                            android.util.Pair<View, String>(
+                                sharedView2,
+                                transitionName2
+                            )
+                        )
+                    var parsingBundle: BundleProduct = bund.copy()
+
+                    bund.BundleID = -1
+
+
+                    var transitionActivityOptions: ActivityOptions =
+                        ActivityOptions.makeSceneTransitionAnimation(
+                            requireActivity(),
+                            *pairs
+                        )
+
+                    intent.putExtra("BundleItem", parsingBundle)
+                    intent.putExtra("type", "bundle")
+
+                    startActivity(intent, transitionActivityOptions.toBundle())
+
+                }
+
+            }
+
+
+        })
+
+        cartViewModel.prodLive.observe(viewLifecycleOwner, Observer { prod ->
+
+
+            if (prod.ProductID != -1) {
+
+                if (sharedViewtopassProd != null) {
+
+                    var sharedView =
+                        sharedViewtopassProd!!.rootView.findViewById<View>(R.id.product_image)
+                    var transitionName = getString(R.string.hero_image)
+                    var sharedView2 =
+                        sharedViewtopassProd!!.rootView.findViewById<View>(R.id.product_title)
+                    var transitionName2 = getString(R.string.hero_name)
+
+                    val pairs: Array<Pair<View, String>> =
+                        TransitionHelper.createSafeTransitionParticipants(
+                            requireActivity(), false,
+                            android.util.Pair<View, String>(
+                                sharedView,
+                                transitionName
+                            ),
+                            android.util.Pair<View, String>(
+                                sharedView2,
+                                transitionName2
+                            )
+                        )
+
+
+                    var transitionActivityOptions: ActivityOptions =
+                        ActivityOptions.makeSceneTransitionAnimation(
+                            requireActivity(),
+                            *pairs
+                        )
+                    var productParsing: Product = prod.copy()
+
+                    prod.ProductID = -1
+
+                    intent.putExtra("type", "product")
+                    Log.d("checkerProd", productParsing.toString())
+                    intent.putExtra("ProductItem", productParsing)
+                    startActivity(intent, transitionActivityOptions.toBundle())
+
+
+                }
+
+
+            }
+
+
+        })
+
+
+    }
+
+    private fun clickBundEventHook(): ClickEventHook<Cartbundle> =
+        object : ClickEventHook<Cartbundle>() {
+            override fun onClick(model: Cartbundle, viewBinder: ViewBinder) {
+//            Toast.makeText(context, "${model.name} clicked", Toast.LENGTH_SHORT).show()
+
+
+                sharedViewtopassBund = viewBinder
+
+                cartViewModel.getThisBundle(model.ID)
+
 
 
         }
@@ -521,8 +839,8 @@ class CartFragment : Fragment() {
         }
 
 
-        @SuppressLint("SetTextI18n")
-        override fun onBind(model: Cartproduct, viewBinder: ViewBinder) {
+        override fun onBind(item: Item<Cartproduct>, viewBinder: ViewBinder) {
+
             val story1 = viewBinder.findViewById<ImageView>(R.id.product_image)
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 =
@@ -532,6 +850,19 @@ class CartFragment : Fragment() {
             val story6 = viewBinder.findViewById<TextView>(R.id.each_price)
             val story7 = viewBinder.findViewById<View>(R.id.line1)
             val story8 = viewBinder.findViewById<TextView>(R.id.old_price)
+            val ribbon: ShimmerRibbonView = viewBinder.findViewById<ShimmerRibbonView>(R.id.ribbon)
+            val ribbon2: ShimmerRibbonView =
+                viewBinder.findViewById<ShimmerRibbonView>(R.id.ribbon2)
+
+//
+            if (item.model.IsNew == 1) {
+                ribbon.visibility = View.VISIBLE
+                ribbon2.visibility = View.VISIBLE
+            } else {
+                ribbon.visibility = View.INVISIBLE
+                ribbon2.visibility = View.INVISIBLE
+            }
+
 
 //            Log.d("hello", model.toString())
 //            if (model.id == cartViewModel.getCartDetailsLiveData.value?.size?.toLong()) {
@@ -546,12 +877,12 @@ class CartFragment : Fragment() {
             Glide.with(this@CartFragment)
 //                .load(model.img)
 //
-                .load(model.SImage).centerCrop().into(story1)
+                .load(item.model.SImage).centerCrop().into(story1)
 
 
-            story2.text = model.Name_En
+            story2.text = item.model.Name_En
 
-            story3.number = model.CartQuantity.toString()
+            story3.number = item.model.CartQuantity.toString()
 
             var newVal: Int = 0
 
@@ -570,24 +901,28 @@ class CartFragment : Fragment() {
 //                cartViewModel.getTotalPrice()
             }
 
-            story4.text = model.Description_En
+            story4.text = item.model.Description_En
 //            if (newVal != model.quantity) {
 //                story5.text =
 //                    (model.price.toFloat() * model.quantity).toString() + " " + getString(R.string._sar)
 //            }
 
             story5.text =
-                (model.Price.toFloat() * model.CartQuantity).toString() + " " + getString(R.string._sar)
+                "%.2f".format(roundTwoDecimals((item.model.Price.toFloat() * item.model.CartQuantity).toDouble()))
+                    .toString() + " " + getString(R.string._sar)
 
-            story6.text = model.Price + " " + getString(R.string._sar_each)
-            story8.text = model.ProductOfferPrice
+            story6.text =
+                "%.2f".format(roundTwoDecimals(item.model.Price.toDouble()).toString()) + " " + getString(
+                    R.string._sar_each
+                )
+            story8.text =
+                "%.2f".format(roundTwoDecimals(item.model.ProductOfferPrice.toDouble())).toString()
 
 
 //            story3.ratingNum = model.rate.toFloat()
 
 
 //            story2.setText(model.title)
-
 
         }
     }
@@ -606,9 +941,8 @@ class CartFragment : Fragment() {
             }
         }
 
+        override fun onBind(item: Item<Cartproduct>, viewBinder: ViewBinder) {
 
-        @SuppressLint("SetTextI18n")
-        override fun onBind(model: Cartproduct, viewBinder: ViewBinder) {
             val story1 = viewBinder.findViewById<ImageView>(R.id.product_image)
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 =
@@ -622,6 +956,19 @@ class CartFragment : Fragment() {
             val story10 = viewBinder.findViewById<TextView>(R.id.discount_value)
             val story11 = viewBinder.findViewById<TextView>(R.id.stock_tv)
             val story12 = viewBinder.findViewById<RelativeLayout>(R.id.counter_box)
+            val ribbon: ShimmerRibbonView = viewBinder.findViewById<ShimmerRibbonView>(R.id.ribbon)
+            val ribbon2: ShimmerRibbonView =
+                viewBinder.findViewById<ShimmerRibbonView>(R.id.ribbon2)
+
+//
+            if (item.model.IsNew == 1) {
+                ribbon.visibility = View.VISIBLE
+                ribbon2.visibility = View.VISIBLE
+            } else {
+                ribbon.visibility = View.INVISIBLE
+                ribbon2.visibility = View.INVISIBLE
+            }
+
 //            val story8 = viewBinder.findViewById<LinearLayout>(R.id.backgroundContainer)
 
 //            viewBinder.getRootView().swipeContainer.setOnLongClickListener {
@@ -661,29 +1008,36 @@ class CartFragment : Fragment() {
 
 ////
             story5.text =
-                (model.Price.toFloat() * model.CartQuantity).toString() + " " + getString(R.string._sar)
+                "%.2f".format(roundTwoDecimals((item.model.Price.toFloat() * item.model.CartQuantity).toDouble()))
+                    .toString() + " " + getString(R.string._sar)
 
-            story6.text = model.Price + " " + getString(R.string._sar_each)
-            if (model.ProductOfferDicountValue.toFloat() > 0F) {
+            story6.text = "%.2f".format(roundTwoDecimals(item.model.Price.toDouble()))
+                .toString() + " " + getString(R.string._sar_each)
+            if (item.model.ProductOfferDicountValue.toFloat() > 0F) {
 
                 story9.visibility = CardView.VISIBLE
                 story10.text =
-                    (model.ProductOfferDicountValue.toFloat() * 100).toInt().toString() + "%"
+                    (item.model.ProductOfferDicountValue.toFloat() * 100).toInt().toString() + "%"
                 story8.text =
-                    (model.Price.toFloat() * model.CartQuantity).toString() + " " + getString(R.string._sar)
+                    "%.2f".format(roundTwoDecimals((item.model.Price.toFloat() * item.model.CartQuantity).toDouble()))
+                        .toString() + " " + getString(R.string._sar)
                 story8.visibility = View.VISIBLE
                 story8.paintFlags = story8.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
                 story5.text =
-                    (model.ProductOfferPrice.toFloat() * model.CartQuantity).toString() + " " + getString(
+                    "%.2f".format(roundTwoDecimals((item.model.ProductOfferPrice.toFloat() * item.model.CartQuantity).toDouble()))
+                        .toString() + " " + getString(
                         R.string._sar
                     )
-                story6.text = model.ProductOfferPrice + " " + getString(R.string._sar_each)
+                story6.text =
+                    "%.2f".format(roundTwoDecimals(item.model.ProductOfferPrice.toDouble())) + " " + getString(
+                        R.string._sar_each
+                    )
 
 
             }
 
-            if (model.CartQuantity > 1) {
+            if (item.model.CartQuantity > 1) {
                 story6.visibility = View.VISIBLE
             } else {
                 story6.visibility = View.INVISIBLE
@@ -691,28 +1045,42 @@ class CartFragment : Fragment() {
             Glide.with(this@CartFragment)
 //                .load(model.img)
 //
-                .load(model.SImage).centerCrop().into(story1)
+                .load(item.model.SImage).centerCrop().into(story1)
 
 
-            story2.text = model.Name_En
-            story3.setRange(1, model.ProductStockQuantity)
+            story2.text = item.model.Name_En
+            story3.setRange(1, item.model.ProductStockQuantity)
 
-            story3.number = model.CartQuantity.toString()
+            story3.number = item.model.CartQuantity.toString()
 
             var newVal: Int = 0
 
 
+            var btn = story3.findViewById<Button>(R.id.subtract_btn)
 
+            if (item.model.CartQuantity > 1) {
+                btn.setTextColor(resources.getColor(R.color.text_header))
+            } else {
+                btn.setTextColor(resources.getColor(R.color.oldPrice))
+            }
 
-
-
-
-            story3.setOnValueChangeListener { view, oldValue, newValue ->
+            story3.setOnValueChangeListener { view
+                                              , oldValue, newValue ->
 
 
                 //                Repository.cartLocalItems.value?.get(((model.id - 1).toInt()))?.quantity = newValue
 //
                 newVal = newValue
+
+
+                if (newValue > 1) {
+//                    var btn = view.findViewById<Button>(R.id.subtract_btn)
+                    btn.setTextColor(resources.getColor(R.color.text_header))
+
+                } else {
+                    btn.setTextColor(resources.getColor(R.color.oldPrice))
+                }
+
 
 
 
@@ -722,7 +1090,7 @@ class CartFragment : Fragment() {
 
                     var item: UpdateCartItemQuantityModel = UpdateCartItemQuantityModel(
                         UserInfo.uid, UserInfo.access_token,
-                        model.ID, false, newVal, UserInfo.device_token
+                        item.model.ID, false, newVal, UserInfo.device_token
                     )
                     cartViewModel.updateCartItemQuantity(item)
                 } else {
@@ -730,21 +1098,20 @@ class CartFragment : Fragment() {
 
                     var item: UpdateCartItemQuantityModel = UpdateCartItemQuantityModel(
                         0, "rr",
-                        model.ID, false, newVal, UserInfo.device_token
+                        item.model.ID, false, newVal, UserInfo.device_token
                     )
                     cartViewModel.updateCartItemQuantity(item)
                 }
 
 
-
             }
 
-            story4.text = model.Description_En
+            story4.text = item.model.Description_En
 
 
-            if (model.ProductStockQuantity <= 5) {
+            if (item.model.ProductStockQuantity <= 5) {
                 story11.visibility = View.VISIBLE
-                if (model.ProductStockQuantity <= 0) {
+                if (item.model.ProductStockQuantity <= 0) {
 
                     story11.text = getString(R.string.sold_out)
                     story11.setTextColor(resources.getColor(R.color.stockColor))
@@ -756,7 +1123,7 @@ class CartFragment : Fragment() {
 
                 } else
                     story11.text =
-                        getString(R.string.only) + " " + model.ProductStockQuantity.toString() + " " + getString(
+                        getString(R.string.only) + " " + item.model.ProductStockQuantity.toString() + " " + getString(
                             R.string.left
                         )
             } else {
@@ -775,8 +1142,9 @@ class CartFragment : Fragment() {
 
 //            story2.setText(model.title)
 
-
         }
+
+
     }
 
 
@@ -793,9 +1161,8 @@ class CartFragment : Fragment() {
             }
         }
 
+        override fun onBind(item: Item<Cartbundle>, viewBinder: ViewBinder) {
 
-        @SuppressLint("SetTextI18n")
-        override fun onBind(model: Cartbundle, viewBinder: ViewBinder) {
             val story1 = viewBinder.findViewById<ImageView>(R.id.product_image)
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 =
@@ -848,12 +1215,15 @@ class CartFragment : Fragment() {
 
 ////
             story5.text =
-                (model.Price.toFloat() * model.CartQuantity).toString() + " " + getString(R.string._sar)
+                roundTwoDecimals((item.model.Price.toFloat() * item.model.CartQuantity).toDouble()).toString() + " " + getString(
+                    R.string._sar
+                )
 
-            story6.text = model.Price + " " + getString(R.string._sar_each)
+            story6.text =
+                roundTwoDecimals(item.model.Price.toDouble()).toString() + " " + getString(R.string._sar_each)
 
 
-            story3.setRange(1, model.BundleStockAvaliable)
+            story3.setRange(1, item.model.BundleStockAvaliable)
 //            if(model.ProductOfferDicountValue.toFloat()>0F){
 //
 //                story9.visibility = CardView.VISIBLE
@@ -871,7 +1241,7 @@ class CartFragment : Fragment() {
 //
 //            }
 
-            if (model.CartQuantity > 1) {
+            if (item.model.CartQuantity > 1) {
                 story6.visibility = View.VISIBLE
             } else {
                 story6.visibility = View.INVISIBLE
@@ -879,14 +1249,22 @@ class CartFragment : Fragment() {
             Glide.with(this@CartFragment)
 //                .load(model.img)
 //
-                .load(model.SImage).centerCrop().into(story1)
+                .load(item.model.SImage).centerCrop().into(story1)
 
 
-            story2.text = model.Name_En
+            story2.text = item.model.Name_En
 
-            story3.number = model.CartQuantity.toString()
+            story3.number = item.model.CartQuantity.toString()
 
             var newVal: Int = 0
+
+            var btn = story3.findViewById<Button>(R.id.subtract_btn)
+
+            if (item.model.CartQuantity > 1) {
+                btn.setTextColor(resources.getColor(R.color.text_header))
+            } else {
+                btn.setTextColor(resources.getColor(R.color.oldPrice))
+            }
 
 
 
@@ -894,18 +1272,26 @@ class CartFragment : Fragment() {
 
                 newVal = newValue
 
+
+
+                if (newValue > 1) {
+                    btn.setTextColor(resources.getColor(R.color.text_header))
+                } else {
+                    btn.setTextColor(resources.getColor(R.color.oldPrice))
+                }
+
                 if (UserInfo.signed) {
 
                     var item: UpdateCartItemQuantityModel = UpdateCartItemQuantityModel(
                         UserInfo.uid, UserInfo.access_token,
-                        model.ID, true, newVal, UserInfo.device_token
+                        item.model.ID, true, newVal, UserInfo.device_token
                     )
                     cartViewModel.updateCartItemQuantity(item)
                 } else {
 //                    updateQuantityLocal(null,model,"bundle",newVal)
                     var item: UpdateCartItemQuantityModel = UpdateCartItemQuantityModel(
                         0, "rr",
-                        model.ID, true, newVal, UserInfo.device_token
+                        item.model.ID, true, newVal, UserInfo.device_token
                     )
                     cartViewModel.updateCartItemQuantity(item)
                 }
@@ -913,16 +1299,15 @@ class CartFragment : Fragment() {
 
             }
 
-            story4.text = model.Description_En
+            story4.text = item.model.Description_En
 
 
-            if (model.BundleStockAvaliable <= 5) {
+            if (item.model.BundleStockAvaliable <= 5) {
                 story11.visibility = View.VISIBLE
-                if (model.BundleStockAvaliable <= 0) {
+                if (item.model.BundleStockAvaliable <= 0) {
 
                     story11.text = getString(R.string.sold_out)
                     story11.setTextColor(resources.getColor(R.color.stockColor))
-//                    story3.visibility=TextView.INVISIBLE
                     story6.visibility = TextView.INVISIBLE
                     story5.visibility = TextView.INVISIBLE
                     story8.visibility = TextView.INVISIBLE
@@ -930,28 +1315,84 @@ class CartFragment : Fragment() {
 
                 } else
                     story11.text =
-                        getString(R.string.only) + " " + model.BundleStockAvaliable.toString() + " " + getString(
+                        getString(R.string.only) + " " + item.model.BundleStockAvaliable.toString() + " " + getString(
                             R.string.left
                         )
             } else {
 
-//                    story8.text=getString(R.string.only)+" "+model.ProductStockQuantity.toString()+" "+getString(R.string.left)
                 story11.visibility = TextView.INVISIBLE
             }
-//            if (newVal != model.quantity) {
-//                story5.text =
-//                    (model.price.toFloat() * model.quantity).toString() + " " + getString(R.string._sar)
-//            }
+        }
+
+
+    }
+
+
+    private fun cartUpdatedItem(): ItemModule<UpdatedItems> = object : ItemModule<UpdatedItems>() {
+        override fun provideModuleConfig(): ItemModuleConfig = object : ItemModuleConfig() {
+            override fun withLayoutResource(): Int = R.layout.updated_item
+
+            override fun withFirstBindAnimation(): Animator {
+                // can be implemented by inflating Animator Xml
+                return AnimatorInflater.loadAnimator(
+                    this@CartFragment.context,
+                    R.animator.category_anim
+                )
+            }
+        }
+
+        override fun onBind(item: Item<UpdatedItems>, viewBinder: ViewBinder) {
+
+            val image = viewBinder.findViewById<ImageView>(R.id.product_image)
+            val title = viewBinder.findViewById<TextView>(R.id.product_title)
+
+            val status = viewBinder.findViewById<TextView>(R.id.product_status)
+            val line = viewBinder.findViewById<View>(R.id.line1)
+
+
+            if (item.model.ItemStatus == 1) {
+                status.text = getString(R.string.sold_out)
+//                status.setTextColor(resources.getColor(R.color.stockColor))
+            } else {
+                status.text =
+                    getString(R.string.only) + " " + item.model.ItemStockQuantity.toString() + " " + getString(
+                        R.string.left
+                    )
+//                status.setTextColor(resources.getColor(R.color.colorPrimary))
+
+            }
+
+
+            Glide.with(this@CartFragment)
+//                .load(model.img)
+//
+                .load(item.model.ItemImage).centerCrop().into(image)
 
 
 
-//            story3.ratingNum = model.rate.toFloat()
+            title.text = item.model.ItemNameEn
 
 
-//            story2.setText(model.title)
+
+            if (updatedItemsLocal.last() == item.model) {
+                line.visibility = View.INVISIBLE
+
+            } else {
+                line.visibility = View.VISIBLE
+            }
 
 
         }
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.etPromoCode.setText("")
+        Log.d("HelloCheck", "iam here again")
+
     }
 
 
@@ -965,6 +1406,8 @@ class CartFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder,
                 viewHolder1: RecyclerView.ViewHolder
             ): Boolean {
+
+
                 //2
                 return false
             }
@@ -1294,7 +1737,13 @@ class CartFragment : Fragment() {
 
         main_alert_background.visibility = ConstraintLayout.GONE
         setViewAndChildrenEnabled(main_container, true)
+        Repository.orderModel = CheckoutModel(
+            UserInfo.uid, UserInfo.access_token, "", "", "",
+            "", "", "", 0, totalpriceTo, promocodeTo, UserInfo.device_token
+        )
+
         if (UserInfo.signed) {
+
             val intent = Intent(activity, PurchaseActivity::class.java)
 //                intent.putExtra("product_name", model.title)
 //                intent.putExtra("product_image", model.img)
@@ -1412,15 +1861,15 @@ class CartFragment : Fragment() {
 
         }
 
-        Repository.getCartDetailsNoLogin(
-            Repository.prodsLocal,
-            Repository.priceLocal,
-            Repository.isbundLocal,
-            Repository.offeridsLocal,
-            Repository.discountLocal,
-            Repository.stockquanLocal,
-            Repository.quantityLocal
-        )
+//        Repository.getCartDetailsNoLogin(
+//            Repository.prodsLocal,
+//            Repository.priceLocal,
+//            Repository.isbundLocal,
+//            Repository.offeridsLocal,
+//            Repository.discountLocal,
+//            Repository.stockquanLocal,
+//            Repository.quantityLocal
+//        )
     }
 
 
@@ -1437,6 +1886,62 @@ class CartFragment : Fragment() {
     fun roundTwoDecimals(d: Double): Double {
         val twoDForm = DecimalFormat("#.##")
         return java.lang.Double.valueOf(twoDForm.format(d))
+    }
+
+
+    private fun showCustomViewDialog(
+        dialogBehavior: DialogBehavior = ModalDialog,
+        items: MutableList<UpdatedItems>
+    ) {
+        val dialog = MaterialDialog(requireContext(), dialogBehavior).show {
+            //            title(R.string.googleWifi)
+            cornerRadius(16f)
+                .noAutoDismiss()
+//            cancelable(false)  // calls setCancelable on the underlying dialog
+            cancelOnTouchOutside(false)  // calls setCanceledOnTouchOutside on the underlying dialog
+
+            customView(
+                R.layout.dialog_updated_items,
+                scrollable = false,
+                horizontalPadding = true
+            )
+
+        }
+
+        materialDialog = dialog
+
+
+        // Setup custom view content
+        val customView = dialog.getCustomView()
+
+        val updatedRecyclerView = customView.findViewById<RecyclerView>(R.id.updated_rec)
+
+        updatedRecyclerView.layoutManager =
+            LinearLayoutManagerWrapper(this.requireContext(), RecyclerView.VERTICAL, false)
+
+        cartUpdatedAdapter = OneAdapter(updatedRecyclerView).attachItemModule(
+            cartUpdatedItem()
+//                .addEventHook(clickBundEventHook())
+        )
+
+        cartUpdatedAdapter.setItems(items)
+
+
+//        val lottieDone = customView.findViewById<LottieAnimationView>(R.id.lottie_done)
+//
+//        lottieDone.setAnimation("done.json")
+////        binding.lottieConnection.setColorFilter(R.color.purple)
+//
+//        lottieDone.playAnimation()
+//        lottieDone.loop(true)
+
+
+        val okbtn: MaterialButton = customView.findViewById(R.id.ok_btn)
+        okbtn.setOnClickListener {
+            dialog.dismiss()
+
+            Navigation.findNavController(binding.root).popBackStack(R.id.profileFragment, false)
+        }
     }
 
     companion object {

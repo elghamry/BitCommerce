@@ -44,7 +44,7 @@
 
     <declare-styleable name="StepperView">
         <attr name="quantity" format="integer" />
-        <attr name="titles" />
+        <attr name="titles" format="string" />
     </declare-styleable>
 
     <!--    <declare-styleable name="LoadingSpin">-->
@@ -64,6 +64,6 @@
         <attr name="text" format="string" />
         <attr name="androidtextColor" format="color" />
         <attr name="textSize" />
-        <attr name="enlarge" />
+        <attr name="enlarge" format="integer" />
     </declare-styleable>
 </resources>

@@ -11,7 +11,7 @@ data class DeleteCartItemModel(
     var AccessToken: String,
     var ProductID: Int = -1,
     var Isbundle: Boolean,
-    var Devicetoken: String
+    var DeviceToken: String
 
 
 ) : Diffable, Parcelable {
@@ -20,7 +20,7 @@ data class DeleteCartItemModel(
             AccessToken == other.AccessToken &&
             ProductID == other.ProductID &&
             Isbundle == other.Isbundle &&
-            Devicetoken == other.Devicetoken
+            DeviceToken == other.DeviceToken
 
 
     override fun getUniqueIdentifier(): Long {

@@ -3,6 +3,7 @@ package sa.biotic.app
 import android.os.Handler
 import android.os.Looper
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okio.BufferedSink
 import java.io.File
@@ -25,7 +26,7 @@ class ProgressRequestBody(
 
     override fun contentType(): MediaType? {
         // i want to upload only images
-        return MediaType.parse("image/*")
+        return "image/*".toMediaTypeOrNull()
     }
 
     @Throws(IOException::class)

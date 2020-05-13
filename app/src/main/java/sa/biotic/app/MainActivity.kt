@@ -1,10 +1,13 @@
 package sa.biotic.app
 
 
+
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.view.forEachIndexed
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
@@ -16,6 +19,7 @@ import com.veyo.autorefreshnetworkconnection.CheckNetworkConnectionHelper
 import com.veyo.autorefreshnetworkconnection.listener.OnNetworkConnectionChangeListener
 import sa.biotic.app.databinding.ActivityMainBinding
 import sa.biotic.app.retrofit_service.Repository
+import sa.biotic.app.utils.getCurrentNavigationFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +42,20 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
             setSupportActionBar(binding.toolbar)
+
+
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    MainActivity.LOCATION_PERMISSION_REQUEST_CODE
+                )
+
+            }
 
         } // Else, need to wait for onRestoreInstanceState
 
@@ -203,7 +221,46 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+    override fun onBackPressed() {
+
+        when (binding.navView.selectedItemId) {
+            R.id.profile -> {
+//                    val dialog=AlertDialog.Builder(this).setMessage("Hello").setPositiveButton("Ok", DialogInterface.OnClickListener { dialogInterface, i ->
+//                        finish()
+//                    }).show()
+
+//            currentNavController.value.currentDestination.
+//                supportFragmentManager.getCurrentNavigationFragment()?.javaClass?.name
+
+//                Log.d("getFragmentCheck",supportFragmentManager.getCurrentNavigationFragment()?.javaClass?.name.toString() )
+//                Log.d("getFragmentCheck",R.id.profileFragment.toString())
+
+                if (supportFragmentManager.getCurrentNavigationFragment()?.javaClass?.name == "sa.biotic.app.fragments.ProfileFragment")
+                    binding.navView.selectedItemId = R.id.home
+                else {
+                    if (supportFragmentManager.getCurrentNavigationFragment()?.javaClass?.name == "sa.biotic.app.fragments.AddressFragmentProfile") {
+                        super.onBackPressed()
+                        super.onBackPressed()
+                    } else {
+                        super.onBackPressed()
+
+                    }
+                }
+            }
+            else -> {
+                super.onBackPressed()
+            }
+        }
+    }
+
+
     override fun onSupportNavigateUp(): Boolean {
+
+        if (currentNavController?.value?.currentDestination?.id == R.id.addressFragmentProfile) {
+            currentNavController?.value?.popBackStack()
+            currentNavController?.value?.popBackStack()
+        }
         return currentNavController?.value?.navigateUp() ?: false
     }
 
@@ -225,6 +282,13 @@ class MainActivity : AppCompatActivity() {
 
 
 //    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+        private const val REQUEST_CHECK_SETTINGS = 2
+        private const val PLACE_PICKER_REQUEST = 3
+    }
+
 
 
 

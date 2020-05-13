@@ -13,14 +13,16 @@ data class Cartproduct(
     val ID: Int,
     val Name_Ar: String,
     val Name_En: String,
-    val Price: String,
+    val Price: Double,
     val ProductOfferDicountValue: String,
     val ProductOfferID: String,
-    val ProductOfferPrice: String,
+    val ProductOfferPrice: Double,
     val ProductStockQuantity: Int,
     val SImage: String,
-    val TypeIsProduct: String
-    , val updatedItems: String
+    val TypeIsProduct: String,
+    val IsNew: Int
+
+
 ) : Diffable, Parcelable {
     override fun areContentTheSame(other: Any): Boolean = other is Cartproduct &&
             Callories == other.Callories
@@ -37,7 +39,9 @@ data class Cartproduct(
             && ProductStockQuantity == other.ProductStockQuantity
             && SImage == other.SImage
             && TypeIsProduct == other.TypeIsProduct
-            && updatedItems == other.updatedItems
+            && IsNew == other.IsNew
+
+
 
 
     override fun getUniqueIdentifier(): Long {

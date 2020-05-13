@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.idanatz.oneadapter.OneAdapter
 import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
+import com.idanatz.oneadapter.external.interfaces.Item
 
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
@@ -150,7 +151,7 @@ class ProdsBundsRelaFragment : Fragment() {
         }
 
 
-        override fun onBind(model: ProductBund, viewBinder: ViewBinder) {
+        override fun onBind(item: Item<ProductBund>, viewBinder: ViewBinder) {
             val story1 = viewBinder.findViewById<ImageView>(R.id.product_image)
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 = viewBinder.findViewById<TextView>(R.id.product_description)
@@ -164,6 +165,8 @@ class ProdsBundsRelaFragment : Fragment() {
 
 
 //            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
+
+            var model = item.model
 
 //////
             Glide.with(this@ProdsBundsRelaFragment)

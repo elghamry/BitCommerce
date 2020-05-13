@@ -4,12 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.activity_main.*
 import sa.biotic.app.R
 import sa.biotic.app.databinding.FragmentOrdersBinding
+import sa.biotic.app.utils.margin
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,6 +35,7 @@ private const val ARG_PARAM2 = "param2"
 class OrdersFragment : Fragment() {
     // TODO: Rename and change types of parameters
     lateinit var binding: FragmentOrdersBinding
+    lateinit var bottomNavigationView: BottomNavigationView
 
 
     override fun onCreateView(
@@ -54,6 +63,18 @@ class OrdersFragment : Fragment() {
                 return 2
             }
         }
+
+
+        var toolbar: Toolbar = ((activity as AppCompatActivity).toolbar)
+        toolbar.visibility = Toolbar.VISIBLE
+        var container: FragmentContainerView =
+            (activity as AppCompatActivity).findViewById<FragmentContainerView>(R.id.nav_host_container)
+        container.margin(top = 40F)
+
+        var searchView: ConstraintLayout =
+            (activity as AppCompatActivity).findViewById<ConstraintLayout>(R.id.search_widget)
+        if (searchView.isVisible)
+            searchView.visibility = ConstraintLayout.GONE
 
 //        binding.tabs.setupWithViewPager(binding.viewPager)
 //        binding.viewPager.adapter?.notifyDataSetChanged()

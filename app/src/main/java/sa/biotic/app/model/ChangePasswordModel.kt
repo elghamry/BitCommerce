@@ -12,7 +12,8 @@ data class ChangePasswordModel(
     val UserID: String,
     val ConfirmedPassword: String,
     val NewPassword: String,
-    val OldPassword: String
+    val OldPassword: String,
+    val DeviceToken: String
 
 
 ) : Diffable, Parcelable {

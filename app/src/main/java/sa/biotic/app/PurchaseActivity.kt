@@ -73,6 +73,10 @@ class PurchaseActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onBackPressed() {
+//        super.onBackPressed()
+    }
+
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1

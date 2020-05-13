@@ -90,7 +90,8 @@
                 app:popExitAnim="@anim/slide_out_right" />
         <action
                 android:id="@+id/action_loginFragment_to_profileFragment"
-                app:destination="@id/profileFragment" />
+                app:destination="@id/profileFragment"
+                app:popUpToInclusive="true" />
         <action
                 android:id="@+id/action_loginFragment_to_forgetPassFragment"
                 app:destination="@id/forgetPassFragment"
@@ -144,11 +145,7 @@
             tools:layout="@layout/fragment_delivery_address">
         <action
                 android:id="@+id/action_deliveryAddressFragment_to_addressFragmentProfile"
-                app:destination="@id/addressFragmentProfile"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:destination="@id/addressFragmentProfile" />
     </fragment>
     <fragment
             android:id="@+id/changePasswordFragment"
@@ -164,7 +161,11 @@
             android:id="@+id/ordersFragment"
             android:name="sa.biotic.app.fragments.OrdersFragment"
             android:label="@string/your_orders"
-            tools:layout="@layout/fragment_orders" />
+            tools:layout="@layout/fragment_orders">
+        <action
+                android:id="@+id/action_ordersFragment_to_orderInformationFragment"
+                app:destination="@id/orderInformationFragment" />
+    </fragment>
     <fragment
             android:id="@+id/upcomingOrdersFragment"
             android:name="sa.biotic.app.fragments.UpcomingOrdersFragment"
@@ -214,11 +215,25 @@
     <fragment
             android:id="@+id/getMyLocationFragmentProfile"
             android:name="sa.biotic.app.fragments.GetMyLocationFragmentProfile"
-            android:label="GetMyLocationFragmentProfile"
+            android:label="Get My Location"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             tools:layout="@layout/fragment_get_my_location" />
+    <fragment
+            android:id="@+id/orderInformationFragment"
+            android:name="sa.biotic.app.fragments.OrderInformationFragment"
+            android:label="Order Information"
+            tools:layout="@layout/fragment_order_information">
+        <action
+                android:id="@+id/action_orderInformationFragment_to_getDriverLocationFragment"
+                app:destination="@id/getDriverLocationFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/getDriverLocationFragment"
+            android:name="sa.biotic.app.fragments.GetDriverLocationFragment"
+            android:label="Order Tracking"
+            tools:layout="@layout/fragment_get_driver_location" />
 
 </navigation>

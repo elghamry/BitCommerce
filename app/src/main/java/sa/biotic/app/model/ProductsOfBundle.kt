@@ -7,7 +7,7 @@ data class ProductsOfBundle(
     val BundleImage: String,
     val BundleName_Ar: String,
     val BundleName_En: String,
-    val BundlePrice: String,
+    val BundlePrice: Double,
     val BundleReview: Int,
     val BundletStockQuantity: Int,
     val Products: MutableList<ProductBund>

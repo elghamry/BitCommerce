@@ -2,31 +2,48 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp">
+            android:layout_height="match_parent">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cart_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="invisible"
+                android:layout_marginTop="8dp"
+                android:visibility="visible"
 
                 >
+
+            <sa.biotic.app.components.swipe_layout.WaveSwipeRefreshLayout
+                    android:id="@+id/swipeRefresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:nestedScrollingEnabled="true"
+
+                    app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+
+                    >
 
             <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
 
                     <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/cartRecycler"
@@ -83,6 +100,24 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/subtotal" />
 
+                    <TextView
+                            android:id="@+id/disc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="@font/grenale_conbla"
+
+
+                            android:maxLength="30"
+                            android:maxLines="1"
+                            android:text="@string/discount"
+                            android:textColor="@color/text_header"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/taxes" />
+
 
                     <TextView
                             android:id="@+id/subtotal_value"
@@ -120,6 +155,24 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/subtotal_value" />
 
+                    <TextView
+                            android:id="@+id/disc_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="32dp"
+                            android:fontFamily="@font/grenale_conbla"
+
+
+                            android:maxLength="30"
+                            android:maxLines="1"
+                            android:text="0 SAR"
+                            android:textColor="@color/line_color"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/taxes_value" />
+
 
                     <View
                             android:id="@+id/line1"
@@ -136,7 +189,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
 
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/taxes"
+                            app:layout_constraintTop_toBottomOf="@id/disc"
 
                             />
 
@@ -324,6 +377,8 @@
 
             </androidx.core.widget.NestedScrollView>
 
+            </sa.biotic.app.components.swipe_layout.WaveSwipeRefreshLayout>
+
 
             <LinearLayout
                     android:id="@+id/linearLayout2"
@@ -375,7 +430,7 @@
                 android:id="@+id/empty_cart_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible">
+                android:visibility="invisible">
 
 
             <TextView

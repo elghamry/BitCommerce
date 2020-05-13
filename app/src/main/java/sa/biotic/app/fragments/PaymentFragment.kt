@@ -1,6 +1,7 @@
 package sa.biotic.app.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import sa.biotic.app.R
 import sa.biotic.app.databinding.FragmentPaymentBinding
+import sa.biotic.app.retrofit_service.Repository
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +42,8 @@ class PaymentFragment : Fragment() {
 
 
         )
+
+
         var stepper =
             (activity as AppCompatActivity).findViewById<sa.biotic.app.components.stepper.StepperView>(
                 R.id.stepper
@@ -48,17 +52,38 @@ class PaymentFragment : Fragment() {
         stepper.goToNextStep()
         stepper.goToNextStep()
 
+
+//        Repository.orderModel.observe(viewLifecycleOwner, Observer<CheckoutModel>{
+//
+//            Log.d("checkoutTo2",it.toString())
+//
+//         order = it
+//        })
+
+
         binding.confirmBtn.setOnClickListener {
             var stepper =
                 (activity as AppCompatActivity).findViewById<sa.biotic.app.components.stepper.StepperView>(
                     R.id.stepper
                 )
 
-            stepper.goToNextStep()
-            stepper.goToNextStep()
+            if (Repository.orderModel.UserID != 0) {
 
-            Navigation.findNavController(binding.root)
-                .navigate(R.id.action_paymentFragment_to_confimationFragment)
+                Log.d("checkoutTo", Repository.orderModel.toString())
+
+
+                Repository.checkout(Repository.orderModel)
+                stepper.goToNextStep()
+                stepper.goToNextStep()
+
+                Navigation.findNavController(binding.root)
+                    .navigate(R.id.action_paymentFragment_to_confimationFragment)
+
+
+            }
+
+
+
 
         }
 

@@ -62,16 +62,16 @@ interface UserService {
     ): Response<UpdateUserAccountDataResponse>
 
 
-    @POST("user/GetDeliveryAddress")
-    suspend fun getDeliveryAddress(
-        @Body user_data: GetDeliveryAddressModel
-    ): Response<GetDeliveryAddressModelResponse>
+    @POST("user/GetProfileAddress")
+    suspend fun getProfileAddress(
+        @Body user_data: GetProfileAddress
+    ): Response<GetProfileAddressResponse>
 
 
-    @POST("user/UpdateDeliveryAddress")
-    suspend fun updateDeliveryAddress(
-        @Body user_data: UpdateDeliveryAddressModel
-    ): Response<UpdateDeiveryAddressResponseModel>
+    @POST("user/UpdateProfileAddress")
+    suspend fun updateProfileAddress(
+        @Body user_data: UpdateProfileAddressModel
+    ): Response<UpdateProfileAddressResponse>
 
     @POST("user/VerifyAccount")
     suspend fun verifyUser(
@@ -79,49 +79,67 @@ interface UserService {
     ): Response<VerifyResponseModel>
 
 
-//    @Multipart
-//    @POST("user/UpdateUserImage")
-//    suspend fun updateUserImage(@Part("Image") Image: MultipartBody.Part, @Part("UserID") UserID: RequestBody,@Part("AccessToken") AccessToken: RequestBody): Response<UploadImageResponse>
+    @POST("user/GetUserOrders")
+    suspend fun getUserOrders(
+        @Body user_data: OrderAfterConfModel
+    ): Response<MutableList<OrderAfterConfResponse>>
+
+
+    @POST("user/Help")
+    suspend fun help(
+        @Body user_data: ContactModel
+    ): Response<ContactlResponse>
+
+
+    @POST("user/ContactUs")
+    suspend fun contactUs(
+        @Body user_data: ContactModel
+    ): Response<ContactlResponse>
+
+
+    @POST("user/GetOrder")
+    suspend fun getOrderInfo(
+        @Body user_data: GetOrderModel
+    ): Response<OrderInfoResponse>
+
+    @POST("user/GetOrderDetailsForRating")
+    suspend fun getOrderDetailsForRating(
+        @Body user_data: OrderRatingModel
+    ): Response<OrderRatingResponse>
+
+
+    @POST("user/GetPostPonedOrderDetailsForRating")
+    suspend fun getOrderPostboDetailsForRating(
+        @Body user_data: OrderRatingPostboModel
+    ): Response<OrderRatingPostboResponse>
+
+    @POST("user/ItemRating")
+    suspend fun setItemRating(
+        @Body user_data: ItemRatingToSendModel
+    ): Response<ItemRatingToSendResponse>
+
+    @POST("user/GetOrderLogs")
+    suspend fun getOrderLogs(
+        @Body user_data: GetOrderLlogsModel
+    ): Response<GetOrderLogsResponse>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     @Multipart
     @POST("user/UpdateUserImage")
     suspend fun updateUserImage(@PartMap params: HashMap<String, RequestBody>): Response<UploadImageResponse>
-//    @GET("general/getCategories")
-//    suspend fun getCategories(): Response<MutableList<Category>>
-//
-//
-//    @GET("general/getallprouducts")
-//    suspend fun getAllProducts(
-//        @Query("currentpage") currentpage: Int,
-//        @Query("pageSize") pageSize: Int
-//    ): Response<MutableList<Product>>
-//
-//    @GET("general/getBundles")
-//    suspend fun getBundles(
-//        @Query("currentpage") currentpage: Int,
-//        @Query("pageSize") pageSize: Int
-//    ): Response<MutableList<BundleProds>>
-//
-//
-//    @GET("general/getCategoryProduct")
-//    suspend fun getCategoryProducts(
-//        @Query("categoryId") categoryId: Int
-//    ): Response<MutableList<Product>>
-//
-//    @GET("general/Search")
-//    suspend fun Search(
-//        @Query("word") word: String,
-//        @Query("pageSize") pageSize: Int,
-//        @Query("currentpage") currentpage: Int,
-//        @Query("lang") lang: String
-//    ): Response<MutableList<SearchItem>>
-//
-//
-//    @GET("general/getBundleProduct")
-//    suspend fun getBundleProduct(
-//        @Query("BundleId") BundleId: Int
-//    ): Response<ProductsOfBundle>
 
 
 }

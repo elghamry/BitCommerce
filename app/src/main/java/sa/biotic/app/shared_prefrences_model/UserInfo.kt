@@ -4,6 +4,7 @@ import com.chibatching.kotpref.KotprefModel
 
 object UserInfo : KotprefModel() {
     var address by stringPref()
+    var promo by stringPref(default = "rr")
     var fname by stringPref()
     var lname by stringPref()
     var name by stringPref()
@@ -18,7 +19,7 @@ object UserInfo : KotprefModel() {
     var signed by booleanPref(default = false)
     var rememberme by booleanPref(default = true)
     var validation_status_number by intPref(default = 0)
-    var device_token by stringPref()
+    var device_token by stringPref(default = "android")
     var has_default_address by booleanPref(default = false)
 //    val prizes by stringSetPref {
 //        val set = TreeSet<String>()

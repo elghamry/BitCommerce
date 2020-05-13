@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
+
         tools:context=".fragments.SearchFragment">
 
     <!--    android:background="@drawable/white_bg"-->
@@ -17,43 +18,6 @@
             android:text="@string/hello_blank_fragment"
             android:visibility="gone" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-                android:id="@+id/no_of_pr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/items_150"
-                android:textColor="#1A1818"
-                android:textSize="11dp"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        <!--                        <TextView-->
-        <!--                                android:layout_width="wrap_content"-->
-        <!--                                android:layout_height="21dp"-->
-        <!--                                android:layout_marginEnd="16dp"-->
-        <!--                                android:fontFamily="@font/ubuntu_regular"-->
-        <!--                                android:text="@string/see_all"-->
-        <!--                                android:textColor="@android:color/holo_green_dark"-->
-        <!--                                android:textSize="16sp"-->
-        <!--                                attrs:layout_constraintEnd_toEndOf="parent"-->
-        <!--                                attrs:layout_constraintTop_toTopOf="parent" />-->
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <pl.droidsonroids.gif.GifImageView
             android:id="@+id/bottle"
             android:layout_width="0dp"
@@ -64,16 +28,68 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/prodsRecycler"
+
+    <sa.biotic.app.components.swipe_layout.WaveSwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:nestedScrollingEnabled="true"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/constraintLayout2" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/prodsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:paddingTop="16dp"
+                android:visibility="visible" />
+
+
+        <!--        <androidx.core.widget.NestedScrollView-->
+
+        <!--                android:id="@+id/scroll_container"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:fillViewport="true"-->
+
+        <!--                >-->
+
+
+        <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--            android:id="@+id/constraintLayout2"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_marginTop="8dp"-->
+        <!--            android:orientation="vertical"-->
+        <!--         >-->
+
+        <!--        <TextView-->
+        <!--                android:id="@+id/no_of_pr"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginStart="16dp"-->
+        <!--                android:layout_marginTop="8dp"-->
+        <!--                android:text="@string/items_150"-->
+        <!--                android:textColor="#1A1818"-->
+        <!--                android:textSize="11dp"-->
+        <!--                android:visibility="gone"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--        -->
+
+        <!--    -->
+
+
+        <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+        <!--        </androidx.core.widget.NestedScrollView>-->
+
+
+    </sa.biotic.app.components.swipe_layout.WaveSwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

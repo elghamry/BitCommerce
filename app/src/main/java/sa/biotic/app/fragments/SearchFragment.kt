@@ -34,9 +34,11 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.idanatz.oneadapter.OneAdapter
 import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
+import com.idanatz.oneadapter.external.interfaces.Item
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
+import com.skydoves.androidribbon.ShimmerRibbonView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
@@ -49,6 +51,7 @@ import sa.biotic.app.databinding.FragmentSearchBinding
 import sa.biotic.app.model.BundleProduct
 import sa.biotic.app.model.Product
 import sa.biotic.app.model.SearchItem
+import sa.biotic.app.utils.ErrorDialog
 import sa.biotic.app.utils.TransitionHelper
 import sa.biotic.app.utils.margin
 import sa.biotic.app.viewmodels.SearchViewModel
@@ -112,6 +115,19 @@ class SearchFragment : Fragment() {
         var gifFromResource = GifDrawable(resources, R.drawable.search_loader)
 
         image_loader = binding.bottle
+
+
+        val color = resources.getColor(R.color.colorPrimary)
+        val red = (color shr 16 and 0xFF.toFloat().toInt()).toFloat()
+        val green = (color shr 8 and 0xFF.toFloat().toInt()).toFloat()
+        val blue = (color and 0xFF.toFloat().toInt()).toFloat()
+        val alpha = (color shr 24 and 0xFF.toFloat().toInt()).toFloat()
+        binding.swipeRefresh.setWaveARGBColor(
+            alpha.toInt(),
+            red.toInt(),
+            green.toInt(),
+            blue.toInt()
+        )
 
         gifFromResource.stop()
         image_loader.setImageDrawable(gifFromResource)
@@ -183,13 +199,32 @@ class SearchFragment : Fragment() {
         search_et.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
 //                doTheLoginWork()
-                viewModel.getSearchItems(search_et.text.toString(), 20, 1, "en")
+                viewModel.getSearchItems(search_et.text.toString(), 200, 1, "en")
 //                binding.bottle.visibility=GifImageView.VISIBLE
 //                binding.noOfPr.visibility=TextView.VISIBLE
 //                binding.prodsRecycler.visibility=RecyclerView.VISIBLE
 
             }
             true
+        }
+
+
+
+        binding.swipeRefresh.setOnRefreshListener {
+
+            if (!search_et.text.isNullOrEmpty() && !search_et.text.isNullOrBlank())
+                viewModel.getSearchItems(search_et.text.toString(), 200, 1, "en")
+            else {
+                ErrorDialog.showCustomViewDialog(
+                    context = requireContext(),
+                    custView = R.layout.dialog_error,
+                    msg = "please fill search field !"
+                )
+
+                binding.swipeRefresh.isRefreshing = false
+            }
+
+
         }
 
 
@@ -414,6 +449,9 @@ class SearchFragment : Fragment() {
                 binding.prodsRecycler.visibility = RecyclerView.VISIBLE
 
 
+                binding.swipeRefresh.isRefreshing = false
+
+
             })
 
 
@@ -570,7 +608,7 @@ class SearchFragment : Fragment() {
         }
 
 
-        override fun onBind(model: SearchItem, viewBinder: ViewBinder) {
+        override fun onBind(item: Item<SearchItem>, viewBinder: ViewBinder) {
             val story1 = viewBinder.findViewById<ImageView>(R.id.product_image)
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 = viewBinder.findViewById<TextView>(R.id.price)
@@ -581,6 +619,21 @@ class SearchFragment : Fragment() {
             val story7 = viewBinder.findViewById<TextView>(R.id.discount_value)
             val story9 = viewBinder.findViewById<CardView>(R.id.discount_card)
             val story10 = viewBinder.findViewById<ImageView>(R.id.cal_icon)
+            val ribbon: ShimmerRibbonView = viewBinder.findViewById<ShimmerRibbonView>(R.id.ribbon)
+            val ribbon2: ShimmerRibbonView =
+                viewBinder.findViewById<ShimmerRibbonView>(R.id.ribbon2)
+
+            var model = item.model
+
+
+            if (model.IsNew == 1) {
+                ribbon.visibility = View.VISIBLE
+                ribbon2.visibility = View.VISIBLE
+            } else {
+                ribbon.visibility = View.INVISIBLE
+                ribbon2.visibility = View.INVISIBLE
+            }
+
 
 
 //            sharedViewtopass = viewBinder
@@ -598,7 +651,18 @@ class SearchFragment : Fragment() {
             story7.text = (model.ProductOfferDicountValue.toFloat() * 100).toInt().toString() + "%"
 
 
-
+            story3.setTextColor(resources.getColor(R.color.colorPrimary))
+            story5.setTextColor(resources.getColor(R.color.purple))
+            story1.visibility = View.VISIBLE
+            story2.visibility = View.VISIBLE
+            story3.visibility = View.VISIBLE
+            story4.visibility = View.VISIBLE
+            story5.visibility = View.VISIBLE
+            story6.visibility = View.VISIBLE
+            story8.visibility = View.VISIBLE
+            story7.visibility = View.VISIBLE
+            story9.visibility = View.VISIBLE
+            story10.visibility = View.VISIBLE
 
 
             story6.paintFlags =
@@ -612,11 +676,13 @@ class SearchFragment : Fragment() {
                 story6.visibility = TextView.VISIBLE
             } else {
                 story9.visibility = CardView.INVISIBLE
-                story6.visibility = TextView.INVISIBLE
+                story6.visibility = TextView.GONE
 
             }
 
             if (model.TypeIsProduct == "1") {
+//                story3.setTextColor(resources.getColor(R.color.colorPrimary))
+//                story5.setTextColor(resources.getColor(R.color.colorPrimary))
 
 
                 if (model.ProductStockQuantity <= 5) {
@@ -624,47 +690,95 @@ class SearchFragment : Fragment() {
                         story3.text = getString(R.string.sold_out)
                         story3.setTextColor(resources.getColor(R.color.stockColor))
 //                    story3.visibility=TextView.INVISIBLE
-                        story6.visibility = TextView.INVISIBLE
-                        story8.visibility = TextView.INVISIBLE
+                        story6.visibility = TextView.GONE
+                        story8.visibility = TextView.GONE
 
-                    } else
+                    } else {
                         story8.text =
                             getString(R.string.only) + " " + model.ProductStockQuantity.toString() + " " + getString(
                                 R.string.left
                             )
+//                        story3.setTextColor(resources.getColor(R.color.colorPrimary))
+                    }
+
                 } else {
 
 //                    story8.text=getString(R.string.only)+" "+model.ProductStockQuantity.toString()+" "+getString(R.string.left)
-                    story8.visibility = TextView.INVISIBLE
+                    story8.visibility = TextView.GONE
+                }
+
+
+
+                if (item.model.Callories == 0) {
+
+                    story5.visibility = View.GONE
+                    story10.visibility = View.GONE
+
+
+                } else {
+                    story5.visibility = View.VISIBLE
+                    story10.visibility = View.VISIBLE
                 }
 
             } else {
                 story5.visibility = TextView.INVISIBLE
+//
+//                story3.setTextColor(resources.getColor(R.color.colorPrimary))
+//                story5.setTextColor(resources.getColor(R.color.colorPrimary))
 
 
-                if (model.ProductStockQuantity == 0) {
+//                if (model.ProductStockQuantity == 0) {
+//
+////                    story8.visibility=TextView.VISIBLE
+//                    story3.visibility = TextView.INVISIBLE
+//
+//                    story5.text = "Sold out"
+//                    story5.visibility = TextView.VISIBLE
+//                    story5.setTextColor(resources.getColor(R.color.stockColor))
+//
+//                } else {
+//                    story5.setTextColor(resources.getColor(R.color.colorPrimary))
 
-//                    story8.visibility=TextView.VISIBLE
-                    story3.visibility = TextView.INVISIBLE
+//                    if (model.ProductStockQuantity <= 5) {
+////
+////                        story5.text =
+////                            getString(R.string.only) + " " + model.ProductStockQuantity.toString() + " " + getString(
+////                                R.string.left
+////                            )
+////                        story5.visibility = TextView.VISIBLE
+////                        story5.setTextColor(resources.getColor(R.color.stockColor))
+////
+////                    }
+////                    else{
+//////                        story5.setTextColor(resources.getColor(R.color.colorPrimary))
+////
+////                    }
 
-                    story5.text = "Sold out"
-                    story5.visibility = TextView.VISIBLE
-                    story5.setTextColor(resources.getColor(R.color.stockColor))
 
-                } else {
                     if (model.ProductStockQuantity <= 5) {
-                        Log.d("iam here bitch", "hello friend")
-                        story5.text =
-                            getString(R.string.only) + " " + model.ProductStockQuantity.toString() + " " + getString(
-                                R.string.left
-                            )
-                        story5.visibility = TextView.VISIBLE
-                        story5.setTextColor(resources.getColor(R.color.stockColor))
+                        if (model.ProductStockQuantity <= 0) {
+                            story3.text = getString(R.string.sold_out)
+                            story3.setTextColor(resources.getColor(R.color.stockColor))
+//                    story3.visibility=TextView.INVISIBLE
+                            story6.visibility = TextView.INVISIBLE
+                            story8.visibility = TextView.INVISIBLE
 
+                        } else {
+                            story8.text =
+                                getString(R.string.only) + " " + model.ProductStockQuantity.toString() + " " + getString(
+                                    R.string.left
+                                )
+//                        story3.setTextColor(resources.getColor(R.color.colorPrimary))
+                        }
+
+                    } else {
+
+//                    story8.text=getString(R.string.only)+" "+model.ProductStockQuantity.toString()+" "+getString(R.string.left)
+                        story8.visibility = TextView.INVISIBLE
                     }
                 }
 
-            }
+//            }
 
 
 
@@ -672,10 +786,11 @@ class SearchFragment : Fragment() {
             if (model.TypeIsProduct == "0") {
 
                 story9.visibility = CardView.INVISIBLE
-                story6.visibility = TextView.INVISIBLE
+                story6.visibility = TextView.GONE
                 story10.visibility = ImageView.INVISIBLE
+                story5.visibility = View.GONE
 //
-                story8.visibility = TextView.INVISIBLE
+//                story8.visibility = TextView.INVISIBLE
 
 
             }

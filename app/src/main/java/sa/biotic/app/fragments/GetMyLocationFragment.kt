@@ -1,5 +1,8 @@
 package sa.biotic.app.fragments
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -12,7 +15,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -34,6 +36,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import sa.biotic.app.R
 import sa.biotic.app.databinding.FragmentGetMyLocationBinding
+import sa.biotic.app.retrofit_service.Repository
 import sa.biotic.app.viewmodels.PurchaseViewModel
 import java.io.IOException
 import java.util.*
@@ -65,6 +68,8 @@ class GetMyLocationFragment : Fragment(), OnMapReadyCallback,
     private var locationUpdateState = false
 
     lateinit var markerCenter: Marker
+
+    var addressCon = ""
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -134,6 +139,7 @@ class GetMyLocationFragment : Fragment(), OnMapReadyCallback,
 
 
             getAddress(markerCenter.position)
+//            getAddressAR(markerCenter.position)
             stepper.goToNextStep()
             stepper.goToNextStep()
 
@@ -313,27 +319,93 @@ class GetMyLocationFragment : Fragment(), OnMapReadyCallback,
 //
 ////          addressText += if (i == 0) address.getAddressLine(i) else "\n" + address.getAddressLine(i)
 //
-//        }
-                var address = addresses.get(0)
+////        }
+                addressCon = addresses.get(0)
                     .getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                var city = addresses.get(0).locality
-                var state = addresses.get(0).adminArea
-                var country = addresses.get(0).countryName
-                var postalCode = addresses.get(0).postalCode
-                var knownName = addresses.get(0).featureName
-                var var1 = addresses.get(0).thoroughfare
-                var var2 = addresses.get(0).subThoroughfare
-                var premises = addresses.get(0).premises
+//                var city = addresses.get(0).locality
+//                var state = addresses.get(0).adminArea
+//                var country = addresses.get(0).countryName
+//                var postalCode = addresses.get(0).postalCode
+//                var knownName = addresses.get(0).featureName
+//                var var1 = addresses.get(0).thoroughfare
+//                var var2 = addresses.get(0).subThoroughfare
+//                var premises = addresses.get(0).premises
+//
+//                addressText =
+//                    address + "\n" + city + "\n" + state + "\n" + country + "\n" + postalCode + "\n" + knownName + "\n" + var1 + "\n" + var2 + "\n" + premises
+//                Log.d("addresss", addressText.toString())
+//
+//
+//                Toast.makeText(context, address, Toast.LENGTH_LONG).show()
 
-                addressText =
-                    address + "\n" + city + "\n" + state + "\n" + country + "\n" + postalCode + "\n" + knownName + "\n" + var1 + "\n" + var2 + "\n" + premises
-                Log.d("addresss", addressText.toString())
+                Repository.setAddressCheckout(addresses.get(0))
 
 
-                Toast.makeText(context, address, Toast.LENGTH_LONG).show()
-
-                purchaseViewModel.setAddress(addresses.get(0))
             }
+
+
+        } catch (e: IOException) {
+            Log.e("MapsActivity", e.localizedMessage)
+        }
+
+
+
+
+
+        return addressText
+    }
+
+
+    private fun getAddressAR(latLng: LatLng): String {
+        // 1
+        var loc = Locale("ar", "sa")//en US
+        var aLocale = Locale.Builder().setLanguage("en").setScript("Latn").setRegion("RS").build()
+        val geocoder = Geocoder(requireContext(), loc)
+        val addresses: List<Address>?
+        val address: Address?
+        var addressText = ""
+
+        try {
+            // 2
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            // 3
+            if (null != addresses && !addresses.isEmpty()) {
+                address = addresses[0]
+                Log.d("helloAdd", address.maxAddressLineIndex.toString())
+//        Log.d("addresss",addresses.toString())
+//        for (i in 0 until address.maxAddressLineIndex) {
+//
+////          addressText += if (i == 0) address.getAddressLine(i) else "\n" + address.getAddressLine(i)
+//
+////        }
+                addressCon = addressCon + addresses.get(0)
+                    .getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//                var city = addresses.get(0).locality
+//                var state = addresses.get(0).adminArea
+//                var country = addresses.get(0).countryName
+//                var postalCode = addresses.get(0).postalCode
+//                var knownName = addresses.get(0).featureName
+//                var var1 = addresses.get(0).thoroughfare
+//                var var2 = addresses.get(0).subThoroughfare
+//                var premises = addresses.get(0).premises
+//
+//                addressText =
+//                    address + "\n" + city + "\n" + state + "\n" + country + "\n" + postalCode + "\n" + knownName + "\n" + var1 + "\n" + var2 + "\n" + premises
+//                Log.d("addresss", addressText.toString())
+//
+//
+//                Toast.makeText(context, address, Toast.LENGTH_LONG).show()
+
+                Repository.setAddressCheckout(addresses.get(0))
+
+                val clipboard: ClipboardManager =
+                    requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip: ClipData = ClipData.newPlainText("Address is ", addressCon)
+                clipboard.setPrimaryClip(clip)
+            }
+
+
+
 
 
         } catch (e: IOException) {

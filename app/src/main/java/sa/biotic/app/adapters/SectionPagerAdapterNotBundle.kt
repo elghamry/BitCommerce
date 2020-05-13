@@ -1,3 +1,4 @@
+package sa.biotic.app.adapters
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -17,7 +18,7 @@ private var TAB_TITLES = arrayOf(
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-class SectionsPagerAdapterNotBundle(private val context: Context, fm: FragmentManager) :
+class SectionPagerAdapterNotBundle(private val context: Context, fm: FragmentManager) :
     FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {

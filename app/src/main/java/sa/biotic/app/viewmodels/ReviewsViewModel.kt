@@ -4,7 +4,9 @@ package sa.biotic.app.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import sa.biotic.app.model.GetReviewsResponse
 import sa.biotic.app.model.Review
+import sa.biotic.app.retrofit_service.Repository
 
 class ReviewsViewModel : ViewModel() {
 
@@ -12,13 +14,14 @@ class ReviewsViewModel : ViewModel() {
 
 
     //livedata
-    var revsLive: MutableLiveData<MutableList<Review>> = MutableLiveData<MutableList<Review>>()
+    var revsLive: MutableLiveData<MutableList<GetReviewsResponse>> =
+        MutableLiveData<MutableList<GetReviewsResponse>>()
 
 
     init {
         Log.i("ReviewsViewModel", "ReviewsViewModel created!")
-
-        getRevs()
+        revsLive = Repository.reviewsResponse
+//        getRevs()
 
 
     }
@@ -71,7 +74,7 @@ class ReviewsViewModel : ViewModel() {
 //
 //        }
 
-        revsLive.value = revs
+//        revsLive.value =
 
     }
 

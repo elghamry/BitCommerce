@@ -107,7 +107,7 @@ class InformationFragment : Fragment() {
                 }
             })
 
-
+        var isEdit: Boolean = true
 
 
         binding.saveBtn.setOnClickListener {
@@ -119,60 +119,74 @@ class InformationFragment : Fragment() {
                 binding.etEmail.setText("")
                 binding.etPhone.setText("")
 
+                isEdit = false
+
             }
+
+
             binding.saveBtn.text = getString(R.string.save)
-            var pass = true
 
-            binding.etPhone.validator()
-                .addRule(FillRequiredRule())
-                .onlyNumbers()
-                .addRule(PhoneLengthRule())
-                .startsWith("5")
-                .addErrorCallback {
-                    binding.etPhonelLayout.error = it
+            if (isEdit) {
+                var pass = true
 
-                    pass = false
+                binding.etPhone.validator()
+                    .addRule(FillRequiredRule())
+                    .onlyNumbers()
+                    .addRule(PhoneLengthRule())
+                    .startsWith("5")
+                    .addErrorCallback {
+                        binding.etPhonelLayout.error = it
 
-
-                    // it will contain the right message.
-                    // For example, if edit text is empty,
-                    // then 'it' will show "Can't be Empty" message
-                }
-                .addSuccessCallback {
-
-                    binding.etPhonelLayout.isErrorEnabled = false
-                }
-                .check()
-
-            binding.etEmail.validator()
-                .addRule(FillRequiredRule())
-                .validEmail()
-                .addErrorCallback {
-                    binding.etEmailLayout.error = it
-
-                    pass = false
+                        pass = false
 
 
-                    // it will contain the right message.
-                    // For example, if edit text is empty,
-                    // then 'it' will show "Can't be Empty" message
-                }.addSuccessCallback {
+                        // it will contain the right message.
+                        // For example, if edit text is empty,
+                        // then 'it' will show "Can't be Empty" message
+                    }
+                    .addSuccessCallback {
 
-                    binding.etEmailLayout.isErrorEnabled = false
-                }
-                .check()
+                        binding.etPhonelLayout.isErrorEnabled = false
+                    }
+                    .check()
 
-            if (pass) {
+                binding.etEmail.validator()
+                    .addRule(FillRequiredRule())
+                    .validEmail()
+                    .addErrorCallback {
+                        binding.etEmailLayout.error = it
 
-                Repository.updateUserAccountData(
-                    UpdateUserAccountDataModel(
-                        UserInfo.access_token, UserInfo.uid.toString()
-                        , binding.etEmail.text.toString(), binding.etPhone.text.toString()
+                        pass = false
+
+
+                        // it will contain the right message.
+                        // For example, if edit text is empty,
+                        // then 'it' will show "Can't be Empty" message
+                    }.addSuccessCallback {
+
+                        binding.etEmailLayout.isErrorEnabled = false
+                    }
+                    .check()
+
+                if (pass) {
+
+                    Repository.updateUserAccountData(
+                        UpdateUserAccountDataModel(
+                            UserInfo.access_token,
+                            UserInfo.uid.toString()
+                            ,
+                            binding.etEmail.text.toString(),
+                            binding.etPhone.text.toString(),
+                            UserInfo.device_token
+                        )
                     )
-                )
 
+
+                }
 
             }
+            isEdit = true
+
         }
 
 
@@ -192,7 +206,8 @@ class InformationFragment : Fragment() {
                 Repository.getUserAccountData(
                     LogoutModel(
                         UserInfo.access_token,
-                        UserInfo.uid.toString()
+                        UserInfo.uid.toString(),
+                        UserInfo.device_token
                     )
                 )
 //                Navigation.findNavController(binding.root).navigate(R.id.action_forgetPassFragment_to_enterCodeFragment)

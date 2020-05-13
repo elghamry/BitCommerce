@@ -1,3 +1,4 @@
+
 package sa.biotic.app.fragments
 
 
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import sa.biotic.app.R
 import sa.biotic.app.databinding.FragmentShowAddressBinding
+import sa.biotic.app.retrofit_service.Repository
 import sa.biotic.app.viewmodels.PurchaseViewModel
 
 
@@ -35,6 +37,20 @@ class ShowAddressFragment : Fragment() {
     lateinit var purchaseViewModel: PurchaseViewModel
 
     lateinit var binding: FragmentShowAddressBinding
+
+
+    lateinit var address: String
+    lateinit var city: String
+    lateinit var state: String
+    lateinit var country: String
+    lateinit var postalCode: String
+    lateinit var streetName: String
+    lateinit var apartmentNumber: String
+    lateinit var subThoroughfare: String
+    lateinit var adminArea: String
+
+    lateinit var lon: String
+    lateinit var lat: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         purchaseViewModel =
@@ -67,10 +83,29 @@ class ShowAddressFragment : Fragment() {
 //            stepper.goToNextStep()
 //            stepper.goToNextStep()
 
+            Repository.orderModel.City = city
+            Repository.orderModel.longitude = lon
+            Repository.orderModel.latitude = lat
+            Repository.orderModel.addressL1 = address
+            Repository.orderModel.addressL2 = ""
+            Repository.orderModel.postalcode = postalCode
+
+            if (remmber) {
+                Repository.orderModel.IsDefault = 1
+            } else {
+                Repository.orderModel.IsDefault = 0
+            }
+
+
+
+
+
             Navigation.findNavController(binding.root)
                 .navigate(sa.biotic.app.R.id.action_showAddressFragment_to_paymentFragment)
 
         }
+
+
 
         binding.backBtn.setOnClickListener {
             var stepper =
@@ -87,19 +122,76 @@ class ShowAddressFragment : Fragment() {
         }
 
 
-        purchaseViewModel.getAddress().observe(viewLifecycleOwner, Observer<Address> {
+        Repository.getAddressCheckout().observe(viewLifecycleOwner, Observer<Address> {
 
 
-            var address =
+            address =
                 it.getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            var city = it.locality
-            var state = it.adminArea
-            var country = it.countryName
-            var postalCode = it.postalCode
-            var knownName = it.featureName
+            city = ""
+            state = ""
+            country = ""
+            postalCode = ""
+            streetName = ""
+            apartmentNumber = ""
+            subThoroughfare = ""
+            adminArea = ""
+
+
+            lon = it.longitude.toString()
+            lat = it.latitude.toString()
+//            if(!it.subThoroughfare.isNullOrEmpty() && !it.subThoroughfare.isNullOrBlank()){
+//                apartmentNumber = it.subThoroughfare
+//            }
+
+
+//            binding.etAddress.setText(address)
+//            binding.etCity.setText(city)
+
+
+//            var addressToShow = "Firas Alateeq\n"
+//            if (!it.premises.isNullOrEmpty() && !it.premises.isNullOrBlank())
+//                apartmentNumber = it.premises  else ""
+
+            if (!it.subThoroughfare.isNullOrEmpty() && !it.subThoroughfare.isNullOrBlank())
+                apartmentNumber = it.subThoroughfare else ""
+            if (!it.thoroughfare.isNullOrEmpty() && !it.thoroughfare.isNullOrBlank())
+                streetName = it.thoroughfare else ""
+            if (!it.adminArea.isNullOrEmpty() && !it.adminArea.isNullOrBlank())
+                adminArea = it.adminArea else ""
+            if (!it.locality.isNullOrEmpty() && !it.locality.isNullOrBlank())
+                city = it.locality else ""
+            if (!it.countryName.isNullOrEmpty() && !it.countryName.isNullOrBlank())
+                country = it.countryName else ""
+            if (!it.postalCode.isNullOrEmpty() && !it.postalCode.isNullOrBlank())
+                postalCode = it.postalCode else ""
+
+
+            if (it.thoroughfare.isNullOrEmpty()) {
+                if (!it.subLocality.isNullOrEmpty() && !it.subLocality.isNullOrBlank())
+                    streetName = it.subLocality
+            }
+
+            if (it.subThoroughfare.isNullOrEmpty()) {
+                if (!it.premises.isNullOrEmpty() && !it.premises.isNullOrBlank())
+                    apartmentNumber = it.premises
+            }
+
+
+
+
+
+
+
 
             binding.etAddress.setText(address)
             binding.etCity.setText(city)
+            binding.etCountry.setText(country)
+            binding.etApartmentNumber.setText(apartmentNumber)
+            binding.etPostalCode.setText(postalCode)
+            binding.etStreetName.setText(streetName)
+
+
+
 
 
         })

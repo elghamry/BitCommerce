@@ -9,7 +9,9 @@ import kotlinx.android.parcel.Parcelize
 data class GetCartDetailsModel(
     val UserID: Int,
     val AccessToken: String,
-    val Devicetoken: String
+    val DeviceToken: String,
+    var Promocode: String
+
 //    var ProductID: Int=-1,
 //    val Isbundle: Boolean,
 //    val Quantity: Int
@@ -18,7 +20,8 @@ data class GetCartDetailsModel(
     override fun areContentTheSame(other: Any): Boolean = other is GetCartDetailsModel &&
             UserID == other.UserID &&
             AccessToken == other.AccessToken &&
-            Devicetoken == other.Devicetoken
+            DeviceToken == other.DeviceToken &&
+            Promocode == other.Promocode
 
 //            &&
 //            ProductID == other.ProductID &&

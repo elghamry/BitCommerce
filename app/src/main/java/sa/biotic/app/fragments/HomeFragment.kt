@@ -2,6 +2,7 @@ package sa.biotic.app.fragments
 
 import android.animation.Animator
 import android.animation.AnimatorInflater
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityOptions
 import android.content.Context
@@ -21,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -28,16 +30,24 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.afollestad.materialdialogs.DialogBehavior
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.ModalDialog
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.customview.getCustomView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.eftimoff.viewpagertransformers.ZoomOutTranformer
+import com.google.android.material.button.MaterialButton
 import com.idanatz.oneadapter.OneAdapter
 import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
+import com.idanatz.oneadapter.external.interfaces.Item
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.external.modules.ItemSelectionModule
 import com.idanatz.oneadapter.external.modules.ItemSelectionModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
+import com.skydoves.androidribbon.ShimmerRibbonView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import sa.biotic.app.AllProductsActivity
@@ -45,14 +55,15 @@ import sa.biotic.app.OnDetailsActivity
 import sa.biotic.app.R
 import sa.biotic.app.adapters.OfferPagerAdapter
 import sa.biotic.app.components.LinearLayoutManagerWrapper
+import sa.biotic.app.components.RatingBar
 import sa.biotic.app.databinding.FragmentHomeBinding
-import sa.biotic.app.model.BundleProduct
-import sa.biotic.app.model.Category
-import sa.biotic.app.model.Product
+import sa.biotic.app.model.*
 import sa.biotic.app.retrofit_service.Repository
+import sa.biotic.app.shared_prefrences_model.UserInfo
 import sa.biotic.app.utils.TransitionHelper
 import sa.biotic.app.utils.margin
 import sa.biotic.app.viewmodels.HomeViewModel
+import kotlin.properties.Delegates
 
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -72,6 +83,20 @@ class HomeFragment : Fragment() {
     private lateinit var prodsAdapter: OneAdapter
     private lateinit var bundlesAdapter: OneAdapter
     private var prevRecyclerBinderView: ViewBinder? = null
+    lateinit var materialDialog: MaterialDialog
+    private lateinit var rateAdapter: OneAdapter
+    lateinit var rateItemsLocal: MutableList<OrderItemForRating>
+
+
+    //for rating
+
+    lateinit var ItemIDs: MutableList<String>
+    lateinit var isbundles: MutableList<String>
+    lateinit var Rates: MutableList<String>
+    var RateStatus by Delegates.notNull<Boolean>()
+
+
+    private var clickedCatID: Int = -1
 //    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +120,38 @@ class HomeFragment : Fragment() {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
         )
+        materialDialog = MaterialDialog(requireContext())
+
+        ItemIDs = mutableListOf()
+        isbundles = mutableListOf()
+        Rates = mutableListOf()
+
+
+//        val r = Integer.valueOf(resources.getColor(R.color.colorPrimary).toString().substring(1, 3), 16)
+//        val g = Integer.valueOf(resources.getColor(R.color.colorPrimary).toString().substring(3, 5), 16)
+//        val b = Integer.valueOf(resources.getColor(R.color.colorPrimary).toString().substring(5, 7), 16)
+//        binding.swipeRefresh.setWaveRGBColor(r,g,b)
+        val color = resources.getColor(R.color.colorPrimary)
+        val red = (color shr 16 and 0xFF.toFloat().toInt()).toFloat()
+        val green = (color shr 8 and 0xFF.toFloat().toInt()).toFloat()
+        val blue = (color and 0xFF.toFloat().toInt()).toFloat()
+        val alpha = (color shr 24 and 0xFF.toFloat().toInt()).toFloat()
+        binding.swipeRefresh.setWaveARGBColor(
+            alpha.toInt(),
+            red.toInt(),
+            green.toInt(),
+            blue.toInt()
+        )
+
+//        binding.swipeRefresh.setTopOffsetOfWave(-50)
+//        binding.swipeRefresh.
+
+
+//        Log.d("UserInfAT",UserInfo.access_token)
+//        Log.d("UserInfDT",UserInfo.device_token)
+//        Log.d("UserInfUI",UserInfo.uid.toString())
+
+
 
 
 
@@ -167,6 +224,7 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onPageScrollStateChanged(p0: Int) {
+                    enableDisableSwipeRefresh(p0 == ViewPager.SCROLL_STATE_IDLE)
                     when (p0) {
                         ViewPager.SCROLL_STATE_SETTLING -> {
 
@@ -191,6 +249,24 @@ class HomeFragment : Fragment() {
             }
         )
 
+
+//      binding.viewPager.setOnTouchListener { view, motionEvent ->
+//
+//          when (motionEvent.getAction()) {
+//              MotionEvent.ACTION_UP -> {binding.swipeRefresh.setEnabled(true)
+//               false}
+//
+//              else ->{binding.swipeRefresh.setEnabled(false)
+//              true}
+//
+//
+//          }
+//
+//
+//      }
+
+
+
         binding.viewPager.setOnClickListener {
 
             //            Toast.makeText(
@@ -210,6 +286,158 @@ class HomeFragment : Fragment() {
         var container: FragmentContainerView =
             (activity as AppCompatActivity).findViewById<FragmentContainerView>(R.id.nav_host_container)
         container.margin(top = 0F)
+
+
+
+        binding.swipeRefresh.setOnRefreshListener {
+
+
+            Repository.getOffers(1, 200)
+            Repository.getBundles(1, 200)
+            Repository.getHomeBundles(1, 6)
+            Repository.getAllProducts(1, 200)
+            Repository.getCategories()
+            if (UserInfo.signed) {
+                Repository.getCartDetails(
+                    GetCartDetailsModel(
+                        UserInfo.uid,
+                        UserInfo.access_token,
+                        UserInfo.device_token,
+                        UserInfo.promo
+                    )
+                )
+            } else {
+                Repository.getCartDetails(
+                    GetCartDetailsModel(
+                        0,
+                        "rr",
+                        UserInfo.device_token,
+                        UserInfo.promo
+                    )
+                )
+
+            }
+
+
+        }
+
+
+        if (UserInfo.signed) {
+            Repository.getCartDetails(
+                GetCartDetailsModel(
+                    UserInfo.uid,
+                    UserInfo.access_token,
+                    UserInfo.device_token,
+                    UserInfo.promo
+                )
+            )
+        } else {
+            Repository.getCartDetails(
+                GetCartDetailsModel(
+                    0,
+                    "rr",
+                    UserInfo.device_token,
+                    UserInfo.promo
+                )
+            )
+
+        }
+
+        if (UserInfo.signed) {
+            Log.d("rating_is", "iam signed")
+
+            Repository.getOrderDetailsForRating(
+                OrderRatingModel(
+                    UserInfo.access_token,
+                    UserInfo.uid,
+                    UserInfo.device_token
+                )
+            )
+
+        }
+
+
+
+
+
+        Repository.orderRatingResponse.observe(viewLifecycleOwner, Observer { newit ->
+
+
+//
+
+
+            if (newit.OrderItems.size > 0 && !newit.OrderItems.isNullOrEmpty() &&
+                !materialDialog.isShowing
+
+            ) {
+
+                if (!isbundles.isEmpty())
+                    isbundles.clear()
+
+                if (!ItemIDs.isEmpty())
+                    ItemIDs.clear()
+
+                if (!Rates.isEmpty())
+                    Rates.clear()
+
+
+
+                newit.OrderItems.forEach {
+                    Log.d("rating_is", "hello boy")
+                    ItemIDs.add(it.ID.toString())
+                    if (it.ISBundle) {
+                        isbundles.add("True")
+
+
+                    } else {
+                        isbundles.add("False")
+                    }
+                    Rates.add(0.toString())
+                }
+
+
+//                isbundles :  MutableList<String>
+//                 Rates : MutableList<String>
+
+                rateItemsLocal = newit.OrderItems
+
+                showCustomViewDialog(items = newit.OrderItems, order_no = newit.OrderNumber)
+
+
+            }
+
+
+
+
+            binding.swipeRefresh.isRefreshing = false
+        })
+
+
+
+
+        Repository.setItemRatingResponse.observe(viewLifecycleOwner, Observer { newit ->
+
+
+            //
+
+
+            if (newit.Status == 1) {
+                materialDialog.dismiss()
+                Repository.orderRatingResponse.value?.OrderItems?.clear()
+                newit.Status = 0
+
+            } else {
+                if (newit.Status == 3) {
+                    materialDialog.dismiss()
+                    Repository.orderRatingResponse.value?.OrderItems?.clear()
+                    newit.Status = 0
+                }
+            }
+
+
+            binding.swipeRefresh.isRefreshing = false
+        })
+
 
 
 
@@ -250,6 +478,8 @@ class HomeFragment : Fragment() {
             bundlesAdapter.setItems(newBunds)
         })
 
+        Repository.getHomeProducts(1, 6)
+
         viewModel.prodsLive.observe(viewLifecycleOwner, Observer { newProds ->
 
             if (newProds.size == 0) {
@@ -261,6 +491,8 @@ class HomeFragment : Fragment() {
                         .addEventHook(clickProductEventHook())
                 )
             prodsAdapter.setItems(newProds)
+
+            swipeRefresh.isRefreshing = false
 
 
         })
@@ -288,14 +520,33 @@ class HomeFragment : Fragment() {
 
         viewModel.catsLive.observe(viewLifecycleOwner, Observer { newCats ->
 
-            Repository.getCategoryProducts(newCats[0].CategoryID)
-            categoryRecycler.post {
-                categoryRecycler.findViewHolderForAdapterPosition(0)?.itemView?.performClick()
+            if (newCats.size > 0) {
+//                if(clickedCatID == -1)
+//                {
+//                    Repository.getCategoryProducts(newCats[0].CategoryID)
+//                }
+//
+//
+//                else
+//                {
+//                    Repository.getCategoryProducts(clickedCatID)
+//                }
+                oneAdapter.setItems(newCats)
 
+
+//                categoryRecycler.post {
+//                    categoryRecycler.findViewHolderForAdapterPosition(0)?.itemView?.performClick()
+//
+//
+//                }
+
+
+                binding.swipeRefresh.isRefreshing = false
 
             }
 
-            oneAdapter.setItems(newCats)
+
+
         })
     }
 
@@ -309,13 +560,13 @@ class HomeFragment : Fragment() {
             }
         }
 
-        override fun onBind(model: Category, viewBinder: ViewBinder) {
+        override fun onBind(item: Item<Category>, viewBinder: ViewBinder) {
             val story1 = viewBinder.findViewById<ImageView>(R.id.category_image)
 //            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
 
 //
             Glide.with(requireContext())
-                .load(model.CategoryIconPurble)
+                .load(item.model.CategoryIconPurble)
 //                .centerCrop()
 //                .load(model.icon).
                 .into(story1)
@@ -337,8 +588,9 @@ class HomeFragment : Fragment() {
             }
         }
 
+        override fun onBind(item: Item<Product>, viewBinder: ViewBinder) {
+//            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
-        override fun onBind(model: Product, viewBinder: ViewBinder) {
             val story1 = viewBinder.findViewById<ImageView>(R.id.product_image)
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 = viewBinder.findViewById<TextView>(R.id.price)
@@ -348,19 +600,46 @@ class HomeFragment : Fragment() {
             val story8 = viewBinder.findViewById<TextView>(R.id.stock_tv)
             val story7 = viewBinder.findViewById<TextView>(R.id.discount_value)
             val story9 = viewBinder.findViewById<CardView>(R.id.discount_card)
+            val story10 = viewBinder.findViewById<ImageView>(R.id.cal_icon)
+
+            val ribbon: ShimmerRibbonView = viewBinder.findViewById<ShimmerRibbonView>(R.id.ribbon)
+            val ribbon2: ShimmerRibbonView =
+                viewBinder.findViewById<ShimmerRibbonView>(R.id.ribbon2)
+
+
+            if (item.model.IsNew == 1) {
+                ribbon.visibility = View.VISIBLE
+                ribbon2.visibility = View.VISIBLE
+            } else {
+                ribbon.visibility = View.INVISIBLE
+                ribbon2.visibility = View.INVISIBLE
+            }
+
+//            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
+
+            viewBinder.rootView.isNestedScrollingEnabled = false
+
+
+
+            Log.d(
+                "isoHere",
+                item.model.ProductName_En + " " + item.model.ProductStockQuantity.toString()
+            )
+
 //
-            Glide.with(requireContext())
+            Glide.with(this@HomeFragment)
+
 //                .load(model.img)
 
-                .load(model.ProductImage).centerCrop()
+                .load(item.model.ProductImage)
+                .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .skipMemoryCache(false)
-                .into(story1)
+                .skipMemoryCache(false).into(story1)
 
-            story2.text = model.ProductName_En
-            story3.text = model.ProductPrice + " " + getString(R.string._sar)
-            story4.text = model.ProductDescription_En
-            story5.text = model.ProductCallories.toString()
+            story2.text = item.model.ProductName_En
+            story3.text = "%.2f".format(item.model.ProductPrice) + " " + getString(R.string._sar)
+            story4.text = item.model.ProductDescription_En
+            story5.text = item.model.ProductCallories.toString()
 
 
             story6.paintFlags =
@@ -369,40 +648,52 @@ class HomeFragment : Fragment() {
 
 
 
-            if (model.ProductOfferPrice.toFloat() > 0) {
-                story3.text = model.ProductOfferPrice + " " + getString(R.string._sar)
-                story6.text = model.ProductPrice + " " + getString(R.string._sar)
+            if (item.model.ProductOfferPrice.toFloat() > 0) {
+                story3.text =
+                    "%.2f".format(item.model.ProductOfferPrice) + " " + getString(R.string._sar)
+                story6.text =
+                    "%.2f".format(item.model.ProductPrice) + " " + getString(R.string._sar)
                 story6.visibility = TextView.VISIBLE
                 story3.visibility = TextView.VISIBLE
 
 
             } else {
 
-                story6.visibility = TextView.INVISIBLE
+                story6.visibility = TextView.GONE
 
 
             }
-            if ((model.ProductOfferDicountValue.toFloat() * 100).toInt() <= 0) {
+            if (item.model.ProductOfferDicountValue.toFloat() <= 0F) {
                 story9.visibility = CardView.GONE
+
+            } else {
+                story9.visibility = CardView.VISIBLE
             }
 
-            story7.text = (model.ProductOfferDicountValue.toFloat() * 100).toInt().toString() + "%"
+            story7.text =
+                (item.model.ProductOfferDicountValue.toFloat() * 100).toInt().toString() + "%"
 
 
 
-            if (model.ProductStockQuantity <= 5) {
-                if (model.ProductStockQuantity <= 0) {
+            if (item.model.ProductStockQuantity <= 5) {
+                if (item.model.ProductStockQuantity <= 0) {
+//                    if(model.ProductID==79)
+
                     story3.text = getString(R.string.sold_out)
-                    story3.setTextColor(resources.getColor(R.color.stockColor))
+
+
 //                    story3.visibility=TextView.INVISIBLE
                     story6.visibility = TextView.INVISIBLE
                     story8.visibility = TextView.INVISIBLE
 
-                } else
+                } else {
                     story8.text =
-                        getString(R.string.only) + " " + model.ProductStockQuantity.toString() + " " + getString(
+                        getString(R.string.only) + " " + item.model.ProductStockQuantity.toString() + " " + getString(
                             R.string.left
                         )
+                    story8.visibility = TextView.VISIBLE
+                }
+
             } else {
 
 //                    story8.text=getString(R.string.only)+" "+model.ProductStockQuantity.toString()+" "+getString(R.string.left)
@@ -410,7 +701,27 @@ class HomeFragment : Fragment() {
             }
 
 
+
+            if (story3.text == getString(R.string.sold_out) && item.model.ProductStockQuantity == 0 && !story6.isVisible)
+                story3.setTextColor(resources.getColor(R.color.stockColor))
+            else
+                story3.setTextColor(resources.getColor(R.color.colorPrimary))
+
+
+
+            if (item.model.ProductCallories == 0) {
+
+                story5.visibility = View.GONE
+                story10.visibility = View.GONE
+
+
+            } else {
+                story5.visibility = View.VISIBLE
+                story10.visibility = View.VISIBLE
+            }
         }
+
+
     }
 
     private fun bundleItem(): ItemModule<BundleProduct> = object : ItemModule<BundleProduct>() {
@@ -423,7 +734,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-        override fun onBind(model: BundleProduct, viewBinder: ViewBinder) {
+        override fun onBind(item: Item<BundleProduct>, viewBinder: ViewBinder) {
+//            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             val story1 = viewBinder.findViewById<ImageView>(R.id.product_image)
             val story2 = viewBinder.findViewById<TextView>(R.id.product_title)
             val story3 = viewBinder.findViewById<TextView>(R.id.price)
@@ -431,43 +743,61 @@ class HomeFragment : Fragment() {
 
             val story8 = viewBinder.findViewById<TextView>(R.id.oldprice)
             val story9 = viewBinder.findViewById<TextView>(R.id.stock_tv)
+            val ribbon: ShimmerRibbonView = viewBinder.findViewById<ShimmerRibbonView>(R.id.ribbon)
+            val ribbon2: ShimmerRibbonView =
+                viewBinder.findViewById<ShimmerRibbonView>(R.id.ribbon2)
+
+
+            if (item.model.IsNew == 1) {
+                ribbon.visibility = View.VISIBLE
+                ribbon2.visibility = View.VISIBLE
+            } else {
+                ribbon.visibility = View.INVISIBLE
+                ribbon2.visibility = View.INVISIBLE
+            }
 
 
 //
-            Glide.with(requireContext())
+            Glide.with(this@HomeFragment)
 //                .load(model.img)
 
-                .load(model.BundleImage).centerCrop().into(story1)
+                .load(item.model.BundleImage).centerCrop().into(story1)
 
-            story2.text = model.BundleName_En
-            story3.text = model.BundlePrice + " " + getString(R.string._sar)
-            story4.text = model.BundleDescription_En
+            story2.text = item.model.BundleName_En
+            story3.text = "%.2f".format(item.model.BundlePrice) + " " + getString(R.string._sar)
+            story4.text = item.model.BundleDescription_En
 
             story8.visibility = TextView.INVISIBLE
 
-            if (model.BundleStockAvaliable == 0) {
+            if (item.model.BundleStockAvaliable == 0) {
 
                 story9.visibility = TextView.VISIBLE
-                story3.visibility = TextView.INVISIBLE
+                story3.visibility = TextView.GONE
                 story9.text = "Sold out"
 //                story3.setTextColor(resources.getColor(R.color.stockColor))
 
             } else {
-                if (model.BundleStockAvaliable <= 5) {
+
+                story9.visibility = TextView.GONE
+                story3.visibility = TextView.VISIBLE
+
+                if (item.model.BundleStockAvaliable <= 5) {
                     Log.d("iam here bitch", "hello friend")
                     story9.text =
-                        getString(R.string.only) + " " + model.BundleStockAvaliable.toString() + " " + getString(
+                        getString(R.string.only) + " " + item.model.BundleStockAvaliable.toString() + " " + getString(
                             R.string.left
                         )
                     story9.visibility = TextView.VISIBLE
 
+                } else {
+                    story9.visibility = TextView.GONE
                 }
             }
+        }
 
 
 
         }
-    }
 
     private fun clickProductEventHook(): ClickEventHook<Product> =
         object : ClickEventHook<Product>() {
@@ -669,6 +999,249 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun enableDisableSwipeRefresh(enable: Boolean) {
+        if (binding.swipeRefresh != null) {
+            binding.swipeRefresh.isEnabled = enable
+        }
+
+    }
+
+    private fun rateItem(): ItemModule<OrderItemForRating> =
+        object : ItemModule<OrderItemForRating>() {
+            override fun provideModuleConfig(): ItemModuleConfig = object : ItemModuleConfig() {
+                override fun withLayoutResource(): Int = R.layout.rate_item
+
+                override fun withFirstBindAnimation(): Animator {
+                    // can be implemented by inflating Animator Xml
+                    return AnimatorInflater.loadAnimator(
+                        this@HomeFragment.context,
+                        R.animator.category_anim
+                    )
+                }
+            }
+
+
+            @SuppressLint("SetTextI18n")
+            override fun onBind(item: Item<OrderItemForRating>, viewBinder: ViewBinder) {
+                val image = viewBinder.findViewById<ImageView>(R.id.product_image)
+                val title = viewBinder.findViewById<TextView>(R.id.product_title)
+
+//            val status = viewBinder.findViewById<TextView>(R.id.product_status)
+                val line = viewBinder.findViewById<View>(R.id.line1)
+
+                val rate = viewBinder.findViewById<RatingBar>(R.id.smart_rating_bar)
+
+                var model = item.model
+
+                rate.setOnRatingBarChangeListener { ratingBar, rating ->
+
+                    Rates[rateItemsLocal.indexOf(model)] = rating.toInt().toString()
+
+                    var btn = materialDialog.findViewById<MaterialButton>(R.id.submit_btn)
+
+
+                    if (Rates.contains("0")) {
+
+
+                        btn.setBackgroundColor(resources.getColor(R.color.oldPrice))
+//                  btn.text = getString(R.string.not_available)
+                        btn.isEnabled = false
+                    } else {
+
+                        btn.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+//                  btn.text = getString(R.string.not_available)
+                        btn.isEnabled = true
+                    }
+
+                }
+
+
+//            rate.setOnRatingBarChangeListener{ ratingBar, rating ->
+//
+//                Rates[rateItemsLocal.indexOf(model)] = rating.toInt().toString()
+//
+//            }
+//            rate.setOnRatingBarChangeListener(this@HomeFragment)
+
+                rate
+//            rate.setOnRatingBarChangeListener { ratingBar, fl ->
+//
+//
+////                Rates[rateItemsLocal.indexOf(model)] = ratingBar..toInt().toString()
+//
+//            }
+
+                if (model.ISBundle) {
+//                status.text = getString(R.string.sold_out)
+//                status.setTextColor(resources.getColor(R.color.stockColor))
+                } else {
+//                status.text =
+//                    getString(R.string.only) + " " + model.ItemStockQuantity.toString() + " " + getString(
+//                        R.string.left
+//                    )
+//                status.setTextColor(resources.getColor(R.color.colorPrimary))
+
+                }
+
+//            rateItemsLocal.find {  }
+
+
+                Glide.with(this@HomeFragment)
+//                .load(model.img)
+//
+                    .load(model.SImage).centerCrop().into(image)
+
+
+
+                title.text = model.Name_En
+
+
+
+                if (rateItemsLocal.last() == model) {
+                    line.visibility = View.INVISIBLE
+
+                } else {
+                    line.visibility = View.VISIBLE
+                }
+
+
+            }
+        }
+
+    private fun showCustomViewDialog(
+        dialogBehavior: DialogBehavior = ModalDialog,
+        items: MutableList<OrderItemForRating>,
+        order_no: Int
+    ) {
+        val dialog = MaterialDialog(requireContext(), dialogBehavior).show {
+            //            title(R.string.googleWifi)
+            cornerRadius(16f)
+                .noAutoDismiss()
+//            cancelable(false)  // calls setCancelable on the underlying dialog
+            cancelOnTouchOutside(false)  // calls setCanceledOnTouchOutside on the underlying dialog
+
+            customView(
+                R.layout.dialog_rate,
+                scrollable = false,
+                horizontalPadding = true
+            )
+
+        }
+
+        materialDialog = dialog
+
+
+        // Setup custom view content
+        val customView = dialog.getCustomView()
+
+        val updatedRecyclerView = customView.findViewById<RecyclerView>(R.id.updated_rec)
+        val order_tv = customView.findViewById<TextView>(R.id.order_no_value)
+        val submit_btn = customView.findViewById<MaterialButton>(R.id.submit_btn)
+        val not_btn = customView.findViewById<MaterialButton>(R.id.not_now_btn)
+
+        submit_btn.setBackgroundColor(resources.getColor(R.color.oldPrice))
+        submit_btn.isEnabled = false
+
+        order_tv.text = order_no.toString()
+
+
+
+        updatedRecyclerView.layoutManager =
+            LinearLayoutManagerWrapper(this.requireContext(), RecyclerView.VERTICAL, false)
+
+        rateAdapter = OneAdapter(updatedRecyclerView).attachItemModule(
+            rateItem()
+//                .addEventHook(clickBundEventHook())
+        )
+
+        submit_btn.setOnClickListener {
+//            Log.d("rates_is",ItemIDs.toString())
+//            Log.d("rates_is",isbundles.toString())
+//            Log.d("rates_is",Rates.toString())
+
+            if (!Rates.contains("0")) {
+                var ids: String = ItemIDs[0]
+                var rates: String = Rates[0]
+                var isbund: String = isbundles[0]
+
+                if (ItemIDs.size > 1)
+                    for (i in 1..ItemIDs.size - 1) {
+
+                        ids = ids + "," + ItemIDs[i]
+                        rates = rates + "," + Rates[i]
+                        isbund = isbund + "," + isbundles[i]
+
+
+                    }
+
+
+
+
+
+                Repository.setItemRating(
+                    ItemRatingToSendModel(
+                        UserInfo.uid, UserInfo.access_token, UserInfo.device_token,
+                        ids, isbund, rates, order_no, true
+                    )
+                )
+
+            }
+
+
+        }
+
+
+        not_btn.setOnClickListener {
+
+//            if(!Rates.contains("0")) {
+
+            var ids: String = ItemIDs[0]
+            var rates: String = Rates[0]
+            var isbund: String = isbundles[0]
+
+
+            if (ItemIDs.size > 1)
+                for (i in 1..ItemIDs.size - 1) {
+
+                    ids = ids + "," + ItemIDs[i]
+                    rates = rates + "," + Rates[i]
+                    isbund = isbund + "," + isbundles[i]
+
+
+                }
+
+            Repository.setItemRating(
+                ItemRatingToSendModel(
+                    UserInfo.uid, UserInfo.access_token, UserInfo.device_token,
+                    ids, isbund, rates, order_no, false
+                )
+            )
+
+//            }
+
+        }
+
+        rateAdapter.setItems(items)
+
+
+//        val lottieDone = customView.findViewById<LottieAnimationView>(R.id.lottie_done)
+//
+//        lottieDone.setAnimation("done.json")
+////        binding.lottieConnection.setColorFilter(R.color.purple)
+//
+//        lottieDone.playAnimation()
+//        lottieDone.loop(true)
+
+
+//        val okbtn: MaterialButton = customView.findViewById(R.id.ok_btn)
+//        okbtn.setOnClickListener {
+//            dialog.dismiss()
+
+//            Navigation.findNavController(binding.root).popBackStack(R.id.profileFragment, false)
+//        }
+    }
+
+
     // TODO: Rename method, update argument and hook method into UI event
 
 //    override fun onAttach(context: Context) {
@@ -713,6 +1286,10 @@ class HomeFragment : Fragment() {
                 }
             }
     }
+
+//    override fun onRatingChanged(ratingBar: RatingBar, rating: Float) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//    }
 
 
 }

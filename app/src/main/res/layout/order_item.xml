@@ -8,6 +8,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+
+            android:id="@+id/info_container"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,68 +69,25 @@
 
         </LinearLayout>
 
-        <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            <TextView
-                    android:id="@+id/order_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/ubuntu_regular"
-                    android:text="@string/order_no"
-
-                    android:textColor="@color/line_color"
-
-                    android:textSize="16sp"
-
-
-                    />
-
-            <TextView
-                    android:id="@+id/order_date_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/ubuntu_regular"
-                    android:text="29 JUN 19"
-
-                    android:textColor="@color/line_color"
-
-                    android:textSize="16sp"
-
-
-                    />
-
-        </LinearLayout>
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
             <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:orientation="horizontal">
 
                 <TextView
-                        android:id="@+id/order_delivery_date"
+                        android:id="@+id/order_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
 
                         android:layout_marginTop="4dp"
                         android:fontFamily="@font/ubuntu_regular"
-                        android:text="@string/delivery_date"
+                        android:text="@string/order_date"
 
                         android:textColor="@color/line_color"
 
@@ -138,13 +97,12 @@
                         />
 
                 <TextView
-                        android:id="@+id/order_delivery_date_value"
+                        android:id="@+id/order_date_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
-                        android:layout_marginTop="4dp"
 
-                        android:layout_marginEnd="4dp"
+                        android:layout_marginTop="4dp"
                         android:fontFamily="@font/ubuntu_regular"
                         android:text="29 JUN 19"
 
@@ -156,6 +114,7 @@
                         />
 
             </LinearLayout>
+
 
             <TextView
                     android:id="@+id/totalTv"
@@ -169,18 +128,75 @@
 
                     android:textColor="@color/line_color"
                     android:textSize="16sp"
+                    android:layout_marginEnd="8dp"
+
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
 
 
                     />
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content">-->
+
+        <!--            <LinearLayout-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:orientation="horizontal"-->
+        <!--                    app:layout_constraintStart_toStartOf="parent"-->
+        <!--                    app:layout_constraintTop_toTopOf="parent">-->
+
+        <!--                <TextView-->
+        <!--                        android:id="@+id/order_delivery_date"-->
+        <!--                        android:layout_width="wrap_content"-->
+        <!--                        android:layout_height="wrap_content"-->
+
+
+        <!--                        android:layout_marginTop="4dp"-->
+        <!--                        android:fontFamily="@font/ubuntu_regular"-->
+        <!--                        android:text="@string/delivery_date"-->
+
+        <!--                        android:textColor="@color/line_color"-->
+
+        <!--                        android:textSize="16sp"-->
+
+
+        <!--                        />-->
+
+        <!--                <TextView-->
+        <!--                        android:id="@+id/order_delivery_date_value"-->
+        <!--                        android:layout_width="wrap_content"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:layout_marginStart="2dp"-->
+        <!--                        android:layout_marginTop="4dp"-->
+
+        <!--                        android:layout_marginEnd="4dp"-->
+        <!--                        android:fontFamily="@font/ubuntu_regular"-->
+        <!--                        android:text="29 JUN 19"-->
+
+        <!--                        android:textColor="@color/line_color"-->
+
+        <!--                        android:textSize="16sp"-->
+
+
+        <!--                        />-->
+
+        <!--            </LinearLayout>-->
+
+        <!--         -->
+
+        <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/track_btn"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
+
 
 
                 android:layout_height="56dp"
@@ -194,7 +210,9 @@
 
                 android:gravity="center"
 
-                android:text="@string/track_order"
+
+                android:text="@string/order_details"
+
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                 android:textColor="@color/white"
@@ -203,8 +221,8 @@
                 android:theme="@style/Theme.MaterialComponents"
                 app:backgroundTint="@color/colorPrimary"
                 app:cornerRadius="12dp"
-                app:icon="@drawable/track_icon"
-                app:iconGravity="start"
+                app:icon="@drawable/next_icon"
+                app:iconGravity="textEnd"
                 app:iconPadding="16dp"
                 app:iconTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"

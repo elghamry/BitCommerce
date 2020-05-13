@@ -60,8 +60,9 @@ class OfferPagerAdapter(val context: Context, val offers: MutableList<Offer>) : 
 
         Glide
             .with(context)
-            .load(offers.get(position).OfferImage)
-            .optionalCenterCrop()
+            .load(offers.get(position).OfferImage_En)
+//            .centerCrop()
+//            .fitCenter()
 //            .placeholder(r)
 //            .placeholder(R.drawable.offer_placeholder)
             .into(binding.offerImage)

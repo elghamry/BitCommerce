@@ -3,27 +3,39 @@ package sa.biotic.app.fragments
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.idanatz.oneadapter.OneAdapter
 import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
+import com.idanatz.oneadapter.external.interfaces.Item
 import com.idanatz.oneadapter.external.modules.ItemModule
 import com.idanatz.oneadapter.external.modules.ItemModuleConfig
 import com.idanatz.oneadapter.internal.holders.ViewBinder
+import kotlinx.android.synthetic.main.activity_main.*
 import sa.biotic.app.R
 import sa.biotic.app.components.LinearLayoutManagerWrapper
 import sa.biotic.app.databinding.FragmentOrdersForTabBinding
-import sa.biotic.app.model.Order
-import sa.biotic.app.model.Review
+import sa.biotic.app.model.OrderAfterConfModel
+import sa.biotic.app.model.OrderAfterConfResponse
+import sa.biotic.app.retrofit_service.Repository
+import sa.biotic.app.shared_prefrences_model.UserInfo
+import sa.biotic.app.utils.margin
 import sa.biotic.app.viewmodels.OrdersViewModel
 
 /**
@@ -36,6 +48,8 @@ class PastOrdersFragment : Fragment() {
 
     private lateinit var viewModel: OrdersViewModel
     lateinit var binding: FragmentOrdersForTabBinding
+    lateinit var bottomNavigationView: BottomNavigationView
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,33 +67,41 @@ class PastOrdersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-//        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-////        val root = inflater.inflate(R.layout.fragment_reviews, container, false)
-////        val textView: TextView = root.findViewById(R.id.section_label)
-////        reviewsViewModel.text.observe(this, Observer<String> {
-////            textView.text = it
-////        })
-////        return root
-
-//
-//        return FragmentReviewsBinding.inflate(
-//            inflater,
-//            container,
-//            false
-//        ).apply {
-//            setLifecycleOwner(this@ReviewsFragment)
-//            reviewsViewModel = ViewModelProviders.of(this).get(ReviewsViewModel::class.java).apply {
-//
-//            }    // Attach your view model here
-//        }.root
 
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_orders_for_tab, container, true
         )
+
+        bottomNavigationView =
+            (activity as AppCompatActivity).findViewById<BottomNavigationView>(sa.biotic.app.R.id.nav_view)
         binding.ordsRecycler.layoutManager =
             LinearLayoutManagerWrapper(this.requireContext(), RecyclerView.VERTICAL, false)
+        var toolbar: Toolbar = ((activity as AppCompatActivity).toolbar)
+        toolbar.visibility = Toolbar.VISIBLE
+        var container: FragmentContainerView =
+            (activity as AppCompatActivity).findViewById<FragmentContainerView>(R.id.nav_host_container)
+        container.margin(top = 40F)
 
+        var searchView: ConstraintLayout =
+            (activity as AppCompatActivity).findViewById<ConstraintLayout>(R.id.search_widget)
+        if (searchView.isVisible)
+            searchView.visibility = ConstraintLayout.GONE
+
+        Repository.getPastUserOrders(
+            OrderAfterConfModel(
+                UserInfo.access_token,
+                UserInfo.uid,
+                2,
+                UserInfo.device_token
+            )
+        )
         ordersAdapterCreation()
+        binding.viewOffersBtn.setOnClickListener {
+
+
+            bottomNavigationView.selectedItemId = R.id.home
+        }
+
 
         return binding.root
 
@@ -87,43 +109,46 @@ class PastOrdersFragment : Fragment() {
     }
 
     private fun ordersAdapterCreation() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
 
-//            .attachItemModule(headerItem())
-//            .attachItemModule(messageItem()
+        ordersAdapter = OneAdapter(binding.ordsRecycler).attachItemModule(
+            orderItem()
+                .addEventHook(clickEventHook())
+        )
 
-//                .addState(selectionState())
-
-//                .addEventHook(swipeEventHook())
-//            )
-//            .attachEmptinessModule(emptinessModule())
-//            .attachPagingModule(pagingModule())
-//            .attachItemSelectionModule(itemSelectionModule())
+        Repository.pastOrders.observe(viewLifecycleOwner, Observer { newOrds ->
 
 
-        ordersAdapter = OneAdapter(binding.ordsRecycler).attachItemModule(orderItem())
+            if (newOrds.size == 0 || newOrds.isNullOrEmpty()) {
 
 
-//
-        viewModel.ordsLive.observe(viewLifecycleOwner, Observer { newOrds ->
+                binding.viewOffersContainer.visibility = View.VISIBLE
 
+                binding.ordsRecycler.visibility = View.GONE
+            } else {
+                ordersAdapter.setItems(newOrds)
 
-            ordersAdapter.setItems(newOrds)
+                binding.viewOffersContainer.visibility = View.GONE
 
+                binding.ordsRecycler.visibility = View.VISIBLE
 
-//            Log.d("hello",reviewsAdapter.modulesActions.toString())
-//
-//
-//
+            }
+
         })
 
 
     }
 
-    private fun clickEventHook(): ClickEventHook<Review> = object : ClickEventHook<Review>() {
-        override fun onClick(model: Review, viewBinder: ViewBinder) {
-            Toast.makeText(context, "${model.name} clicked", Toast.LENGTH_SHORT).show()
+    private fun clickEventHook(): ClickEventHook<OrderAfterConfResponse> =
+        object : ClickEventHook<OrderAfterConfResponse>() {
+            override fun onClick(model: OrderAfterConfResponse, viewBinder: ViewBinder) {
+//            Toast.makeText(context, "${model.name} clicked", Toast.LENGTH_SHORT).show()
+                var bundle = bundleOf("order_no" to model.OrderNumber)
+                bundle.putString("type", "past")
+
+
+                Navigation.findNavController(binding.root)
+                    .navigate(R.id.orderInformationFragment, bundle)
 
 
         }
@@ -132,7 +157,8 @@ class PastOrdersFragment : Fragment() {
     }
 
 
-    private fun orderItem(): ItemModule<Order> = object : ItemModule<Order>() {
+    private fun orderItem(): ItemModule<OrderAfterConfResponse> =
+        object : ItemModule<OrderAfterConfResponse>() {
         override fun provideModuleConfig(): ItemModuleConfig = object : ItemModuleConfig() {
             override fun withLayoutResource(): Int = R.layout.order_item
 
@@ -146,47 +172,29 @@ class PastOrdersFragment : Fragment() {
         }
 
 
-        override fun onBind(model: Order, viewBinder: ViewBinder) {
-//            val story1 = viewBinder.findViewById<RoundedImageView>(R.id.review_image)
-//            val story2 = viewBinder.findViewById<TextView>(R.id.review_name)
+            override fun onBind(item: Item<OrderAfterConfResponse>, viewBinder: ViewBinder) {
+
+                val order_no = viewBinder.findViewById<TextView>(R.id.order_no_value)
+                val order_date = viewBinder.findViewById<TextView>(R.id.order_date_value)
+                val price = viewBinder.findViewById<TextView>(R.id.totalTv)
+
+
             val story3 = viewBinder.findViewById<View>(R.id.line3)
             val story4 = viewBinder.findViewById<MaterialButton>(R.id.track_btn)
 
+                var model = item.model
+
+
+                order_no.text = model.OrderNumber.toString()
+                order_date.text = model.OrderDate
+                price.text = "%.2f".format(model.TotalPrice) + " " + getString(R.string._sar)
+
+
             story4.visibility = MaterialButton.GONE
 
-//            viewModel.ordsLive.observe(viewLifecycleOwner, Observer { newOrds ->
-//
-//
-//               if(newOrds.get(newOrds.size-1)==model)
-//               {
-//                   story3.visibility=View.VISIBLE
-//               }
-//
-//
-////            Log.d("hello",reviewsAdapter.modulesActions.toString())
-////
-////
-////
-//            })
 
 
-            Log.d("hello", model.toString())
-//
-//
-////            val story2 = viewBinder.findViewById<TextView>(R.id.category_text)
-//
-//////
-//            Glide.with(this@UpcomingOrdersFragment)
-////                .load(model.img)
-////
-//                .load(model.img).centerCrop().into(story1)
-//
-//
-//            story2.text = model.name
-//            story3.ratingNum = model.rate.toFloat()
 
-
-//            story2.setText(model.title)
 
 
         }

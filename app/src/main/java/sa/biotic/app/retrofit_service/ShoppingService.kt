@@ -55,4 +55,11 @@ interface ShoppingService {
         @Body item: AddProductCartAfterLoginModel
     ): Response<MutableList<AddProductCartAfterLoginResponse>>
 
+
+    @POST("Shopping/CheckOUT")
+    suspend fun checkout(
+        @Body item: CheckoutModel
+    ): Response<CheckoutResponse>
+
+
 }

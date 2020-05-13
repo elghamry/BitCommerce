@@ -16,8 +16,9 @@ data class Product(
     val ProductName_En: String,
     val ProductOfferDicountValue: String,
     val ProductOfferID: String,
-    val ProductOfferPrice: String,
-    val ProductPrice: String,
+    val ProductOfferPrice: Double,
+    val ProductPrice: Double,
+    val IsNew: Int,
     val ProductReviews: String,
     val ProductStockQuantity: Int
 
@@ -35,6 +36,7 @@ data class Product(
             && ProductReviews == other.ProductReviews
             && ProductOfferPrice == other.ProductOfferPrice
             && ProductOfferID == other.ProductOfferID
+            && IsNew == other.IsNew
             && ProductOfferDicountValue == other.ProductOfferDicountValue
             && ProductStockQuantity == other.ProductStockQuantity
 

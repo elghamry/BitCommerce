@@ -13,11 +13,12 @@ data class Cartbundle(
     val ID: Int,
     val Name_Ar: String,
     val Name_En: String,
-    val Price: String,
+    val Price: Double,
     val ProductsNamesAr: String,
     val ProductsNamesEn: String,
+    val IsNew: Int,
     val SImage: String
-    , val updatedItems: String
+
 ) : Diffable, Parcelable {
     override fun areContentTheSame(other: Any): Boolean = other is Cartbundle &&
             BundleStockAvaliable == other.BundleStockAvaliable
@@ -31,7 +32,8 @@ data class Cartbundle(
             && ProductsNamesAr == other.ProductsNamesAr
             && ProductsNamesEn == other.ProductsNamesEn
             && SImage == other.SImage
-            && updatedItems == other.updatedItems
+            && IsNew == other.IsNew
+
 
 
     override fun getUniqueIdentifier(): Long {

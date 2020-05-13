@@ -46,6 +46,13 @@
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
+    <style name="scrollStyle" parent="AppTheme">
+        <item name="colorAccent">@android:color/transparent</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+
+    </style>
+
     <style name="ToolBarStyle.Event" parent="ToolBarStyle">
         <item name="titleTextAppearance">@style/TextAppearance.Widget.Event.Toolbar.Title</item>
     </style>
@@ -159,12 +166,12 @@
     </style>
 
     <style name="AppTheme.Icon">
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_margin">0dp</item>
     </style>
 
     <style name="AppTheme.Icon.Big">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">284dp</item>
+        <item name="android:layout_height">300dp</item>
     </style>
 
     <style name="AppTheme.Icon.Medium">

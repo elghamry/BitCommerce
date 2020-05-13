@@ -13,6 +13,11 @@ interface HomeService {
         @Query("pageSize") pageSize: Int
     ): Response<MutableList<Offer>>
 
+    @GET("general/getProductImages")
+    suspend fun getImages(
+        @Query("ProductID") ProductID: Int
+    ): Response<GetImagesResponse>
+
     @GET("general/getCategories")
     suspend fun getCategories(): Response<MutableList<Category>>
 
@@ -73,6 +78,12 @@ interface HomeService {
     suspend fun getOfferList(
         @Query("offerId") offerId: Int
     ): Response<MutableList<OfferProduct>>
+
+    @GET("general/getReviews")
+    suspend fun getReviews(
+        @Query("ID") ID: Int,
+        @Query("IsBundle") IsBundle: Int
+    ): Response<MutableList<GetReviewsResponse>>
 
 
 }

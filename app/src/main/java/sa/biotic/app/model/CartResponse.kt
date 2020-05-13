@@ -1,11 +1,14 @@
 package sa.biotic.app.model
 
 data class CartResponse(
-    val Tax: Double,
+    val TaxPrice: Double,
     val TotalPrice: Double,
+    val DiscountPrice: Double,
+    val SubTotalPrice: Double,
     val cartbundles: MutableList<Cartbundle>,
     val cartproduct: MutableList<Cartproduct>,
-//    val updatedIDs : MutableList<UpdatedIDs>,
-    val CartID: Int
+    val UpdatedCartItem: MutableList<UpdatedItems>,
+    val CartID: Int,
+    val Promo: Promo
 
 )

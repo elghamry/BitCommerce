@@ -1,7 +1,6 @@
 package sa.biotic.app.viewmodels
 
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import sa.biotic.app.model.*
@@ -10,6 +9,12 @@ import sa.biotic.app.retrofit_service.Repository
 class CartViewModel : ViewModel() {
 
     var cartItems: MutableList<CartItem> = mutableListOf<CartItem>()
+
+    var prodLive: MutableLiveData<Product> =
+        MutableLiveData<Product>()
+
+    var bundleLive: MutableLiveData<BundleProduct> =
+        MutableLiveData<BundleProduct>()
 
 
     //livedata
@@ -34,7 +39,9 @@ class CartViewModel : ViewModel() {
 
 
     init {
-        Log.i("ReviewsViewModel", "ReviewsViewModel created!")
+
+        prodLive = Repository.prod
+        bundleLive = Repository.bundleItem
 
         addToCartLiveData = Repository.addToCartResponse
         getCartDetailsLiveData = Repository.getCartResponse
@@ -44,6 +51,16 @@ class CartViewModel : ViewModel() {
         getCartItems()
 
 
+    }
+
+
+    fun getThisProd(Id: Int) {
+        Repository.getProduct(Id)
+    }
+
+
+    fun getThisBundle(Id: Int) {
+        Repository.getBundleProductAsItem(Id)
     }
 
     private fun getCartItems() {

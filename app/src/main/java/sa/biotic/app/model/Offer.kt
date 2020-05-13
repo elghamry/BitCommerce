@@ -12,7 +12,8 @@ data class Offer(
     val OfferDicountValuePercentage: String,
     val OfferEndDate: String,
     val OfferID: Int,
-    val OfferImage: String,
+    val OfferImage_En: String,
+    val OfferImage_Ar: String,
     val OfferName_Ar: String,
     val OfferName_En: String,
     val OfferStartDate: String
